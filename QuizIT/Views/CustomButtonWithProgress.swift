@@ -7,7 +7,7 @@ struct CustomLoading: View {
     var body: some View {
         ZStack {
             Circle() // Linke Kugel
-                .fill(Color.white)
+                .fill(Color.black)
                 .frame(width: 10, height: 10)
                 .offset(x: leftBallOffset) // Position abhängig vom Offset
             

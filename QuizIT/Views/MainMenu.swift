@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import URLImage
 
 struct MainMenu: View {
     
@@ -18,6 +19,13 @@ struct MainMenu: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
+                
+                Image("Logo")
+                    .resizable()
+                    .frame(width: 150, height: 80)
+                    .cornerRadius(20)
+                    .padding()
+                
                 Text("Deine Fächer".uppercased())
                     .font(.title2)
                     .fontWeight(.bold)
@@ -55,17 +63,18 @@ extension MainMenu {
                             .padding(.top, 20)
             
             VStack {
-                Image("Maths")
-                            .resizable()
-                            .frame(width: 250, height: 120)
-                            .cornerRadius(20)
+                URLImage(URL(string: "https://schoolizer.com/img/articles_photos/17062655360.jpg")!) { image in
+                    image
+                        .resizable()
+                        .frame(width: 250, height: 120)
+                        .cornerRadius(20)
+                }
                 
                 VStack(alignment: .leading) {
                     Text(subject.subjectName)
                         .font(.headline)
                         .fontWeight(.bold)
                         .padding(.top, 10)
-                        .padding(.leading, 15)
                                 
                 
                 Button(action: {
@@ -77,15 +86,16 @@ extension MainMenu {
                                 .frame(minWidth: 218)
                                 .frame(height: 40)
                                 .background(Color.white)
-                                .font(.headline)
+                                .font(.subheadline)
+                                .fontWeight(.bold)
                                 .cornerRadius(12)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Color.blue, lineWidth: 1)
+                                        .stroke(Color.blue, lineWidth: 2)
                                       
                                 )
                         }
-                        .padding(12)
+                        .padding(.top,5)
                 }
                   
                 

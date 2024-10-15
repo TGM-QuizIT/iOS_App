@@ -16,6 +16,8 @@
 		2C4E47742CAC0BE600633AA3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C4E47732CAC0BE600633AA3 /* Localizable.strings */; };
 		2C4E47782CAC0D1700633AA3 /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4E47772CAC0D1700633AA3 /* FriendsView.swift */; };
 		2C61E3EC2CAD7AAB00B09BF7 /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C61E3EB2CAD7AAB00B09BF7 /* QuizView.swift */; };
+		2CABC2802CBE73DD0097A738 /* URLImage in Frameworks */ = {isa = PBXBuildFile; productRef = 2CABC27F2CBE73DD0097A738 /* URLImage */; };
+		2CABC2822CBE73DD0097A738 /* URLImageStore in Frameworks */ = {isa = PBXBuildFile; productRef = 2CABC2812CBE73DD0097A738 /* URLImageStore */; };
 		2CBC9CAF2CB546430090C7F7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CBC9CAE2CB546430090C7F7 /* Images.xcassets */; };
 		2CFA18F82CB2C9FC00FB8228 /* Fonts.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CFA18F72CB2C9FC00FB8228 /* Fonts.xcassets */; };
 		2CFA18FC2CB2F06E00FB8228 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFA18FB2CB2F06E00FB8228 /* Question.swift */; };
@@ -50,6 +52,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CABC2822CBE73DD0097A738 /* URLImageStore in Frameworks */,
+				2CABC2802CBE73DD0097A738 /* URLImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,6 +147,10 @@
 			dependencies = (
 			);
 			name = QuizIT;
+			packageProductDependencies = (
+				2CABC27F2CBE73DD0097A738 /* URLImage */,
+				2CABC2812CBE73DD0097A738 /* URLImageStore */,
+			);
 			productName = QuizIT;
 			productReference = 2C4189692C91D9C800DE1AAF /* QuizIT.app */;
 			productType = "com.apple.product-type.application";
@@ -171,6 +179,9 @@
 				Base,
 			);
 			mainGroup = 2C4189602C91D9C800DE1AAF;
+			packageReferences = (
+				2CABC27E2CBE73DD0097A738 /* XCRemoteSwiftPackageReference "url-image" */,
+			);
 			productRefGroup = 2C41896A2C91D9C800DE1AAF /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -414,6 +425,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2CABC27E2CBE73DD0097A738 /* XCRemoteSwiftPackageReference "url-image" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dmytro-anokhin/url-image";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2CABC27F2CBE73DD0097A738 /* URLImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2CABC27E2CBE73DD0097A738 /* XCRemoteSwiftPackageReference "url-image" */;
+			productName = URLImage;
+		};
+		2CABC2812CBE73DD0097A738 /* URLImageStore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2CABC27E2CBE73DD0097A738 /* XCRemoteSwiftPackageReference "url-image" */;
+			productName = URLImageStore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2C4189612C91D9C800DE1AAF /* Project object */;
 }
