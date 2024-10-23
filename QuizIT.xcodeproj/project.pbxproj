@@ -18,6 +18,10 @@
 		2C61E3EC2CAD7AAB00B09BF7 /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C61E3EB2CAD7AAB00B09BF7 /* QuizView.swift */; };
 		2CABC2802CBE73DD0097A738 /* URLImage in Frameworks */ = {isa = PBXBuildFile; productRef = 2CABC27F2CBE73DD0097A738 /* URLImage */; };
 		2CABC2822CBE73DD0097A738 /* URLImageStore in Frameworks */ = {isa = PBXBuildFile; productRef = 2CABC2812CBE73DD0097A738 /* URLImageStore */; };
+		2CABC2AC2CBE7BE50097A738 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2CABC2A92CBE7BE50097A738 /* Poppins-Regular.ttf */; };
+		2CABC2AD2CBE7BE50097A738 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2CABC2AA2CBE7BE50097A738 /* Poppins-Bold.ttf */; };
+		2CABC2AE2CBE7BE50097A738 /* Poppins-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2CABC2AB2CBE7BE50097A738 /* Poppins-ExtraBold.ttf */; };
+		2CABC2B02CBE83FE0097A738 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2CABC2AF2CBE83FE0097A738 /* Poppins-SemiBold.ttf */; };
 		2CBC9CAF2CB546430090C7F7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CBC9CAE2CB546430090C7F7 /* Images.xcassets */; };
 		2CFA18F82CB2C9FC00FB8228 /* Fonts.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CFA18F72CB2C9FC00FB8228 /* Fonts.xcassets */; };
 		2CFA18FC2CB2F06E00FB8228 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFA18FB2CB2F06E00FB8228 /* Question.swift */; };
@@ -38,6 +42,11 @@
 		2C4E47732CAC0BE600633AA3 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		2C4E47772CAC0D1700633AA3 /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
 		2C61E3EB2CAD7AAB00B09BF7 /* QuizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizView.swift; sourceTree = "<group>"; };
+		2CABC2A82CBE7B8B0097A738 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		2CABC2A92CBE7BE50097A738 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-Regular.ttf"; path = "../../../../../../../../Downloads/Poppins/Poppins-Regular.ttf"; sourceTree = "<group>"; };
+		2CABC2AA2CBE7BE50097A738 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-Bold.ttf"; path = "../../../../../../../../Downloads/Poppins/Poppins-Bold.ttf"; sourceTree = "<group>"; };
+		2CABC2AB2CBE7BE50097A738 /* Poppins-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-ExtraBold.ttf"; path = "../../../../../../../../Downloads/Poppins/Poppins-ExtraBold.ttf"; sourceTree = "<group>"; };
+		2CABC2AF2CBE83FE0097A738 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-SemiBold.ttf"; path = "../../../../../../../../Downloads/Poppins/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 		2CBC9CAE2CB546430090C7F7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		2CFA18F72CB2C9FC00FB8228 /* Fonts.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Fonts.xcassets; sourceTree = "<group>"; };
 		2CFA18FB2CB2F06E00FB8228 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
@@ -79,6 +88,7 @@
 		2C41896B2C91D9C800DE1AAF /* QuizIT */ = {
 			isa = PBXGroup;
 			children = (
+				2CABC2A82CBE7B8B0097A738 /* Info.plist */,
 				2C41896C2C91D9C800DE1AAF /* QuizITApp.swift */,
 				2CFA19002CB2F0C500FB8228 /* Views */,
 				2CFA18FF2CB2F0BB00FB8228 /* Models */,
@@ -97,9 +107,21 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		2CABC2A72CBE7A7E0097A738 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				2CABC2AF2CBE83FE0097A738 /* Poppins-SemiBold.ttf */,
+				2CABC2AA2CBE7BE50097A738 /* Poppins-Bold.ttf */,
+				2CABC2AB2CBE7BE50097A738 /* Poppins-ExtraBold.ttf */,
+				2CABC2A92CBE7BE50097A738 /* Poppins-Regular.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		2CFA18F42CB2C9A600FB8228 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				2CABC2A72CBE7A7E0097A738 /* Fonts */,
 				2C4189702C91D9CA00DE1AAF /* Colors.xcassets */,
 				2CFA18F72CB2C9FC00FB8228 /* Fonts.xcassets */,
 				2CBC9CAE2CB546430090C7F7 /* Images.xcassets */,
@@ -123,8 +145,8 @@
 			children = (
 				2C41896E2C91D9C800DE1AAF /* ContentView.swift */,
 				2C4E476F2CAC0A1B00633AA3 /* MainMenu.swift */,
-				2C4E47772CAC0D1700633AA3 /* FriendsView.swift */,
 				2C61E3EB2CAD7AAB00B09BF7 /* QuizView.swift */,
+				2C4E47772CAC0D1700633AA3 /* FriendsView.swift */,
 				2C4E47712CAC0AA000633AA3 /* SettingsView.swift */,
 				2CFA19072CB2FB7E00FB8228 /* CustomButtonWithProgress.swift */,
 			);
@@ -198,7 +220,11 @@
 			files = (
 				2C4189742C91D9CA00DE1AAF /* Preview Assets.xcassets in Resources */,
 				2CBC9CAF2CB546430090C7F7 /* Images.xcassets in Resources */,
+				2CABC2AD2CBE7BE50097A738 /* Poppins-Bold.ttf in Resources */,
 				2C4E47742CAC0BE600633AA3 /* Localizable.strings in Resources */,
+				2CABC2AE2CBE7BE50097A738 /* Poppins-ExtraBold.ttf in Resources */,
+				2CABC2AC2CBE7BE50097A738 /* Poppins-Regular.ttf in Resources */,
+				2CABC2B02CBE83FE0097A738 /* Poppins-SemiBold.ttf in Resources */,
 				2CFA18F82CB2C9FC00FB8228 /* Fonts.xcassets in Resources */,
 				2C4189712C91D9CA00DE1AAF /* Colors.xcassets in Resources */,
 			);
@@ -357,6 +383,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"QuizIT/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = QuizIT/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -385,6 +412,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"QuizIT/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = QuizIT/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
