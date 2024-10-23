@@ -12,10 +12,12 @@ struct Subject: Identifiable, Hashable {
     var id: Int { subjectId }
     let subjectName: String
     let subjectActive: Bool
+    let subjectImageAddress: String
 
-    init(subjectId: Int, subjectName: String, subjectActive: Bool) {
+    init(subjectId: Int, subjectName: String, subjectActive: Bool, subjectImageAddress: String) {
         self.subjectId = subjectId
         self.subjectName = subjectName
         self.subjectActive = subjectActive
+        self.subjectImageAddress = subjectImageAddress
     }
 }
