@@ -105,8 +105,7 @@ extension MainMenu {
                 
                 VStack(alignment: .center) {
                     Text(subject.subjectName)
-                        .font(.headline)
-                        .fontWeight(.bold)
+                        .font(Font.custom("Poppins-SemiBold", size: 19))
                         .padding(.top, -10)
                                 
                 
