@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C324A8C2CDA40CC004FDC52 /* Poppins-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C324A882CDA40CC004FDC52 /* Poppins-ExtraBoldItalic.ttf */; };
+		2C324A8D2CDA40CC004FDC52 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C324A892CDA40CC004FDC52 /* Poppins-Regular.ttf */; };
+		2C324A8E2CDA40CC004FDC52 /* Poppins-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C324A8A2CDA40CC004FDC52 /* Poppins-SemiBoldItalic.ttf */; };
+		2C324A8F2CDA40CC004FDC52 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C324A8B2CDA40CC004FDC52 /* Poppins-Bold.ttf */; };
 		2C41896D2C91D9C800DE1AAF /* QuizITApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C41896C2C91D9C800DE1AAF /* QuizITApp.swift */; };
 		2C41896F2C91D9C800DE1AAF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C41896E2C91D9C800DE1AAF /* ContentView.swift */; };
 		2C4189712C91D9CA00DE1AAF /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C4189702C91D9CA00DE1AAF /* Colors.xcassets */; };
@@ -16,12 +20,10 @@
 		2C4E47742CAC0BE600633AA3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C4E47732CAC0BE600633AA3 /* Localizable.strings */; };
 		2C4E47782CAC0D1700633AA3 /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4E47772CAC0D1700633AA3 /* FriendsView.swift */; };
 		2C61E3EC2CAD7AAB00B09BF7 /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C61E3EB2CAD7AAB00B09BF7 /* QuizView.swift */; };
+		2C8593F32CDA3A9A00CDA0C1 /* PerfomQuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8593F22CDA3A9A00CDA0C1 /* PerfomQuizView.swift */; };
+		2C8593F52CDA3B8600CDA0C1 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C8593F42CDA3B8600CDA0C1 /* Roboto-Regular.ttf */; };
 		2CABC2802CBE73DD0097A738 /* URLImage in Frameworks */ = {isa = PBXBuildFile; productRef = 2CABC27F2CBE73DD0097A738 /* URLImage */; };
 		2CABC2822CBE73DD0097A738 /* URLImageStore in Frameworks */ = {isa = PBXBuildFile; productRef = 2CABC2812CBE73DD0097A738 /* URLImageStore */; };
-		2CABC2AC2CBE7BE50097A738 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2CABC2A92CBE7BE50097A738 /* Poppins-Regular.ttf */; };
-		2CABC2AD2CBE7BE50097A738 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2CABC2AA2CBE7BE50097A738 /* Poppins-Bold.ttf */; };
-		2CABC2AE2CBE7BE50097A738 /* Poppins-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2CABC2AB2CBE7BE50097A738 /* Poppins-ExtraBold.ttf */; };
-		2CABC2B02CBE83FE0097A738 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2CABC2AF2CBE83FE0097A738 /* Poppins-SemiBold.ttf */; };
 		2CBC9CAF2CB546430090C7F7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CBC9CAE2CB546430090C7F7 /* Images.xcassets */; };
 		2CC9E2482CD588100063C25C /* FocusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC9E2472CD588100063C25C /* FocusView.swift */; };
 		2CFA18F82CB2C9FC00FB8228 /* Fonts.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CFA18F72CB2C9FC00FB8228 /* Fonts.xcassets */; };
@@ -33,6 +35,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2C324A882CDA40CC004FDC52 /* Poppins-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-ExtraBoldItalic.ttf"; path = "QuizIT/Resources/Fonts/Poppins-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
+		2C324A892CDA40CC004FDC52 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-Regular.ttf"; path = "QuizIT/Resources/Fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
+		2C324A8A2CDA40CC004FDC52 /* Poppins-SemiBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-SemiBoldItalic.ttf"; path = "QuizIT/Resources/Fonts/Poppins-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
+		2C324A8B2CDA40CC004FDC52 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-Bold.ttf"; path = "QuizIT/Resources/Fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
 		2C4189692C91D9C800DE1AAF /* QuizIT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuizIT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C41896C2C91D9C800DE1AAF /* QuizITApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizITApp.swift; sourceTree = "<group>"; };
 		2C41896E2C91D9C800DE1AAF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -43,6 +49,8 @@
 		2C4E47732CAC0BE600633AA3 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		2C4E47772CAC0D1700633AA3 /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
 		2C61E3EB2CAD7AAB00B09BF7 /* QuizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizView.swift; sourceTree = "<group>"; };
+		2C8593F22CDA3A9A00CDA0C1 /* PerfomQuizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerfomQuizView.swift; sourceTree = "<group>"; };
+		2C8593F42CDA3B8600CDA0C1 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
 		2CABC2A82CBE7B8B0097A738 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2CABC2A92CBE7BE50097A738 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-Regular.ttf"; path = "../../../../../../../../Downloads/Poppins/Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		2CABC2AA2CBE7BE50097A738 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-Bold.ttf"; path = "../../../../../../../../Downloads/Poppins/Poppins-Bold.ttf"; sourceTree = "<group>"; };
@@ -74,6 +82,10 @@
 		2C4189602C91D9C800DE1AAF = {
 			isa = PBXGroup;
 			children = (
+				2C324A8B2CDA40CC004FDC52 /* Poppins-Bold.ttf */,
+				2C324A882CDA40CC004FDC52 /* Poppins-ExtraBoldItalic.ttf */,
+				2C324A892CDA40CC004FDC52 /* Poppins-Regular.ttf */,
+				2C324A8A2CDA40CC004FDC52 /* Poppins-SemiBoldItalic.ttf */,
 				2C41896B2C91D9C800DE1AAF /* QuizIT */,
 				2C41896A2C91D9C800DE1AAF /* Products */,
 			);
@@ -93,6 +105,7 @@
 				2CABC2A82CBE7B8B0097A738 /* Info.plist */,
 				2C41896C2C91D9C800DE1AAF /* QuizITApp.swift */,
 				2CFA19002CB2F0C500FB8228 /* Views */,
+				2C8593F12CDA3A5600CDA0C1 /* Quiz */,
 				2CFA18FF2CB2F0BB00FB8228 /* Models */,
 				2CFA18F42CB2C9A600FB8228 /* Resources */,
 				2C4E47732CAC0BE600633AA3 /* Localizable.strings */,
@@ -109,6 +122,14 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		2C8593F12CDA3A5600CDA0C1 /* Quiz */ = {
+			isa = PBXGroup;
+			children = (
+				2C8593F22CDA3A9A00CDA0C1 /* PerfomQuizView.swift */,
+			);
+			path = Quiz;
+			sourceTree = "<group>";
+		};
 		2CABC2A72CBE7A7E0097A738 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -116,6 +137,7 @@
 				2CABC2AA2CBE7BE50097A738 /* Poppins-Bold.ttf */,
 				2CABC2AB2CBE7BE50097A738 /* Poppins-ExtraBold.ttf */,
 				2CABC2A92CBE7BE50097A738 /* Poppins-Regular.ttf */,
+				2C8593F42CDA3B8600CDA0C1 /* Roboto-Regular.ttf */,
 			);
 			path = Fonts;
 			sourceTree = "<group>";
@@ -229,13 +251,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C324A8C2CDA40CC004FDC52 /* Poppins-ExtraBoldItalic.ttf in Resources */,
+				2C324A8D2CDA40CC004FDC52 /* Poppins-Regular.ttf in Resources */,
+				2C324A8E2CDA40CC004FDC52 /* Poppins-SemiBoldItalic.ttf in Resources */,
+				2C324A8F2CDA40CC004FDC52 /* Poppins-Bold.ttf in Resources */,
 				2C4189742C91D9CA00DE1AAF /* Preview Assets.xcassets in Resources */,
 				2CBC9CAF2CB546430090C7F7 /* Images.xcassets in Resources */,
-				2CABC2AD2CBE7BE50097A738 /* Poppins-Bold.ttf in Resources */,
+				2C8593F52CDA3B8600CDA0C1 /* Roboto-Regular.ttf in Resources */,
 				2C4E47742CAC0BE600633AA3 /* Localizable.strings in Resources */,
-				2CABC2AE2CBE7BE50097A738 /* Poppins-ExtraBold.ttf in Resources */,
-				2CABC2AC2CBE7BE50097A738 /* Poppins-Regular.ttf in Resources */,
-				2CABC2B02CBE83FE0097A738 /* Poppins-SemiBold.ttf in Resources */,
 				2CFA18F82CB2C9FC00FB8228 /* Fonts.xcassets in Resources */,
 				2C4189712C91D9CA00DE1AAF /* Colors.xcassets in Resources */,
 			);
@@ -250,6 +273,7 @@
 			files = (
 				2CFA19022CB2F28A00FB8228 /* Focus.swift in Sources */,
 				2CFA18FE2CB2F0B300FB8228 /* Subject.swift in Sources */,
+				2C8593F32CDA3A9A00CDA0C1 /* PerfomQuizView.swift in Sources */,
 				2C4E47782CAC0D1700633AA3 /* FriendsView.swift in Sources */,
 				2CFA19082CB2FB7E00FB8228 /* CustomButtonWithProgress.swift in Sources */,
 				2C41896F2C91D9C800DE1AAF /* ContentView.swift in Sources */,
@@ -318,7 +342,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -375,7 +399,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
