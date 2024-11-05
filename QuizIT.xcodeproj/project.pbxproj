@@ -7,10 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2C324A8C2CDA40CC004FDC52 /* Poppins-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C324A882CDA40CC004FDC52 /* Poppins-ExtraBoldItalic.ttf */; };
-		2C324A8D2CDA40CC004FDC52 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C324A892CDA40CC004FDC52 /* Poppins-Regular.ttf */; };
-		2C324A8E2CDA40CC004FDC52 /* Poppins-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C324A8A2CDA40CC004FDC52 /* Poppins-SemiBoldItalic.ttf */; };
-		2C324A8F2CDA40CC004FDC52 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C324A8B2CDA40CC004FDC52 /* Poppins-Bold.ttf */; };
 		2C41896D2C91D9C800DE1AAF /* QuizITApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C41896C2C91D9C800DE1AAF /* QuizITApp.swift */; };
 		2C41896F2C91D9C800DE1AAF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C41896E2C91D9C800DE1AAF /* ContentView.swift */; };
 		2C4189712C91D9CA00DE1AAF /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C4189702C91D9CA00DE1AAF /* Colors.xcassets */; };
@@ -35,10 +31,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2C324A882CDA40CC004FDC52 /* Poppins-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-ExtraBoldItalic.ttf"; path = "QuizIT/Resources/Fonts/Poppins-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
-		2C324A892CDA40CC004FDC52 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-Regular.ttf"; path = "QuizIT/Resources/Fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
-		2C324A8A2CDA40CC004FDC52 /* Poppins-SemiBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-SemiBoldItalic.ttf"; path = "QuizIT/Resources/Fonts/Poppins-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
-		2C324A8B2CDA40CC004FDC52 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Poppins-Bold.ttf"; path = "QuizIT/Resources/Fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
 		2C4189692C91D9C800DE1AAF /* QuizIT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuizIT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C41896C2C91D9C800DE1AAF /* QuizITApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizITApp.swift; sourceTree = "<group>"; };
 		2C41896E2C91D9C800DE1AAF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -82,10 +74,6 @@
 		2C4189602C91D9C800DE1AAF = {
 			isa = PBXGroup;
 			children = (
-				2C324A8B2CDA40CC004FDC52 /* Poppins-Bold.ttf */,
-				2C324A882CDA40CC004FDC52 /* Poppins-ExtraBoldItalic.ttf */,
-				2C324A892CDA40CC004FDC52 /* Poppins-Regular.ttf */,
-				2C324A8A2CDA40CC004FDC52 /* Poppins-SemiBoldItalic.ttf */,
 				2C41896B2C91D9C800DE1AAF /* QuizIT */,
 				2C41896A2C91D9C800DE1AAF /* Products */,
 			);
@@ -251,10 +239,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C324A8C2CDA40CC004FDC52 /* Poppins-ExtraBoldItalic.ttf in Resources */,
-				2C324A8D2CDA40CC004FDC52 /* Poppins-Regular.ttf in Resources */,
-				2C324A8E2CDA40CC004FDC52 /* Poppins-SemiBoldItalic.ttf in Resources */,
-				2C324A8F2CDA40CC004FDC52 /* Poppins-Bold.ttf in Resources */,
 				2C4189742C91D9CA00DE1AAF /* Preview Assets.xcassets in Resources */,
 				2CBC9CAF2CB546430090C7F7 /* Images.xcassets in Resources */,
 				2C8593F52CDA3B8600CDA0C1 /* Roboto-Regular.ttf in Resources */,
