@@ -37,7 +37,7 @@ extension FocusView {
     private func AllFocusCard() -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color.grey)
+                .fill(Color.lightGrey)
                             .frame(width: 345, height: 75)
                             .shadow(radius: 10)
                             .padding()
@@ -65,7 +65,7 @@ extension FocusView {
     private func FocusCard(focus: Focus) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color.grey)
+                .fill(Color.lightGrey)
                             .frame(width: 345, height: 75)
                             .padding(6)
             HStack {
