@@ -14,10 +14,13 @@ struct FocusView: View {
     
     var focusList: [Focus]
     
+    @Environment(\.dismiss) var dismiss
+    
     var body: some View {
         VStack(alignment: .center) {
             Text("Schwerpunkte\n" + subjectName)
                 .font(Font.custom("Poppins-SemiBold", size: 20))
+                .foregroundStyle(.black)
                 .multilineTextAlignment(.center)
             
             AllFocusCard()
@@ -30,6 +33,24 @@ struct FocusView: View {
             
             Spacer()
         }
+        .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(action: {
+                            dismiss() // Zurücknavigieren
+                        }) {
+                            HStack {
+                                Image(systemName: "chevron.left")
+                                    .foregroundStyle(.black)
+                                Spacer()
+                                
+                                
+                                
+                                Spacer()
+                            }
+                        }
+                    }
+                }
+        .navigationBarBackButtonHidden(true)
     }
 }
 

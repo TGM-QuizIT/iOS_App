@@ -12,10 +12,12 @@ struct Question: Identifiable {
     var id: Int { questionId }
     let questionText: String
     let questionAnswers: [String]
+    let questionMChoice: Bool
 
-    init(questionId: Int, questionText: String, questionAnswers: [String]) {
+    init(questionId: Int, questionText: String, questionAnswers: [String], questionMChoice: Bool) {
         self.questionId = questionId
         self.questionText = questionText
         self.questionAnswers = questionAnswers
+        self.questionMChoice = questionMChoice
     }
 }
