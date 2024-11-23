@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C2E021F2CECB27E0056A72B /* ResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2E021E2CECB27E0056A72B /* ResultView.swift */; };
 		2C324AA22CDA43EB004FDC52 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C324A9E2CDA43EB004FDC52 /* Poppins-Regular.ttf */; };
 		2C324AA32CDA43EB004FDC52 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C324A9F2CDA43EB004FDC52 /* Poppins-Bold.ttf */; };
 		2C324AA42CDA43EB004FDC52 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C324AA02CDA43EB004FDC52 /* Poppins-SemiBold.ttf */; };
@@ -23,6 +24,8 @@
 		2C61E3EC2CAD7AAB00B09BF7 /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C61E3EB2CAD7AAB00B09BF7 /* QuizView.swift */; };
 		2C8593F32CDA3A9A00CDA0C1 /* PerfomQuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C8593F22CDA3A9A00CDA0C1 /* PerfomQuizView.swift */; };
 		2C8593F52CDA3B8600CDA0C1 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2C8593F42CDA3B8600CDA0C1 /* Roboto-Regular.ttf */; };
+		2CA247612CEF8F82003EEA04 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2CA247602CEF8F82003EEA04 /* Roboto-Bold.ttf */; };
+		2CA247632CEF930C003EEA04 /* Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA247622CEF930C003EEA04 /* Option.swift */; };
 		2CABC2802CBE73DD0097A738 /* URLImage in Frameworks */ = {isa = PBXBuildFile; productRef = 2CABC27F2CBE73DD0097A738 /* URLImage */; };
 		2CABC2822CBE73DD0097A738 /* URLImageStore in Frameworks */ = {isa = PBXBuildFile; productRef = 2CABC2812CBE73DD0097A738 /* URLImageStore */; };
 		2CACC3192CE13C8100C2B486 /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CACC3182CE13C8100C2B486 /* Icons.xcassets */; };
@@ -37,6 +40,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2C2E021E2CECB27E0056A72B /* ResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultView.swift; sourceTree = "<group>"; };
 		2C324A9E2CDA43EB004FDC52 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		2C324A9F2CDA43EB004FDC52 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-Bold.ttf"; sourceTree = "<group>"; };
 		2C324AA02CDA43EB004FDC52 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -54,6 +58,8 @@
 		2C61E3EB2CAD7AAB00B09BF7 /* QuizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizView.swift; sourceTree = "<group>"; };
 		2C8593F22CDA3A9A00CDA0C1 /* PerfomQuizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerfomQuizView.swift; sourceTree = "<group>"; };
 		2C8593F42CDA3B8600CDA0C1 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Regular.ttf"; sourceTree = "<group>"; };
+		2CA247602CEF8F82003EEA04 /* Roboto-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Roboto-Bold.ttf"; sourceTree = "<group>"; };
+		2CA247622CEF930C003EEA04 /* Option.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Option.swift; sourceTree = "<group>"; };
 		2CABC2A82CBE7B8B0097A738 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2CACC3182CE13C8100C2B486 /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
 		2CBC9CAE2CB546430090C7F7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -102,7 +108,7 @@
 				2C41896C2C91D9C800DE1AAF /* QuizITApp.swift */,
 				2CFA19002CB2F0C500FB8228 /* Views */,
 				2C8593F12CDA3A5600CDA0C1 /* Quiz */,
-				2CFA18FF2CB2F0BB00FB8228 /* Models */,
+				2CFA18FF2CB2F0BB00FB8228 /* Model */,
 				2CFA18F42CB2C9A600FB8228 /* Resources */,
 				2C4E47732CAC0BE600633AA3 /* Localizable.strings */,
 				2C4189722C91D9CA00DE1AAF /* Preview Content */,
@@ -122,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				2C8593F22CDA3A9A00CDA0C1 /* PerfomQuizView.swift */,
+				2C2E021E2CECB27E0056A72B /* ResultView.swift */,
 			);
 			path = Quiz;
 			sourceTree = "<group>";
@@ -129,6 +136,7 @@
 		2CABC2A72CBE7A7E0097A738 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				2CA247602CEF8F82003EEA04 /* Roboto-Bold.ttf */,
 				2C324A9F2CDA43EB004FDC52 /* Poppins-Bold.ttf */,
 				2C324AA12CDA43EB004FDC52 /* Poppins-ExtraBold.ttf */,
 				2C324A9E2CDA43EB004FDC52 /* Poppins-Regular.ttf */,
@@ -161,16 +169,17 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		2CFA18FF2CB2F0BB00FB8228 /* Models */ = {
+		2CFA18FF2CB2F0BB00FB8228 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				2C4BE69F2CE8D55F00E12685 /* Quiz.swift */,
 				2CFA18FB2CB2F06E00FB8228 /* Question.swift */,
+				2CA247622CEF930C003EEA04 /* Option.swift */,
 				2CFA18FD2CB2F0B300FB8228 /* Subject.swift */,
 				2CFA19012CB2F28A00FB8228 /* Focus.swift */,
 				2CFA19032CB2F34C00FB8228 /* User.swift */,
 			);
-			path = Models;
+			path = Model;
 			sourceTree = "<group>";
 		};
 		2CFA19002CB2F0C500FB8228 /* Views */ = {
@@ -251,6 +260,7 @@
 			files = (
 				2C324AA22CDA43EB004FDC52 /* Poppins-Regular.ttf in Resources */,
 				2C324AA32CDA43EB004FDC52 /* Poppins-Bold.ttf in Resources */,
+				2CA247612CEF8F82003EEA04 /* Roboto-Bold.ttf in Resources */,
 				2C324AA42CDA43EB004FDC52 /* Poppins-SemiBold.ttf in Resources */,
 				2C324AA52CDA43EB004FDC52 /* Poppins-ExtraBold.ttf in Resources */,
 				2C4189742C91D9CA00DE1AAF /* Preview Assets.xcassets in Resources */,
@@ -272,8 +282,10 @@
 			files = (
 				2CFA19022CB2F28A00FB8228 /* Focus.swift in Sources */,
 				2CFA18FE2CB2F0B300FB8228 /* Subject.swift in Sources */,
+				2C2E021F2CECB27E0056A72B /* ResultView.swift in Sources */,
 				2C4BE6A02CE8D56600E12685 /* Quiz.swift in Sources */,
 				2C8593F32CDA3A9A00CDA0C1 /* PerfomQuizView.swift in Sources */,
+				2CA247632CEF930C003EEA04 /* Option.swift in Sources */,
 				2C4E47782CAC0D1700633AA3 /* FriendsView.swift in Sources */,
 				2CFA19082CB2FB7E00FB8228 /* CustomButtonWithProgress.swift in Sources */,
 				2C41896F2C91D9C800DE1AAF /* ContentView.swift in Sources */,
