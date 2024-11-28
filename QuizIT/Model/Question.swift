@@ -7,11 +7,12 @@
 
 import Foundation
 
-struct Question: Identifiable {
+struct Question: Identifiable, Hashable {
     var id: Int
     let text: String
-    let options: [Option]
+    var options: [Option]
     let mChoice: Bool
+    var score: Double = 0
 
     init(id: Int, text: String, options: [Option], mChoice: Bool) {
         self.id = id
