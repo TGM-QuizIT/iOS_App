@@ -15,17 +15,16 @@
 
 import Foundation
 
-struct Option: Identifiable {
-    var id: Int
+struct Option: Identifiable, Hashable {
+    let id: Int
     let text: String
     let correct: Bool
-    var selected: Bool
+    var selected: Bool = false
 
-    init(id: Int, text: String, correct: Bool, selected: Bool) {
+    init(id: Int, text: String, correct: Bool) {
         self.id = id
         self.text = text
         self.correct = correct
-        self.selected = selected
     }
     enum CodingKeys: String, CodingKey {
             case id = "userId"

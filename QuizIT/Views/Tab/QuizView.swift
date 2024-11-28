@@ -13,9 +13,9 @@ struct QuizView: View {
     let isFavoriteSelected: Bool = true
     
     private var subjects: [Subject] = [
-        Subject(subjectId: 1, subjectName: "Angewandte Mathematik", subjectActive: true, subjectImageAddress: "https://firebasestorage.googleapis.com/v0/b/website-projekteserver.appspot.com/o/imagesForApp%2Fmaths.png?alt=media&token=b7d6b8e7-31b1-4f25-a6f9-29d3cb92be32"),
-        Subject(subjectId: 2, subjectName: "SEW", subjectActive: true, subjectImageAddress: "https://cdn.sanity.io/images/tlr8oxjg/production/9f15109746df254c5a030a7ba9239f8a4bb5dadb-1456x816.png?w=3840&q=100&fit=clip&auto=format"),
-        Subject(subjectId: 3, subjectName: "GGP", subjectActive: true, subjectImageAddress: "https://images.unsplash.com/photo-1461360370896-922624d12aa1?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8aGlzdG9yeXxlbnwwfHwwfHx8MA%3D%3D")
+        Subject(subjectId: 1, subjectName: "Angewandte Mathematik",  subjectImageAddress: "https://firebasestorage.googleapis.com/v0/b/website-projekteserver.appspot.com/o/imagesForApp%2Fmaths.png?alt=media&token=b7d6b8e7-31b1-4f25-a6f9-29d3cb92be32"),
+        Subject(subjectId: 2, subjectName: "SEW",  subjectImageAddress: "https://cdn.sanity.io/images/tlr8oxjg/production/9f15109746df254c5a030a7ba9239f8a4bb5dadb-1456x816.png?w=3840&q=100&fit=clip&auto=format"),
+        Subject(subjectId: 3, subjectName: "GGP",  subjectImageAddress: "https://images.unsplash.com/photo-1461360370896-922624d12aa1?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8aGlzdG9yeXxlbnwwfHwwfHx8MA%3D%3D")
     ]
     
     var body: some View {
@@ -48,18 +48,18 @@ private func sampleFocusList(subjectId: Int) -> [Focus] {
     switch subjectId {
     case 1: // Mathematik
         return [
-            Focus(focusId: 1, focusName: "Analysis", focusYear: 5, questionNumber: 50),
-            Focus(focusId: 2, focusName: "Geometrie", focusYear: 4, questionNumber: 30)
+            Focus(id: 1, name: "Analysis", year: 5, questionNumber: 50),
+            Focus(id: 2, name: "Geometrie", year: 4, questionNumber: 30)
         ]
     case 2: // SEW
         return [
-            Focus(focusId: 1, focusName: "Webentwicklung", focusYear: 5, questionNumber: 40),
-            Focus(focusId: 2, focusName: "Datenbanken", focusYear: 4, questionNumber: 60)
+            Focus(id: 1, name: "Webentwicklung", year: 5, questionNumber: 40),
+            Focus(id: 2, name: "Datenbanken", year: 4, questionNumber: 60)
         ]
     case 3: // GGP
         return [
-            Focus(focusId: 1, focusName: "2. Weltkrieg", focusYear: 5, questionNumber: 30),
-            Focus(focusId: 2, focusName: "Mittelalter", focusYear: 4, questionNumber: 67)
+            Focus(id: 1, name: "2. Weltkrieg", year: 5, questionNumber: 30),
+            Focus(id: 2, name: "Mittelalter", year: 4, questionNumber: 67)
         ]
     default:
         return []

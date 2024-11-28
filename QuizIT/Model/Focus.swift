@@ -8,18 +8,22 @@
 import Foundation
 
 struct Focus: Identifiable, Codable, Hashable {
-    let focusId: Int
-    
-    var id: Int { focusId }
-    
-    let focusName: String
-    let focusYear: Int
+    let id: Int
+        
+    let name: String
+    let year: Int
     let questionNumber: Int
 
-    init(focusId: Int, focusName: String, focusYear: Int, questionNumber: Int) {
-        self.focusId = focusId
-        self.focusName = focusName
-        self.focusYear = focusYear
+    init(id: Int, name: String, year: Int, questionNumber: Int) {
+        self.id = id
+        self.name = name
+        self.year = year
         self.questionNumber = questionNumber
     }
+    enum CodingKeys: String, CodingKey {
+            case id = "focusId"
+            case name = "focusName"
+            case year = "focusYear"
+            case questionNumber = "questionNumber"
+        }
 }

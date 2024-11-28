@@ -27,7 +27,10 @@ struct FocusView: View {
             
             
             ForEach(focusList, id: \.self) { focus in
+                
                     FocusCard(focus: focus)
+                
+                    
                 }
             
             
@@ -91,7 +94,7 @@ extension FocusView {
                             .padding(6)
             HStack {
                 VStack(alignment: .leading) {
-                    Text(focus.focusName)
+                    Text(focus.name)
                         .font(Font.custom("Poppins-SemiBold", size: 16))
                         .padding(.leading, 50)
 
@@ -112,5 +115,5 @@ extension FocusView {
 }
 
 #Preview {
-    FocusView(subjectName: "GGP", questionNumberSubject: 147, focusList: [Focus(focusId: 1, focusName: "2. Weltkrieg", focusYear: 5, questionNumber: 30),Focus(focusId: 2, focusName: "Mittelalter", focusYear: 4, questionNumber: 67),Focus(focusId: 3, focusName: "Zwischenkriegszeit", focusYear: 3, questionNumber: 55),Focus(focusId: 4, focusName: "Kalter Krieg", focusYear: 4, questionNumber: 33)])
+    FocusView(subjectName: "GGP", questionNumberSubject: 147, focusList: [Focus(id: 1, name: "2. Weltkrieg", year: 5, questionNumber: 30),Focus(id: 2, name: "Mittelalter", year: 4, questionNumber: 67),Focus(id: 3, name: "Zwischenkriegszeit", year: 3, questionNumber: 55),Focus(id: 4, name: "Kalter Krieg", year: 4, questionNumber: 33)])
 }
