@@ -19,7 +19,7 @@ struct ContentView: View {
                     .tabItem {
                         Label("Quiz", systemImage: "book.closed")
                     }
-                FriendsView()
+                SocialView()
                     .tabItem {
                         Label(NSLocalizedString("friends", comment: ""), systemImage: "person.2")
                     }
