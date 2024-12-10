@@ -8,14 +8,20 @@
 import Foundation
 
 struct Subject: Identifiable, Hashable {
-    let subjectId: Int
-    var id: Int { subjectId }
-    let subjectName: String
-    let subjectImageAddress: String
+    let id: Int
+    let name: String
+    let imageAddress: String
 
-    init(subjectId: Int, subjectName: String, subjectImageAddress: String) {
-        self.subjectId = subjectId
-        self.subjectName = subjectName
-        self.subjectImageAddress = subjectImageAddress
+    init(id: Int, name: String, imageAddress: String) {
+        self.id = id
+        self.name = name
+        self.imageAddress = imageAddress
     }
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "subjectId"
+        case name = "subjectName"
+        case imageAddress = "subjectImageAddress"
+    }
+    
 }
