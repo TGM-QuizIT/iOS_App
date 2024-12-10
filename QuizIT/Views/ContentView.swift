@@ -15,7 +15,7 @@ struct ContentView: View {
                     .tabItem {
                         Label("Home", systemImage: "house")
                     }
-                QuizView()
+                SubjectView()
                     .tabItem {
                         Label("Quiz", systemImage: "book.closed")
                     }

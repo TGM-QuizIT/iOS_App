@@ -158,7 +158,7 @@ struct PerfomQuizView: View {
                 
             }
             .navigationDestination(isPresented: $showResult) {
-                ResultView(quiz: quiz, result: self.result, focus: Focus(id: 1, name: "2. Weltkrieg", year: 4, questionNumber: 125), subject: Subject(subjectId: 1, subjectName: "GGP", subjectImageAddress: ""))
+                ResultView(quiz: quiz, result: self.result, focus: dummyFocuses[0], subject: Subject(id: 1, name: "GGP", imageAddress: ""))
             }
             .navigationBarBackButtonHidden(true)
             .onAppear {
@@ -315,8 +315,8 @@ struct LeftRoundedRectangle: Shape {
 
 #Preview {
     PerfomQuizView(
-        focus: Focus(id: 1, name: "2. Weltkrieg", year: 4, questionNumber: 125),
-        subject: Subject(subjectId: 1, subjectName: "GGP",subjectImageAddress: ""), quiz: QuizData.shared.quiz
+        focus: dummyFocuses[0],
+        subject: Subject(id: 1, name: "GGP",imageAddress: ""), quiz: QuizData.shared.quiz
     )
 
 

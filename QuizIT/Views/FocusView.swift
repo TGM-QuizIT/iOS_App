@@ -99,7 +99,7 @@ extension FocusView {
                         .padding(.leading, 50)
 
                     
-                    Text(focus.questionNumber.codingKey.stringValue + " Fragen im Pool")
+                    Text(focus.questionCount.codingKey.stringValue + " Fragen im Pool")
                         .font(Font.custom("Poppins-Regular", size: 12))
                         .padding(.leading, 50)
 
@@ -115,5 +115,5 @@ extension FocusView {
 }
 
 #Preview {
-    FocusView(subjectName: "GGP", questionNumberSubject: 147, focusList: [Focus(id: 1, name: "2. Weltkrieg", year: 5, questionNumber: 30),Focus(id: 2, name: "Mittelalter", year: 4, questionNumber: 67),Focus(id: 3, name: "Zwischenkriegszeit", year: 3, questionNumber: 55),Focus(id: 4, name: "Kalter Krieg", year: 4, questionNumber: 33)])
+    FocusView(subjectName: "GGP", questionNumberSubject: 147, focusList: dummyFocuses)
 }

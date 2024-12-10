@@ -27,7 +27,7 @@ struct ResultView: View {
                     .multilineTextAlignment(.center)
                 
                 HStack {
-                    Text(subject.subjectName)
+                    Text(subject.name)
                         .font(Font.custom("Roboto-Regular", size: 20))
                         .fontWeight(.bold)
                         .multilineTextAlignment(.center)
@@ -243,5 +243,5 @@ extension ResultView {
 }
 
 #Preview {
-    ResultView(quiz: QuizData.shared.quiz, result: 0.8, focus: Focus(id: 1, name: "2. Weltkrieg", year: 4, questionNumber: 125), subject: Subject(subjectId: 1, subjectName: "GGP", subjectImageAddress: ""))
+    ResultView(quiz: QuizData.shared.quiz, result: 0.8, focus: dummyFocuses[0], subject: Subject(id: 1, name: "GGP", imageAddress: ""))
 }

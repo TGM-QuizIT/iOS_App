@@ -11,12 +11,13 @@ import SwiftUI
 struct QuizITApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+           ContentView()
 //            PerfomQuizView(
 //                focusName: "2. Weltkrieg",
 //                quiz: QuizData.shared.quiz
 //            )
        //     StartQuizView()
+//            SocialView()
         }
     }
 }
