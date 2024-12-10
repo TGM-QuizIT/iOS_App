@@ -9,19 +9,26 @@ import SwiftUI
 import URLImage
 
 struct DetailFriendView: View {
+    
+    @Environment(\.dismiss) var dismiss
 
-    var userFriend: User
-    var friendship: Friend
+
+    var friendship: Friendship
     var lastResults: [Result]
 
     var body: some View {
         VStack {
+            
+            NavigationHeader(title: "Social") {
+                dismiss()
+            }
+            
             Image("AvatarM")
 
-            Text(userFriend.fullName).font(
+            Text(friendship.user2.fullName).font(
                 .custom("Poppins-SemiBold", size: 20))
 
-            Text(userFriend.year.description + "xHit").font(
+            Text(friendship.user2.uClass).font(
                 .custom("Roboto-Regular", size: 20)
             )
             .fontWeight(.medium)
@@ -30,7 +37,7 @@ struct DetailFriendView: View {
 
             VStack(alignment: .leading) {
                 HStack {
-                    Text(userFriend.fullName + "'s Herausforderungen").font(
+                    Text(friendship.user2.fullName + "'s Herausforderungen").font(
                         .custom("Poppins-SemiBold", size: 16)
                     )
                     .padding(.leading)
@@ -54,11 +61,12 @@ struct DetailFriendView: View {
 
             Spacer()
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 
 extension DetailFriendView {
-    func pendingFriendButton(friendship: Friend) -> some View {
+    func pendingFriendButton(friendship: Friendship) -> some View {
         Button {
 
         } label: {
@@ -146,7 +154,7 @@ extension DetailFriendView {
                         // Fortschrittsanzeige
                         ZStack {
                             RoundedRectangle(cornerRadius: 5)
-                                .fill(Color.darkGrey)
+                                .fill(Color.lightBlue)
                                 .frame(width: 143.28, height: 16) // Erhöhte Höhe
                             
                             ProgressView(value: result.score / 100)
@@ -238,5 +246,5 @@ extension DetailFriendView {
 }
 
 #Preview {
-    DetailFriendView(userFriend: dummyUser[0], friendship: dummyFriends[0], lastResults: dummyResults)
+    DetailFriendView(friendship: dummyFriendships[0], lastResults: dummyResults)
 }

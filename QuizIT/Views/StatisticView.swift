@@ -139,7 +139,7 @@ extension StatisticView {
                         // Fortschrittsanzeige
                         ZStack {
                             RoundedRectangle(cornerRadius: 5)
-                                .fill(Color.darkGrey)
+                                .fill(Color.lightBlue)
                                 .frame(width: 143.28, height: 16) // Erhöhte Höhe
                             
                             ProgressView(value: result.score / 100)

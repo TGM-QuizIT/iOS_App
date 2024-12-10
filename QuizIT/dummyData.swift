@@ -71,24 +71,38 @@ let dummyResults: [Result] = [
     ),
 ]
 
-let dummyFriends: [Friend] = [
-    Friend(
-        id: 1, name: "mthaler", year: 5, pending: 2,
-        since: Date(timeIntervalSince1970: 1_676_000_000)),  // 2023-02-19
-    Friend(
-        id: 2, name: "tenzi", year: 1, pending: 1,
-        since: Date(timeIntervalSince1970: 1_580_000_000)),  // 2020-01-01
-    Friend(
-        id: 3, name: "rtarnoczi", year: 5, pending: 1,
-        since: Date(timeIntervalSince1970: 1_600_000_000)),  // 2020-09-13
-    Friend(
-        id: 4, name: "nredl", year: 5, pending: 2,
-        since: Date(timeIntervalSince1970: 1_700_000_000)),  // 2023-12-03
-    Friend(
-        id: 5, name: "mturetschek", year: 5, pending: 2,
-        since: Date()),
+let dummyFriendships: [Friendship] = [
+    Friendship(
+        id: 1,
+        user2: dummyUser[0],
+        pending: 2,
+        since: Date(timeIntervalSince1970: 1_676_000_000) // 2023-02-19
+    ),
+    Friendship(
+        id: 2,
+        user2: dummyUser[1],
+        pending: 1,
+        since: Date(timeIntervalSince1970: 1_580_000_000) // 2020-01-01
+    ),
+    Friendship(
+        id: 3,
+        user2: dummyUser[2],
+        pending: 1,
+        since: Date(timeIntervalSince1970: 1_600_000_000) // 2020-09-13
+    ),
+    Friendship(
+        id: 4,
+        user2: dummyUser[3],
+        pending: 2,
+        since: Date(timeIntervalSince1970: 1_700_000_000) // 2023-12-03
+    ),
+    Friendship(
+        id: 5,
+        user2: dummyUser[4],
+        pending: 2,
+        since: Date()
+    )
 ]
-
 let dummyQuiz: Quiz = Quiz(questions: [
     Question(
         id: 1,
@@ -151,6 +165,7 @@ let dummyUser = [
     User(id: 1, name: "mthaler", fullName: "Marius Thaler", year: 5, uClass: "5AHIT", role: "Schüler"),
     User(id: 2, name: "rtarnoczi", fullName: "Raphael Tarnoczi", year: 4, uClass: "4BHIT", role: "Schüler"),
     User(id: 3, name: "tenzi", fullName: "Timo Enzi", year: 1, uClass: "1CHIT", role: "Schüler"),
-    User(id: 4, name: "nredl", fullName: "Nikolaus Redl", year: 2, uClass: "2BHIT", role: "Schüler")
+    User(id: 4, name: "nredl", fullName: "Nikolaus Redl", year: 2, uClass: "2BHIT", role: "Schüler"),
+    User(id: 4, name: "mturetschek", fullName: "Marcel Turetschek", year: 2, uClass: "2BHIT", role: "Schüler")
 ]
 

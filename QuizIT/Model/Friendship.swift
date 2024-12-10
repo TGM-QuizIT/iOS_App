@@ -6,24 +6,22 @@
 //
 import Foundation
 
-struct Friend: Identifiable, Hashable {
+struct Friendship: Identifiable, Hashable {
     let id: Int
-    let name: String
-    let year: Int
+    let user2: User
     let pending: Int
     let since: Date
     
-    init(id: Int, name: String, year: Int, pending: Int, since: Date) {
+    init(id: Int, user2: User, pending: Int, since: Date) {
         self.id = id
-        self.name = name
-        self.year = year
+        self.user2 = user2
         self.pending = pending
         self.since = since
     }
     enum CodingKeys: String, CodingKey {
         case id = "friendshipId"
-        case name = "friendName"
-        case year = "friendYear"
+        case user2 = "user2"
+        case since = "friend"
         case pending = "friendshipPending"
     }
     
