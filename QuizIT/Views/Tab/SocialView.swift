@@ -10,7 +10,7 @@ import SwiftUI
 struct SocialView: View {
     
     
-    @State private var selectedTab = "Freunde"
+    @State private var selectedTab = "Statistik"
     
     
     var body: some View {
@@ -29,10 +29,10 @@ struct SocialView: View {
             .padding(.trailing)
             
             if selectedTab == "Freunde" {
-                MyFriendsView(currentFriends: [dummyFriendships[0],dummyFriendships[1],dummyFriendships[2]], friendRequests: [dummyFriendships[3],dummyFriendships[4]])
+                MyFriendsView(currentFriends: [dummyFriends[0],dummyFriends[1],dummyFriends[2]], friendRequests: [dummyFriends[3],dummyFriends[4]])
                     .padding()
             } else if selectedTab == "Statistik" {
-                StatisticView()
+                StatisticView(lastResults: dummyResults)
                     .padding()
             }
             
