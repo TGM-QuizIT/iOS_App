@@ -37,7 +37,11 @@ struct StatisticView: View {
                 
                 
             }
+            .onAppear {
+                // TODO: Raphael Statistik laden
+            }
         }
+        
         
     }
 }

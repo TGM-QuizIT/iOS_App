@@ -15,35 +15,49 @@ struct MyFriendsView: View {
     var friendRequests: [Friendship]
 
     var body: some View {
-
-        VStack(alignment: .leading) {
-            ForEach(currentFriends, id: \.id) { friend in
-                NavigationLink(
-                    destination: DetailFriendView(
-                        friendship: dummyFriendships[0],
-                        lastResults: dummyResults),
-                    label: {
-                        CurrentFriendCard(friend: friend)
-                    }
-                )
-                .buttonStyle(PlainButtonStyle())
-            }
-            Text("Freundesanfragen").font(.custom("Poppins-SemiBold", size: 16))
-                .padding(.top, 30)
-                .padding(.leading)
-            ForEach(friendRequests, id: \.id) { friend in
-                FriendRequestCard(friend: friend)
-            }
-            Button("add Friend") {
+        VStack {
+            Button(action: {
                 showAddFriendView.toggle()
+            }) {
+                Text("Freund hinzufügen").font(.custom("Poppins-SemiBold", size: 16))
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(width: 220,height: 40)
+                    .background(Color.accentColor)
+                    .cornerRadius(40)
             }
             .sheet(isPresented: $showAddFriendView) {
                 AddFriendView(user: dummyUser)
             }
-            Spacer()
 
-            
+            VStack(alignment: .leading) {
+                ForEach(currentFriends, id: \.id) { friend in
+                    NavigationLink(
+                        destination: DetailFriendView(
+                            friendship: friend,
+                            lastResults: dummyResults),
+                        label: {
+                            CurrentFriendCard(friend: friend)
+                        }
+                    )
+                    .buttonStyle(PlainButtonStyle())
+                }
+                Text("Freundesanfragen").font(.custom("Poppins-SemiBold", size: 16))
+                    .padding(.top, 30)
+                    .padding(.leading)
+                ForEach(friendRequests, id: \.id) { friend in
+                    FriendRequestCard(friend: friend)
+                }
+                
+                Spacer()
+
+                
+            }
         }
+        .onAppear {
+            // TODO: Raphael Freunde (currentFriends & friendRequests) laden
+        }
+        
     }
 }
 

@@ -12,11 +12,7 @@ struct SubjectView: View {
     
     let isFavoriteSelected: Bool = true
     
-    private var subjects: [Subject] = [
-        Subject(id: 1, name: "Angewandte Mathematik",  imageAddress: "https://firebasestorage.googleapis.com/v0/b/website-projekteserver.appspot.com/o/imagesForApp%2Fmaths.png?alt=media&token=b7d6b8e7-31b1-4f25-a6f9-29d3cb92be32"),
-        Subject(id: 2, name: "SEW",  imageAddress: "https://cdn.sanity.io/images/tlr8oxjg/production/9f15109746df254c5a030a7ba9239f8a4bb5dadb-1456x816.png?w=3840&q=100&fit=clip&auto=format"),
-        Subject(id: 3, name: "GGP",  imageAddress: "https://images.unsplash.com/photo-1461360370896-922624d12aa1?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8aGlzdG9yeXxlbnwwfHwwfHx8MA%3D%3D")
-    ]
+    private var subjects: [Subject] = dummySubjects
     
     var body: some View {
         NavigationStack {
@@ -29,8 +25,7 @@ struct SubjectView: View {
                     VStack(spacing: 1) {
                         ForEach(subjects, id: \.self) { subject in
                             NavigationLink(destination: FocusView(
-                                subjectName: subject.name,
-                                questionNumberSubject: 100, // Beispielwert, anpassen je nach Bedarf
+                                subject: dummySubjects[0],
                                 focusList: dummyFocuses                            )) {
                                 SubjectCard(subject: subject)
                             }
@@ -85,10 +80,12 @@ extension SubjectView {
                     URLImage(URL(string: subject.imageAddress)!) { image in
                         image
                             .resizable()
-                            .frame(width: 347, height: 117)
+                            .aspectRatio(24/9, contentMode: .fit)
+                            .frame(width: 347)
                             .clipShape(CustomCorners(corners: [.topLeft, .topRight], radius: 20))
                             .padding(.top, -43)
                     }
+
                 }
                 
                 VStack(alignment: .center) {

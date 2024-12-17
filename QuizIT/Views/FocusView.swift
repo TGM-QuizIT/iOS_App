@@ -6,11 +6,11 @@
 //
 
 import SwiftUI
+import URLImage
 
 struct FocusView: View {
     
-    var subjectName: String
-    var questionNumberSubject: Int
+    var subject: Subject
     
     var focusList: [Focus]
     
@@ -18,12 +18,12 @@ struct FocusView: View {
     
     var body: some View {
         VStack(alignment: .center) {
-            Text("Schwerpunkte\n" + subjectName)
+            Text("Schwerpunkte\n" + subject.name)
                 .font(Font.custom("Poppins-SemiBold", size: 20))
                 .foregroundStyle(.black)
                 .multilineTextAlignment(.center)
             
-            AllFocusCard()
+            AllFocusCard(subject: subject)
             
             
             ForEach(focusList, id: \.self) { focus in
@@ -58,28 +58,50 @@ struct FocusView: View {
 }
 
 extension FocusView {
-    private func AllFocusCard() -> some View {
+    private func AllFocusCard(subject: Subject) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color.lightGrey)
-                            .frame(width: 345, height: 75)
-                            .shadow(radius: 10)
-                            .padding()
+                            .frame(width: 347, height: 110)
+                            .padding(6)
+            Button(action: {
+                
+            }) {
+                Text("Quiz starten").font(.custom("Poppins-SemiBold", size: 9))
+                    .foregroundColor(.black)
+                    .padding()
+                    .frame(width: 89,height: 30)
+                    .background(Color.white)
+                    .cornerRadius(40)
+            }
+            .padding(.top,50)
+            .padding(.trailing,200)
+            
+            URLImage(URL(string: subject.imageAddress)!) { image in
+                image
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 140, height: 75)
+                    .clipped()
+                    .padding(.leading, 190)
+            }
+
             HStack {
-                VStack(alignment: .leading) {
-                    Text(subjectName)
-                        .font(Font.custom("Poppins-SemiBold", size: 16))
-                        .padding(.leading, 50)
+                    VStack(alignment: .leading) {
+                        Text(subject.name)
+                            .font(Font.custom("Poppins-SemiBold", size: 16))
+                            .padding(.leading, 50)
 
-                    
-                    Text(questionNumberSubject.codingKey.stringValue + " Fragen insgesamt im Pool")
-                        .font(Font.custom("Poppins-Regular", size: 12))
-                        .padding(.leading, 50)
-
-                }
+                        
+                        Text("147 Fragen im Pool")
+                            .font(Font.custom("Poppins-Regular", size: 12))
+                            .padding(.leading, 50)
+                            .padding(.bottom,35)
+                    }
+                
                 Spacer()
-                Image(systemName: "chevron.right")
-                    .padding(.trailing,50)
+                
+
 
                 
             }
@@ -90,23 +112,46 @@ extension FocusView {
         ZStack {
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color.lightGrey)
-                            .frame(width: 345, height: 75)
+                            .frame(width: 347, height: 110)
                             .padding(6)
+            Button(action: {
+                
+            }) {
+                Text("Quiz starten").font(.custom("Poppins-SemiBold", size: 12))
+                    .foregroundColor(.black)
+                    .padding()
+                    .frame(width: 110,height: 30)
+                    .background(Color.white)
+                    .cornerRadius(40)
+            }
+            .padding(.top,50)
+            .padding(.trailing,200)
+            
+            URLImage(URL(string: focus.imageAddress)!) { image in
+                image
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 140, height: 75)
+                    .clipped()
+                    .padding(.leading, 190)
+            }
+
             HStack {
-                VStack(alignment: .leading) {
-                    Text(focus.name)
-                        .font(Font.custom("Poppins-SemiBold", size: 16))
-                        .padding(.leading, 50)
+                    VStack(alignment: .leading) {
+                        Text(focus.name)
+                            .font(Font.custom("Poppins-SemiBold", size: 16))
+                            .padding(.leading, 50)
 
-                    
-                    Text(focus.questionCount.codingKey.stringValue + " Fragen im Pool")
-                        .font(Font.custom("Poppins-Regular", size: 12))
-                        .padding(.leading, 50)
-
-                }
+                        
+                        Text(focus.questionCount.codingKey.stringValue + " Fragen im Pool")
+                            .font(Font.custom("Poppins-Regular", size: 12))
+                            .padding(.leading, 50)
+                            .padding(.bottom,35)
+                    }
+                
                 Spacer()
-                Image(systemName: "chevron.right")
-                    .padding(.trailing,50)
+                
+
 
                 
             }
@@ -115,5 +160,5 @@ extension FocusView {
 }
 
 #Preview {
-    FocusView(subjectName: "GGP", questionNumberSubject: 147, focusList: dummyFocuses)
+    FocusView(subject: dummySubjects[2],focusList: dummyFocuses)
 }

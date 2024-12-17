@@ -22,6 +22,7 @@
 		2C4189712C91D9CA00DE1AAF /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C4189702C91D9CA00DE1AAF /* Colors.xcassets */; };
 		2C4189742C91D9CA00DE1AAF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C4189732C91D9CA00DE1AAF /* Preview Assets.xcassets */; };
 		2C4BE6A02CE8D56600E12685 /* Quiz.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4BE69F2CE8D55F00E12685 /* Quiz.swift */; };
+		2C4D40822D118FA7000B8F52 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4D40812D118FA7000B8F52 /* SignInView.swift */; };
 		2C4E47702CAC0A1B00633AA3 /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4E476F2CAC0A1B00633AA3 /* MainMenu.swift */; };
 		2C4E47722CAC0AA000633AA3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4E47712CAC0AA000633AA3 /* SettingsView.swift */; };
 		2C4E47742CAC0BE600633AA3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C4E47732CAC0BE600633AA3 /* Localizable.strings */; };
@@ -65,6 +66,7 @@
 		2C4189702C91D9CA00DE1AAF /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		2C4189732C91D9CA00DE1AAF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2C4BE69F2CE8D55F00E12685 /* Quiz.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Quiz.swift; sourceTree = "<group>"; };
+		2C4D40812D118FA7000B8F52 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		2C4E476F2CAC0A1B00633AA3 /* MainMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
 		2C4E47712CAC0AA000633AA3 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		2C4E47732CAC0BE600633AA3 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
@@ -216,6 +218,7 @@
 				2C1079332D071F8000EF23C6 /* DetailFriendView.swift */,
 				2CCC43DF2D0853770059B03E /* AddFriendView.swift */,
 				2CCC43E12D085AB50059B03E /* NavigationHeader.swift */,
+				2C4D40812D118FA7000B8F52 /* SignInView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -319,6 +322,7 @@
 				2C41896F2C91D9C800DE1AAF /* ContentView.swift in Sources */,
 				2CC9E2482CD588100063C25C /* FocusView.swift in Sources */,
 				2C4E47722CAC0AA000633AA3 /* SettingsView.swift in Sources */,
+				2C4D40822D118FA7000B8F52 /* SignInView.swift in Sources */,
 				2C61E3EC2CAD7AAB00B09BF7 /* SubjectView.swift in Sources */,
 				2C9545252CF5EB7C00957B14 /* StartQuizView.swift in Sources */,
 				2C11BF9F2CFF20BF00EDE904 /* StatisticView.swift in Sources */,
@@ -465,6 +469,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"QuizIT/Preview Content\"";
+				DEVELOPMENT_TEAM = 3L8KQF23LP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = QuizIT/Info.plist;
@@ -495,6 +500,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"QuizIT/Preview Content\"";
+				DEVELOPMENT_TEAM = 3L8KQF23LP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = QuizIT/Info.plist;

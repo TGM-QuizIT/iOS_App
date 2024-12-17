@@ -7,6 +7,24 @@
 
 import Foundation
 
+let dummySubjects: [Subject] = [
+    Subject(
+        id: 1, name: "Angewandte Mathematik",
+        imageAddress:
+            "https://placehold.co/1600x600.png"
+    ),
+    Subject(
+        id: 2, name: "SEW",
+        imageAddress:
+            "https://placehold.co/1600x600.png"
+    ),
+    Subject(
+        id: 3, name: "GGP",
+        imageAddress:
+            "https://placehold.co/1600x600.png"
+    ),
+]
+
 // Dummy Daten Focus
 let dummyFocuses: [Focus] = [
     Focus(
@@ -15,21 +33,23 @@ let dummyFocuses: [Focus] = [
         year: 4,
         questionCount: 50,
         imageAddress:
-            "https://firebasestorage.googleapis.com/v0/b/website-projekteserver.appspot.com/o/imagesForApp%2Fmaths.png?alt=media&token=b7d6b8e7-31b1-4f25-a6f9-29d3cb92be32"
+            "https://placehold.co/1600x600.png"
     ),
     Focus(
         id: 2,
         name: "Zwischenkriegszeit",
         year: 4,
         questionCount: 45,
-        imageAddress: "https://firebasestorage.googleapis.com/v0/b/website-projekteserver.appspot.com/o/imagesForApp%2Fmaths.png?alt=media&token=b7d6b8e7-31b1-4f25-a6f9-29d3cb92be32"
+        imageAddress:
+            "https://placehold.co/1600x600.png"
     ),
     Focus(
         id: 3,
         name: "Kalter Krieg",
         year: 4,
         questionCount: 40,
-        imageAddress: "https://firebasestorage.googleapis.com/v0/b/website-projekteserver.appspot.com/o/imagesForApp%2Fmaths.png?alt=media&token=b7d6b8e7-31b1-4f25-a6f9-29d3cb92be32"
+        imageAddress:
+            "https://placehold.co/1600x600.png"
     ),
 ]
 
@@ -76,32 +96,32 @@ let dummyFriendships: [Friendship] = [
         id: 1,
         user2: dummyUser[0],
         pending: 2,
-        since: Date(timeIntervalSince1970: 1_676_000_000) // 2023-02-19
+        since: Date(timeIntervalSince1970: 1_676_000_000)  // 2023-02-19
     ),
     Friendship(
         id: 2,
         user2: dummyUser[1],
         pending: 1,
-        since: Date(timeIntervalSince1970: 1_580_000_000) // 2020-01-01
+        since: Date(timeIntervalSince1970: 1_580_000_000)  // 2020-01-01
     ),
     Friendship(
         id: 3,
         user2: dummyUser[2],
         pending: 1,
-        since: Date(timeIntervalSince1970: 1_600_000_000) // 2020-09-13
+        since: Date(timeIntervalSince1970: 1_600_000_000)  // 2020-09-13
     ),
     Friendship(
         id: 4,
         user2: dummyUser[3],
         pending: 2,
-        since: Date(timeIntervalSince1970: 1_700_000_000) // 2023-12-03
+        since: Date(timeIntervalSince1970: 1_700_000_000)  // 2023-12-03
     ),
     Friendship(
         id: 5,
         user2: dummyUser[4],
         pending: 2,
         since: Date()
-    )
+    ),
 ]
 let dummyQuiz: Quiz = Quiz(questions: [
     Question(
@@ -162,10 +182,19 @@ let dummyQuiz: Quiz = Quiz(questions: [
 ])
 
 let dummyUser = [
-    User(id: 1, name: "mthaler", fullName: "Marius Thaler", year: 5, uClass: "5AHIT", role: "Schüler"),
-    User(id: 2, name: "rtarnoczi", fullName: "Raphael Tarnoczi", year: 4, uClass: "4BHIT", role: "Schüler"),
-    User(id: 3, name: "tenzi", fullName: "Timo Enzi", year: 1, uClass: "1CHIT", role: "Schüler"),
-    User(id: 4, name: "nredl", fullName: "Nikolaus Redl", year: 2, uClass: "2BHIT", role: "Schüler"),
-    User(id: 4, name: "mturetschek", fullName: "Marcel Turetschek", year: 2, uClass: "2BHIT", role: "Schüler")
+    User(
+        id: 1, name: "mthaler", fullName: "Marius Thaler", year: 5,
+        uClass: "5AHIT", role: "Schüler"),
+    User(
+        id: 2, name: "rtarnoczi", fullName: "Raphael Tarnoczi", year: 4,
+        uClass: "4BHIT", role: "Schüler"),
+    User(
+        id: 3, name: "tenzi", fullName: "Timo Enzi", year: 1, uClass: "1CHIT",
+        role: "Schüler"),
+    User(
+        id: 4, name: "nredl", fullName: "Nikolaus Redl", year: 2,
+        uClass: "2BHIT", role: "Schüler"),
+    User(
+        id: 5, name: "mturetschek", fullName: "Marcel Turetschek", year: 2,
+        uClass: "2BHIT", role: "Schüler"),
 ]
-

@@ -30,6 +30,9 @@ struct ContentView: View {
                 
             }
         }
+        .onAppear {
+            // TODO: Raphael User/Subject/Fächer-Req
+        }
         
     }
 }

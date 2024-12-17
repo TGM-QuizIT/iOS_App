@@ -118,7 +118,6 @@ struct PerfomQuizView: View {
                 // Weiter-Button
                 Button(action: {
                     
-                    // TODO Calc question score
                     quiz.questions[currentQuestionIndex].score = calcQuestionResult(question: quiz.questions[currentQuestionIndex])
                     print(quiz.questions[currentQuestionIndex].score)
                     if currentQuestionIndex < quiz.questions.count - 1 {
@@ -132,7 +131,6 @@ struct PerfomQuizView: View {
                         selectedAnswerIndices.removeAll()
                     } else {
                         
-                        // TODO Calc result
                         self.result = calcQuizReult(questions: quiz.questions)
                         print(self.result)
                         showResult.toggle()
