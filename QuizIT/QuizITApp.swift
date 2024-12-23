@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct QuizITApp: App {
+    var network: Network
+    
     var body: some Scene {
         WindowGroup {
-           ContentView()
+            SignInView()
+                .environmentObject(network)
 //            PerfomQuizView(
 //                focusName: "2. Weltkrieg",
 //                quiz: QuizData.shared.quiz
@@ -19,5 +22,9 @@ struct QuizITApp: App {
        //     StartQuizView()
 //            SocialView()
         }
+    }
+    
+    init() {
+        self.network = Network()
     }
 }

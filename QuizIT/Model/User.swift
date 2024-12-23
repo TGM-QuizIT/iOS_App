@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct User: Identifiable, Hashable {
+struct User: Identifiable, Hashable, Codable {
     let id: Int
     let name: String
     let fullName: String
@@ -29,10 +29,10 @@ struct User: Identifiable, Hashable {
     enum CodingKeys: String, CodingKey {
         case id = "userId"
         case name = "userName"
-        case fullName = "userFullName"
+        case fullName = "userFullname"
         case year = "userYear"
         case uClass = "userClass"
-        case role = "userRole"
+        case role = "userType"
     }
 
 }

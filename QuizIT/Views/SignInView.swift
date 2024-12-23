@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct SignInView: View {
+    @EnvironmentObject var network: Network
 
     @State private var email = ""
     @State private var password = ""
+    @State private var loading = false
+    @State private var errorMessage = ""
 
     var body: some View {
         VStack {
@@ -30,6 +33,7 @@ struct SignInView: View {
             .font(.system(size: 18))
             .padding(.horizontal, 20)
             .accentColor(.gray)
+            .textInputAutocapitalization(.never)
             
             SecureField(
                 "", text: $password,
@@ -50,7 +54,7 @@ struct SignInView: View {
                 .padding()
             
             Button(action: {
-                // Einloggen
+                login()
             }) {
                 Text("Einloggen").font(.custom("Poppins-SemiBold", size: 16))
                     .foregroundColor(.white)
@@ -59,6 +63,16 @@ struct SignInView: View {
                     .background(Color.accentColor)
                     .cornerRadius(40)
                     .padding(10)
+                if self.loading {
+                    ProgressView()
+                }
+            }
+            .disabled(loading)
+            
+            if errorMessage != "" {
+                Text(self.errorMessage)
+                    .font(.custom("Poppins-SemiBold", size: 12))
+                    .foregroundStyle(.red)
             }
             
             Image("Logo_SignIn")
@@ -78,6 +92,27 @@ struct SignInView: View {
 
             Spacer()
 
+        }
+    }
+    
+    private func login() {
+        self.loading = true
+        network.login(username:self.email, password: self.password) { text, success in
+            if success {
+                //TODO: was passiert nach erfolgreichem Login??
+            }
+            else {
+                if let t = text {
+                    if t == "Invalid Credentials" {
+                        self.errorMessage = "Ungültige Anmeldedaten"
+                    }
+                    else {
+                        //TODO: was passiert nach fehlerhaftem Login??
+                    }
+                }
+            }
+            self.loading = false
+            
         }
     }
 }
