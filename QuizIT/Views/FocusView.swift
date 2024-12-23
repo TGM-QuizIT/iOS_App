@@ -12,48 +12,75 @@ struct FocusView: View {
     
     var subject: Subject
     
-    var focusList: [Focus]
+    @EnvironmentObject var network: Network
+    @State private var focusList: [Focus] = []
+    @State private var loading = true
     
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        VStack(alignment: .center) {
-            Text("Schwerpunkte\n" + subject.name)
-                .font(Font.custom("Poppins-SemiBold", size: 20))
-                .foregroundStyle(.black)
-                .multilineTextAlignment(.center)
-            
-            AllFocusCard(subject: subject)
-            
-            
-            ForEach(focusList, id: \.self) { focus in
-                
-                    FocusCard(focus: focus)
-                
+        VStack {
+            if loading {
+                ProgressView()
+            } else {
+                VStack(alignment: .center) {
+                    Text("Schwerpunkte\n" + subject.name)
+                        .font(Font.custom("Poppins-SemiBold", size: 20))
+                        .foregroundStyle(.black)
+                        .multilineTextAlignment(.center)
                     
+                    AllFocusCard(subject: subject)
+                    
+                    
+                    ForEach(focusList, id: \.self) { focus in
+                        
+                            FocusCard(focus: focus)
+                        
+                            
+                        }
+                    
+                    
+                    Spacer()
                 }
-            
-            
-            Spacer()
-        }
-        .toolbar {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button(action: {
-                            dismiss() // Zurücknavigieren
-                        }) {
-                            HStack {
-                                Image(systemName: "chevron.left")
-                                    .foregroundStyle(.black)
-                                Spacer()
-                                
-                                
-                                
-                                Spacer()
+                .toolbar {
+                            ToolbarItem(placement: .navigationBarLeading) {
+                                Button(action: {
+                                    dismiss() // Zurücknavigieren
+                                }) {
+                                    HStack {
+                                        Image(systemName: "chevron.left")
+                                            .foregroundStyle(.black)
+                                        Spacer()
+                                        
+                                        
+                                        
+                                        Spacer()
+                                    }
+                                }
                             }
                         }
-                    }
-                }
-        .navigationBarBackButtonHidden(true)
+                .navigationBarBackButtonHidden(true)
+            }
+        }
+        .onAppear() {
+            fetchFocus()
+        }
+    }
+    
+    private func fetchFocus() {
+        self.loading = true
+        network.fetchFocus(id: self.subject.id) { focus in
+            if let focus = focus {
+                self.focusList = focus
+            }
+            else {
+                self.focusList = []
+            }
+            for focus in self.focusList {
+                print(focus.imageAddress)
+            }
+        }
+        self.loading = false
     }
 }
 
@@ -160,5 +187,5 @@ extension FocusView {
 }
 
 #Preview {
-    FocusView(subject: dummySubjects[2],focusList: dummyFocuses)
+    //FocusView(subject: dummySubjects[2])
 }

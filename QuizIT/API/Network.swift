@@ -55,26 +55,50 @@ class Network: ObservableObject {
     
     func fetchSubjects(completion: @escaping (String?) -> Void) {
         AF.request("\(self.baseUrl)/subject?id=\(self.user?.id ?? 1)", method: .get, headers: self.headers) //TODO: Sinnvollen Standardwert überlegen
-            .validate(statusCode: 200..<300)
+            .validate(statusCode: 200..<500)
             .responseDecodable(of: Response.self) { res in
                 switch res.result {
                 case .success(let response):
-                    self.subjects = response.subjects
-                    completion(nil)
-                case .failure(let error):
                     if let code = res.response?.statusCode {
                         switch code {
-                        case 400...499:
-                            completion("Fehlerhafte Anfrage (Code: \(code))")
-                        case 500...599:
-                            completion("Serverfehler (Code: \(code))")
+                        case 200:
+                            self.subjects = response.subjects
+                            completion(nil)
+                        case 400...500:
+                            if let reason = response.reason {
+                                completion(reason)
+                            }
                         default:
-                            completion("Unerwarteter Fehler (Code: \(code))")
+                            completion("Unhandeled HTTP-Code")
                         }
                     }
-                    else {
-                        completion("Request fehlgeschlagen! Begründung: \(error.localizedDescription)")
+                case .failure(let error):
+                    completion("Request failed! Reason: \(error.localizedDescription)")
+                }
+            }
+    }
+    
+    func fetchFocus(id: Int, completion: @escaping ([Focus]?) -> Void) {
+        AF.request("\(self.baseUrl)/focus?id=\(id)&year=\(self.user?.year ?? 1)&active=1", method: .get, headers: self.headers) //TODO: Sinnvollen Standardwert überlegen
+            .validate(statusCode: 200..<500)
+            .responseDecodable(of: Response.self) { res in
+                switch res.result {
+                case .success(let response):
+                    if let code = res.response?.statusCode {
+                        switch code {
+                        case 200:
+                            completion(response.focus)
+                        case 400...500:
+                            if let reason = response.reason {
+                                //TODO: Fehlerbehandlung
+                                completion(nil)
+                            }
+                        default:
+                            completion(nil)
+                        }
                     }
+                case .failure(let error):
+                    completion(nil)
                 }
             }
     }
