@@ -9,6 +9,8 @@ import SwiftUI
 
 struct SignInView: View {
     @EnvironmentObject var network: Network
+    
+    @Binding var showSignInView: Bool
 
     @State private var email = ""
     @State private var password = ""
@@ -100,6 +102,7 @@ struct SignInView: View {
         network.login(username:self.email, password: self.password) { text, success in
             if success {
                 //TODO: was passiert nach erfolgreichem Login??
+                self.showSignInView = false
             }
             else {
                 if let t = text {
@@ -141,6 +144,6 @@ extension SignInView {
     }
 }
 
-#Preview {
-    SignInView()
-}
+//#Preview {
+//    SignInView(showSignInView: true)
+//}
