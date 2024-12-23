@@ -11,4 +11,5 @@ struct Response: Codable {
     let status: String
     let reason: String?
     let user: User?
+    let subjects: [Subject]?
 }

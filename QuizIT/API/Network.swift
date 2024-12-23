@@ -14,6 +14,7 @@ class Network: ObservableObject {
         "authorization": ProcessInfo.processInfo.environment["API_KEY"] ?? ""
     ]
     @Published public var user: User? = nil
+    @Published public var subjects: [Subject]? = nil
     
     
     
@@ -34,7 +35,6 @@ class Network: ObservableObject {
                     if let code = res.response?.statusCode {
                         switch code {
                         case 400...499:
-                            print(res.data)
                             completion("Fehlerhafte Anfrage (Code: \(code))", false)
                         case 500...599:
                             completion("Serverfehler (Code: \(code))", false)
@@ -44,6 +44,32 @@ class Network: ObservableObject {
                         }
                     } else {
                         completion("Request fehlgeschlagen! Begründung: \(error.localizedDescription)", false)
+                    }
+                }
+            }
+    }
+    
+    func fetchSubjects(completion: @escaping (String?) -> Void) {
+        AF.request("\(self.baseUrl)/subject?id=\(self.user?.id ?? 1)", method: .get, headers: self.headers) //TODO: Sinnvollen Standardwert überlegen
+            .validate(statusCode: 200..<300)
+            .responseDecodable(of: Response.self) { res in
+                switch res.result {
+                case .success(let response):
+                    self.subjects = response.subjects
+                    completion(nil)
+                case .failure(let error):
+                    if let code = res.response?.statusCode {
+                        switch code {
+                        case 400...499:
+                            completion("Fehlerhafte Anfrage (Code: \(code))")
+                        case 500...599:
+                            completion("Serverfehler (Code: \(code))")
+                        default:
+                            completion("Unerwarteter Fehler (Code: \(code))")
+                        }
+                    }
+                    else {
+                        completion("Request fehlgeschlagen! Begründung: \(error.localizedDescription)")
                     }
                 }
             }

@@ -10,71 +10,100 @@ import URLImage
 
 
 struct MainMenu: View {
+    @EnvironmentObject var network: Network
     
-    private var subjects: [Subject] = dummySubjects
+    @State private var subjects: [Subject] = []
+    @State private var loading = true
+    
+
                 
     
 
     
     var body: some View {
         VStack {
-            HStack {
-                
-                Image("Logo")
-                    .resizable()
-                    .frame(width: 150, height: 80)
-                    .cornerRadius(20)
-                    .padding(.leading)
-                
-                
-                
-                Spacer()
+            if loading {
+                ProgressView()
             }
-            .padding(.bottom, 10)
-            VStack(alignment: .leading, spacing: 1) {
-                HStack {
-                    Text("Deine Fächer").font(Font.custom("Poppins-SemiBold", size: 25))
-                        .padding(.leading)
-                    Spacer()
-                    Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 15))
-                        .padding(.trailing)
-                }
-                
-                
-                ScrollView(.horizontal) {
+            else {
+                VStack {
                     HStack {
-                        ForEach(subjects, id: \.self) { subject in
-                                SubjectCard(subject: subject)
-                            }
+                        
+                        Image("Logo")
+                            .resizable()
+                            .frame(width: 150, height: 80)
+                            .cornerRadius(20)
+                            .padding(.leading)
+                        
+                        
+                        
+                        Spacer()
                     }
-                
-                }
-                .scrollIndicators(.hidden)
-                
-                HStack {
-                    Text("Deine Statistiken").font(Font.custom("Poppins-SemiBold", size: 25))
-                        .padding(.leading)
+                    .padding(.bottom, 10)
+                    VStack(alignment: .leading, spacing: 1) {
+                        HStack {
+                            Text("Deine Fächer").font(Font.custom("Poppins-SemiBold", size: 25))
+                                .padding(.leading)
+                            Spacer()
+                            Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 15))
+                                .padding(.trailing)
+                        }
+                        
+                        if self.subjects != [] {
+                            ScrollView(.horizontal) {
+                                HStack {
+                                    ForEach(subjects, id: \.self) { subject in
+                                        SubjectCard(subject: subject)
+                                    }
+                                }
+                                
+                            }
+                            .scrollIndicators(.hidden)
+                        }
+                        
+                        else {
+                            Text("Keine Fächer verfügbar").font(Font.custom("Poppins-Semibold", size: 15))
+                                .padding(.leading)
+                        }
+                        
+                        HStack {
+                            Text("Deine Statistiken").font(Font.custom("Poppins-SemiBold", size: 25))
+                                .padding(.leading)
+                            Spacer()
+                            Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 15))
+                                .padding(.trailing)
+                        }
+                        .padding(.top)
+                        
+                        StatisticCard()
+                        
+                        
+                    }
+                    
+                    
+                    
+                    
+                    
                     Spacer()
-                    Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 15))
-                        .padding(.trailing)
                 }
-                .padding(.top)
-                
-                StatisticCard()
-                
-                
             }
-            
-            
-           
-            
-            
-            Spacer()
         }
         .onAppear {
-            //    TODO: @Raphael
-            
+            fetchSubjects()
         }
+    }
+    
+    private func fetchSubjects() {
+        self.loading = true
+        network.fetchSubjects() { text in
+            if let t = text {
+                //TODO: Fehlerbehandlung, wenn Fächer nicht abrufbar waren
+            }
+            else {
+                self.subjects = network.subjects ?? []
+            }
+        }
+        self.loading = false
     }
 }
 
