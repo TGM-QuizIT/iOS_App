@@ -13,7 +13,7 @@ struct QuizITApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SignInView()
                 .environmentObject(network)
 //            PerfomQuizView(
 //                focusName: "2. Weltkrieg",

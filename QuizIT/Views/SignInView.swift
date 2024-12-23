@@ -13,6 +13,7 @@ struct SignInView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var loading = false
+    @State private var errorMessage = ""
 
     var body: some View {
         VStack {
@@ -53,7 +54,6 @@ struct SignInView: View {
                 .padding()
             
             Button(action: {
-                print("pressed")
                 login()
             }) {
                 Text("Einloggen").font(.custom("Poppins-SemiBold", size: 16))
@@ -68,6 +68,12 @@ struct SignInView: View {
                 }
             }
             .disabled(loading)
+            
+            if errorMessage != "" {
+                Text(self.errorMessage)
+                    .font(.custom("Poppins-SemiBold", size: 12))
+                    .foregroundStyle(.red)
+            }
             
             Image("Logo_SignIn")
                 .resizable()
@@ -97,7 +103,12 @@ struct SignInView: View {
             }
             else {
                 if let t = text {
-                    //TODO: was passiert nach fehlerhaftem Login??
+                    if t == "Invalid Credentials" {
+                        self.errorMessage = "Ungültige Anmeldedaten"
+                    }
+                    else {
+                        //TODO: was passiert nach fehlerhaftem Login??
+                    }
                 }
             }
             self.loading = false

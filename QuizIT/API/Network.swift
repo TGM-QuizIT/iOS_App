@@ -25,26 +25,30 @@ class Network: ObservableObject {
         ]
         
         AF.request("\(self.baseUrl)/user/login", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: self.headers)
-            .validate(statusCode: 200..<300) 
+            .validate(statusCode: 200...500)
             .responseDecodable(of: Response.self) { res in
                 switch res.result {
                 case .success(let response):
-                    self.user = response.user
-                    completion(nil, true)
-                case .failure(let error):
                     if let code = res.response?.statusCode {
                         switch code {
-                        case 400...499:
-                            completion("Fehlerhafte Anfrage (Code: \(code))", false)
-                        case 500...599:
-                            completion("Serverfehler (Code: \(code))", false)
+                        case 200:
+                            self.user = response.user
+                            completion(nil, true)
+                        case 400...500:
+                            if let reason = response.reason {
+                                if reason == "Invalid Credentials" {
+                                    completion(reason, false)
+                                }
+                                else {
+                                    completion(reason, false)
+                                }
+                            }
                         default:
-                            print(error.localizedDescription)
-                            completion("Unerwarteter Fehler (Code: \(code))", false)
+                            completion("Unhandeled HTTP-Code", false)
                         }
-                    } else {
-                        completion("Request fehlgeschlagen! Begründung: \(error.localizedDescription)", false)
                     }
+                case .failure(let error):
+                    completion("Request failed! Reason: \(error.localizedDescription)", false)
                 }
             }
     }
