@@ -109,8 +109,10 @@ struct SignInView: View {
         self.loading = true
         network.login(username:self.username, password: self.password) { text, success in
             if success {
-                //TODO: Raphael User-Daten laden und hier als User Object speichern
-                UserManager.shared.saveUser(user: dummyUser[0])
+                if let user = network.user {
+                    //TODO: Raphael User-Daten laden und hier als User Object speichern
+                    UserManager.shared.saveUser(user: user)
+                }
                 
                 self.showSignInView = false
             }
