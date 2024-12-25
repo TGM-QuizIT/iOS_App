@@ -12,7 +12,7 @@ struct SignInView: View {
     
     @Binding var showSignInView: Bool
 
-    @State private var email = ""
+    @State private var username = ""
     @State private var password = ""
     @State private var loading = false
     @State private var errorMessage = ""
@@ -23,7 +23,7 @@ struct SignInView: View {
             WelcomeText()
 
             TextField(
-                "", text: $email,
+                "", text: $username,
                 prompt: Text("mmuster").foregroundColor(Color.darkGrey)
             )
             .padding()
@@ -56,7 +56,15 @@ struct SignInView: View {
                 .padding()
             
             Button(action: {
-                login()
+                self.errorMessage = ""
+                if(username.isEmpty) {
+                    self.errorMessage = "Username eingeben"
+                } else if(password.isEmpty) {
+                    self.errorMessage = "Passwort eingeben"
+                } else {
+                    login()
+                }
+                
             }) {
                 Text("Einloggen").font(.custom("Poppins-SemiBold", size: 16))
                     .foregroundColor(.white)
@@ -99,9 +107,13 @@ struct SignInView: View {
     
     private func login() {
         self.loading = true
-        network.login(username:self.email, password: self.password) { text, success in
+        network.login(username:self.username, password: self.password) { text, success in
             if success {
-                //TODO: was passiert nach erfolgreichem Login??
+                if let user = network.user {
+                    //TODO: Raphael User-Daten laden und hier als User Object speichern
+                    UserManager.shared.saveUser(user: user)
+                }
+                
                 self.showSignInView = false
             }
             else {
@@ -110,7 +122,7 @@ struct SignInView: View {
                         self.errorMessage = "Ungültige Anmeldedaten"
                     }
                     else {
-                        //TODO: was passiert nach fehlerhaftem Login??
+                        //TODO: Marius was passiert nach fehlerhaftem Login??
                     }
                 }
             }

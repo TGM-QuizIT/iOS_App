@@ -101,6 +101,7 @@ struct MainMenu: View {
             }
             else {
                 self.subjects = network.subjects ?? []
+                print(self.subjects)
             }
         }
         self.loading = false
@@ -161,10 +162,6 @@ extension MainMenu {
                                 )
                         .padding(.top,5)
                 }
-               
-                  
-                
-
             }
 
             Spacer()

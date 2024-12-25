@@ -16,7 +16,9 @@ class Network: ObservableObject {
     @Published public var user: User? = nil
     @Published public var subjects: [Subject]? = nil
     
-    
+    init() {
+        self.user = UserManager.shared.loadUser()
+    }
     
     func login(username: String, password: String, completion: @escaping (String?, Bool) -> Void) {
         let parameters: [String: Any] = [
