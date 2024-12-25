@@ -11,31 +11,63 @@ import URLImage
 struct SubjectView: View {
     
     let isFavoriteSelected: Bool = true
+    @EnvironmentObject var network: Network
     
-    private var subjects: [Subject] = dummySubjects
+    @State private var subjects: [Subject] = []
+    @State private var loading = true
+    
     
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 1) {
-                yourSubjectsSection()
-                    .padding(.top)
-                
-                
-                ScrollView {
+        VStack {
+            if loading {
+                ProgressView()
+            }
+            else {
+                NavigationStack {
                     VStack(spacing: 1) {
-                        ForEach(subjects, id: \.self) { subject in
-                            NavigationLink(destination: FocusView(
-                                subject: dummySubjects[0],
-                                focusList: dummyFocuses                            )) {
-                                SubjectCard(subject: subject)
+                        yourSubjectsSection()
+                            .padding(.top)
+                        
+                        if self.subjects != [] {
+                            ScrollView {
+                                VStack(spacing: 1) {
+                                    ForEach(subjects, id: \.self) { subject in
+                                        NavigationLink(destination: FocusView(subject: subject)) {
+                                            SubjectCard(subject: subject)
+                                        }
+                                    }
+                                }
+                                .padding(.top, 20)
                             }
                         }
+                        else {
+                            Text("Keine Schwerpunkte verfügbar").font(Font.custom("Poppins-Semibold", size: 15))
+                                .padding(.leading)
+                        }
+                        Spacer()
                     }
-                    .padding(.top, 20)
                 }
-                Spacer()
             }
         }
+        .onAppear() {
+            fetchSubjects()
+        }
+    }
+    
+    private func fetchSubjects() {
+        self.loading = true
+        network.fetchSubjects() { text in
+            if let t = text {
+                //TODO: Fehlerbehandlung, wenn Fächer nicht abrufbar waren
+            }
+            else {
+                self.subjects = network.subjects ?? []
+                for subject in self.subjects {
+                    print(subject.imageAddress)
+                }
+            }
+        }
+        self.loading = false
     }
 }
 
