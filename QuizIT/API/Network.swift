@@ -11,7 +11,7 @@ import Alamofire
 class Network: ObservableObject {
     private let baseUrl = "https://projekte.tgm.ac.at/quizit/api"
     private let headers: HTTPHeaders = [
-        "authorization": ProcessInfo.processInfo.environment["API_KEY"] ?? ""
+        "authorization" : Bundle.main.infoDictionary?["API_KEY"] as? String ?? ""
     ]
     @Published public var user: User? = nil
     @Published public var subjects: [Subject]? = nil
@@ -38,12 +38,7 @@ class Network: ObservableObject {
                             completion(nil, true)
                         case 400...500:
                             if let reason = response.reason {
-                                if reason == "Invalid Credentials" {
-                                    completion(reason, false)
-                                }
-                                else {
-                                    completion(reason, false)
-                                }
+                                completion(reason, false)
                             }
                         default:
                             completion("Unhandeled HTTP-Code", false)

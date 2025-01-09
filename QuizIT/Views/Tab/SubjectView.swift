@@ -62,9 +62,6 @@ struct SubjectView: View {
             }
             else {
                 self.subjects = network.subjects ?? []
-                for subject in self.subjects {
-                    print(subject.imageAddress)
-                }
             }
         }
         self.loading = false

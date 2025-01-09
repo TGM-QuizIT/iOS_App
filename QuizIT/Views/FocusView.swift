@@ -76,9 +76,6 @@ struct FocusView: View {
             else {
                 self.focusList = []
             }
-            for focus in self.focusList {
-                print(focus.imageAddress)
-            }
         }
         self.loading = false
     }

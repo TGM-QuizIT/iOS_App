@@ -62,7 +62,7 @@ struct SignInView: View {
                 } else if password.isEmpty {
                     self.errorMessage = "Passwort eingeben"
                 } else {
-                    login()
+                    self.login()
                 }
 
             }) {
@@ -117,9 +117,7 @@ struct SignInView: View {
             text, success in
             if success {
                 if let user = network.user {
-                    //TODO: Raphael User-Daten laden und hier als User Object speichern
                     UserManager.shared.saveUser(user: user)
-                    print(user)
                 }
 
                 self.showSignInView = false
@@ -128,7 +126,7 @@ struct SignInView: View {
                     if t == "Invalid Credentials" {
                         self.errorMessage = "Ungültige Anmeldedaten"
                     } else {
-                        //TODO: Marius was passiert nach fehlerhaftem Login??
+                        self.errorMessage = t
                     }
                 }
             }
