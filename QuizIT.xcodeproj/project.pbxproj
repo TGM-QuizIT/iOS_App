@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 71;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -99,6 +99,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		2E1D33232D1996AD0080500A /* API */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = API; sourceTree = "<group>"; };
+		2E5993102D3023E70095D8DA /* API-Keys */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "API-Keys"; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +119,7 @@
 		2C4189602C91D9C800DE1AAF = {
 			isa = PBXGroup;
 			children = (
+				2E5993102D3023E70095D8DA /* API-Keys */,
 				2C41896B2C91D9C800DE1AAF /* QuizIT */,
 				2C41896A2C91D9C800DE1AAF /* Products */,
 			);
@@ -372,6 +374,8 @@
 /* Begin XCBuildConfiguration section */
 		2C4189752C91D9CA00DE1AAF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 2E5993102D3023E70095D8DA /* API-Keys */;
+			baseConfigurationReferenceRelativePath = Config.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -435,6 +439,8 @@
 		};
 		2C4189762C91D9CA00DE1AAF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 2E5993102D3023E70095D8DA /* API-Keys */;
+			baseConfigurationReferenceRelativePath = Config.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -497,7 +503,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"QuizIT/Preview Content\"";
-				DEVELOPMENT_TEAM = 3L8KQF23LP;
+				DEVELOPMENT_TEAM = 9KJP4SJKAT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = QuizIT/Info.plist;
@@ -512,7 +518,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.quizit.QuizIT;
+				PRODUCT_BUNDLE_IDENTIFIER = at.tarnoczi.quizit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -528,7 +534,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"QuizIT/Preview Content\"";
-				DEVELOPMENT_TEAM = 3L8KQF23LP;
+				DEVELOPMENT_TEAM = 9KJP4SJKAT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = QuizIT/Info.plist;
@@ -543,7 +549,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.quizit.QuizIT;
+				PRODUCT_BUNDLE_IDENTIFIER = at.tarnoczi.quizit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
