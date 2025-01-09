@@ -1,0 +1,7 @@
+# Ignore macOS system files
+.DS_Store
+
+# Ignore API keys and configuration files
+API-Keys/Config.xcconfig
+Config.xcconfig
+
