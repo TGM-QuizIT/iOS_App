@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SignInView: View {
     @EnvironmentObject var network: Network
-    
+
     @Binding var showSignInView: Bool
 
     @State private var username = ""
@@ -36,7 +36,7 @@ struct SignInView: View {
             .padding(.horizontal, 20)
             .accentColor(.gray)
             .textInputAutocapitalization(.never)
-            
+
             SecureField(
                 "", text: $password,
                 prompt: Text("passwort").foregroundColor(Color.darkGrey)
@@ -50,85 +50,91 @@ struct SignInView: View {
             .font(.system(size: 18))
             .padding(.horizontal, 20)
             .accentColor(.gray)
-            
+
             Divider()
                 .frame(width: 343)
                 .padding()
-            
+
             Button(action: {
                 self.errorMessage = ""
-                if(username.isEmpty) {
+                if username.isEmpty {
                     self.errorMessage = "Username eingeben"
-                } else if(password.isEmpty) {
+                } else if password.isEmpty {
                     self.errorMessage = "Passwort eingeben"
                 } else {
                     login()
                 }
-                
+
             }) {
-                Text("Einloggen").font(.custom("Poppins-SemiBold", size: 16))
+                if self.loading {
+                    ZStack {
+                        CustomLoading()
+                            .frame(width: 150, height: 44)
+                    }
+                } else {
+                    Text("Einloggen").font(
+                        .custom("Poppins-SemiBold", size: 16)
+                    )
                     .foregroundColor(.white)
                     .padding()
-                    .frame(width: 150,height: 44)
+                    .frame(width: 150, height: 44)
                     .background(Color.accentColor)
                     .cornerRadius(40)
                     .padding(10)
-                if self.loading {
-                    ProgressView()
                 }
             }
             .disabled(loading)
-            
+
             if errorMessage != "" {
                 Text(self.errorMessage)
                     .font(.custom("Poppins-SemiBold", size: 12))
                     .foregroundStyle(.red)
             }
-            
+
             Image("Logo_SignIn")
                 .resizable()
-                .frame(width: 100,height:100)
-                .padding(.top,10)
-            
+                .frame(width: 100, height: 100)
+                .padding(.top, 10)
+
             Image("Just_do_it")
                 .resizable()
-                .frame(width: 119,height:45)
-                .padding(.bottom,90)
-            
+                .frame(width: 119, height: 45)
+                .padding(.bottom, 90)
+
             Image("Copyright")
                 .resizable()
-                .frame(width: 68,height:10)
-                .padding(.bottom,44)
+                .frame(width: 68, height: 10)
+                .padding(.bottom, 44)
 
             Spacer()
 
         }
     }
-    
+
     private func login() {
         self.loading = true
-        network.login(username:self.username, password: self.password) { text, success in
+        network.login(username: self.username, password: self.password) {
+            text, success in
             if success {
                 if let user = network.user {
                     //TODO: Raphael User-Daten laden und hier als User Object speichern
                     UserManager.shared.saveUser(user: user)
+                    print(user)
                 }
-                
+
                 self.showSignInView = false
-            }
-            else {
+            } else {
                 if let t = text {
                     if t == "Invalid Credentials" {
                         self.errorMessage = "Ungültige Anmeldedaten"
-                    }
-                    else {
+                    } else {
                         //TODO: Marius was passiert nach fehlerhaftem Login??
                     }
                 }
             }
             self.loading = false
-            
         }
+
     }
 }
 
