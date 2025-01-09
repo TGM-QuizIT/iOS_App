@@ -29,7 +29,6 @@ class UserManager {
         if let savedUserData = UserDefaults.standard.data(forKey: userDefaultsKey) {
             let decoder = JSONDecoder()
             if let user = try? decoder.decode(User.self, from: savedUserData) {
-                print("User geladen!")
                 return user
             } else {
                 print("Fehler beim Dekodieren des Benutzers.")

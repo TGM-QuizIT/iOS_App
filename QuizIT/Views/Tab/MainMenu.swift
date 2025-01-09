@@ -15,11 +15,6 @@ struct MainMenu: View {
     @State private var subjects: [Subject] = []
     @State private var loading = true
     
-
-                
-    
-
-    
     var body: some View {
         VStack {
             if loading {

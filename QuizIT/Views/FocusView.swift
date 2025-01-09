@@ -94,10 +94,10 @@ extension FocusView {
             Button(action: {
                 
             }) {
-                Text("Quiz starten").font(.custom("Poppins-SemiBold", size: 9))
+                Text("Quiz starten").font(.custom("Poppins-SemiBold", size: 12))
                     .foregroundColor(.black)
                     .padding()
-                    .frame(width: 89,height: 30)
+                    .frame(width: 110,height: 30)
                     .background(Color.white)
                     .cornerRadius(40)
             }
