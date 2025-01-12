@@ -11,9 +11,11 @@ struct ContentView: View {
 
     @EnvironmentObject var network: Network
 
-    var user: User?
+    @State private var user: User?
 
     @State private var showSignInView = true
+
+    @State private var selectedTab: Int = 0
 
     var body: some View {
 
@@ -26,35 +28,48 @@ struct ContentView: View {
                         if let loadedUser = UserManager.shared.loadUser() {
                             withAnimation {
                                 print("Benutzer geladen: \(loadedUser.name)")
+                                self.user = loadedUser
                                 self.showSignInView = false
                             }
                         } else {
-                            print("Kein Benutzer gefunden. Zeige Anmeldeansicht.")
+                            print(
+                                "Kein Benutzer gefunden. Zeige Anmeldeansicht.")
                         }
                     }
             } else {
                 ZStack {
-                    TabView {
+                    TabView(selection: $selectedTab) {
                         MainMenu()
                             .tabItem {
                                 Label("Home", systemImage: "house")
                             }
+                            .tag(0)  // Home-Tab
+
                         SubjectView()
                             .tabItem {
                                 Label("Quiz", systemImage: "book.closed")
                             }
+                            .tag(1)  // Quiz-Tab
+
                         SocialView()
                             .tabItem {
                                 Label(
                                     NSLocalizedString("friends", comment: ""),
                                     systemImage: "person.2")
                             }
-                        SettingsView(showSignInView: $showSignInView)
-                            .tabItem {
-                                Label(
-                                    NSLocalizedString("profile", comment: ""),
-                                    systemImage: "gear")
-                            }
+                            .tag(2)  // Freunde-Tab
+
+                        SettingsView(
+                            showSignInView: $showSignInView,
+                            user: self.user ?? dummyUser[0],
+                            selectedTab: $selectedTab  // selectedTab weitergeben
+                        )
+                        .tabItem {
+                            Label(
+                                NSLocalizedString("profile", comment: ""),
+                                systemImage: "gear")
+                        }
+                        .tag(3)  // Einstellungen-Tab
                     }
                 }
                 .onAppear {
@@ -63,11 +78,10 @@ struct ContentView: View {
                 .zIndex(0)
             }
         }
-        .animation(.easeInOut, value: showSignInView) 
+        .animation(.easeInOut, value: showSignInView)
     }
 }
 
 #Preview {
     ContentView()
 }
-
