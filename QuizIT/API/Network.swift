@@ -99,5 +99,38 @@ class Network: ObservableObject {
                 }
             }
     }
+    
+    func editUserYear(newYear: Int, completion: @escaping (String?) -> Void) {
+        let parameters: [String: Any] = [
+            "userId": self.user?.id,
+            "userYear": newYear
+        ]
+        
+        AF.request("\(self.baseUrl)/user", method: .put, parameters: parameters, encoding: JSONEncoding.default, headers: self.headers)
+            .validate(statusCode: 200...500)
+            .responseDecodable(of: Response.self) { res in
+                switch res.result {
+                case .success(let response):
+                    if let code = res.response?.statusCode {
+                        switch code {
+                        case 200:
+                            self.user = response.user
+                            if let user = self.user {
+                                UserManager.shared.saveUser(user: user)
+                            }
+                            completion(nil)
+                        case 400...500:
+                            if let reason = response.reason {
+                                completion(reason)
+                            }
+                        default:
+                            completion("Unhandeled HTTP-Code")
+                        }
+                    }
+                case .failure(let error):
+                    completion("Request failed! Reason: \(error.localizedDescription)")
+                }
+            }
+    }
 
 }
