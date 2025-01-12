@@ -96,7 +96,6 @@ struct MainMenu: View {
             }
             else {
                 self.subjects = network.subjects ?? []
-                print(self.subjects)
             }
         }
         self.loading = false
