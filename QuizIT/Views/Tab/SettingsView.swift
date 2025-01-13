@@ -8,11 +8,10 @@
 import SwiftUI
 
 struct SettingsView: View {
-
-    @Binding var showSignInView: Bool
-
-    @State var user: User
     
+    @EnvironmentObject var network: Network
+    @Binding var showSignInView: Bool
+    @State var user: User
     @Binding var selectedTab: Int
 
     var body: some View {
@@ -91,6 +90,18 @@ extension SettingsView {
                 .foregroundStyle(.darkGrey)
                 .padding(.leading, 280)
 
+        }
+        .onTapGesture {
+            network.editUserYear(newYear: 4) { error in
+                if let error = error {
+                    //TODO: Was passiert, wenn Bearbeiten des Jahres nicht möglich war
+                }
+                else {
+                    if let user = network.user {
+                        self.user = user
+                    }
+                }
+            }
         }
     }
     func ListButton(icon: String, title: String) -> some View {
