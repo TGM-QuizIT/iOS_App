@@ -7,6 +7,8 @@
 
 import SwiftUI
 import URLImage
+import URLImageStore
+
 
 
 struct MainMenu: View {
