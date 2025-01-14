@@ -20,7 +20,7 @@ struct SubjectView: View {
     var body: some View {
         VStack {
             if loading {
-                ProgressView()
+                CustomLoading()
             }
             else {
                 NavigationStack {
@@ -83,8 +83,7 @@ extension SubjectView {
                     .font(Font.custom("Poppins-SemiBold", size: 18))
                     .padding(.leading, 40)
                 Spacer()
-                Image(systemName: "chevron.down")
-                    .padding(.trailing, 40)
+                
             }
         }
     }
@@ -105,8 +104,20 @@ extension SubjectView {
                         .clipShape(CustomCorners(corners: [.topLeft, .topRight], radius: 20))
                         .padding()
                         .padding(.top, -43)
-                    
-                    URLImage(URL(string: subject.imageAddress)!) { image in
+                    URLImage(URL(string: subject.imageAddress)!) {
+                        // This view is displayed before download starts
+                        EmptyView()
+                    } inProgress: { progress in
+                        // Display progress
+                        CustomLoading()
+                    } failure: { error, retry in
+                        // Display error and retry button
+                        VStack {
+                            Text(error.localizedDescription)
+                            Button("Retry", action: retry)
+                        }
+                    } content: { image in
+                        // Downloaded image
                         image
                             .resizable()
                             .aspectRatio(24/9, contentMode: .fit)

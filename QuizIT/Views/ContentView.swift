@@ -61,14 +61,14 @@ struct ContentView: View {
 
                         SettingsView(
                             showSignInView: $showSignInView,
-                            selectedTab: $selectedTab  // selectedTab weitergeben
+                            selectedTab: $selectedTab
                         )
                         .tabItem {
                             Label(
                                 NSLocalizedString("profile", comment: ""),
                                 systemImage: "gear")
                         }
-                        .tag(3)  // Einstellungen-Tab
+                        .tag(3)
                     }
                 }
                 .onAppear {

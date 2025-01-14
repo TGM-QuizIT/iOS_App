@@ -21,7 +21,7 @@ struct FocusView: View {
     var body: some View {
         VStack {
             if loading {
-                ProgressView()
+                CustomLoading()
             } else {
                 VStack(alignment: .center) {
                     Text("Schwerpunkte\n" + subject.name)
@@ -100,8 +100,22 @@ extension FocusView {
             }
             .padding(.top,50)
             .padding(.trailing,200)
-            
-            URLImage(URL(string: subject.imageAddress)!) { image in
+            URLImage(URL(string: subject.imageAddress)!) {
+                // This view is displayed before download starts
+                EmptyView()
+            } inProgress: { progress in
+                // Display progress
+                CustomLoading()
+                    .padding(.leading, 210)
+
+            } failure: { error, retry in
+                // Display error and retry button
+                VStack {
+                    Text(error.localizedDescription)
+                    Button("Retry", action: retry)
+                }
+            } content: { image in
+                // Downloaded image
                 image
                     .resizable()
                     .scaledToFill()
@@ -109,6 +123,7 @@ extension FocusView {
                     .clipped()
                     .padding(.leading, 190)
             }
+            
 
             HStack {
                     VStack(alignment: .leading) {
@@ -150,8 +165,22 @@ extension FocusView {
             }
             .padding(.top,50)
             .padding(.trailing,200)
-            
-            URLImage(URL(string: focus.imageAddress)!) { image in
+            URLImage(URL(string: focus.imageAddress)!) {
+                // This view is displayed before download starts
+                EmptyView()
+            } inProgress: { progress in
+                // Display progress
+                CustomLoading()
+                    .padding(.leading, 210)
+
+            } failure: { error, retry in
+                // Display error and retry button
+                VStack {
+                    Text(error.localizedDescription)
+                    Button("Retry", action: retry)
+                }
+            } content: { image in
+                // Downloaded image
                 image
                     .resizable()
                     .scaledToFill()
@@ -159,12 +188,14 @@ extension FocusView {
                     .clipped()
                     .padding(.leading, 190)
             }
+            
 
             HStack {
                     VStack(alignment: .leading) {
                         Text(focus.name)
                             .font(Font.custom("Poppins-SemiBold", size: 16))
                             .padding(.leading, 50)
+                        
 
                         
                         Text(focus.questionCount.codingKey.stringValue + " Fragen im Pool")

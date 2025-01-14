@@ -109,6 +109,8 @@ extension SettingsView {
 
         }
         .onTapGesture {
+            
+           
             network.editUserYear(newYear: 4) { error in
                 if let error = error {
                     //TODO: Was passiert, wenn Bearbeiten des Jahres nicht möglich war
