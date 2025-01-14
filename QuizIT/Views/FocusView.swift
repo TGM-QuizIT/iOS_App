@@ -144,6 +144,21 @@ extension FocusView {
                             .frame(width: 347, height: 110)
                             .padding(6)
             Button(action: {
+                network.fetchFocusQuiz(id: focus.id) { questions, error in
+                    if let error = error {
+                        //display error
+                    }
+                    else {
+                        if let questions = questions {
+                            if questions == [] {
+                                //no questions error
+                            }
+                            else {
+                                //questions ready for next view
+                            }
+                        }
+                    }
+                }
                 self.showQuiz = true
             }) {
                 Text("Quiz starten").font(.custom("Poppins-SemiBold", size: 12))
