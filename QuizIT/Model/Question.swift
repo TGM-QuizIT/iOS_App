@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Question: Identifiable, Hashable {
+struct Question: Identifiable, Hashable, Codable {
     var id: Int
     let text: String
     var options: [Option]
@@ -22,9 +22,9 @@ struct Question: Identifiable, Hashable {
     }
     
     enum CodingKeys: String, CodingKey {
-            case id = "userId"
+            case id = "questionId"
             case text = "questionText"
             case options = "options"
-            case mChoice = "questionMChoice"
+            case mChoice = "mChoice"
         }
 }

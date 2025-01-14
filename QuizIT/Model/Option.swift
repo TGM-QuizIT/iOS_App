@@ -1,13 +1,5 @@
 //
-//  Question 2.swift
-//  QuizIT
-//
-//  Created by Marius on 21.11.24.
-//
-
-
-//
-//  Question.swift
+//  Option.swift
 //  QuizIT
 //
 //  Created by Marius on 06.10.24.
@@ -15,7 +7,7 @@
 
 import Foundation
 
-struct Option: Identifiable, Hashable {
+struct Option: Identifiable, Hashable, Codable {
     let id: Int
     let text: String
     let correct: Bool
@@ -27,7 +19,7 @@ struct Option: Identifiable, Hashable {
         self.correct = correct
     }
     enum CodingKeys: String, CodingKey {
-            case id = "userId"
+            case id = "optionId"
             case text = "optionText"
             case correct = "optionCorrect"
         }
