@@ -89,7 +89,6 @@ extension FocusView {
                             .frame(width: 347, height: 110)
                             .padding(6)
             Button(action: {
-                
             }) {
                 Text("Quiz starten").font(.custom("Poppins-SemiBold", size: 12))
                     .foregroundColor(.black)
@@ -154,7 +153,20 @@ extension FocusView {
                             .frame(width: 347, height: 110)
                             .padding(6)
             Button(action: {
-                
+                network.fetchFocusQuiz(id: focus.id) { questions, error in
+                    if let error = error {
+                        //Display error
+                    }
+                    else {
+                        if let questions = questions {
+                            if questions == [] {
+                                //display error
+                            } else {
+                                //store in questions in corresponding object
+                            }
+                        }
+                    }
+                }
             }) {
                 Text("Quiz starten").font(.custom("Poppins-SemiBold", size: 12))
                     .foregroundColor(.black)
