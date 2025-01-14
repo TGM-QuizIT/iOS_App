@@ -61,7 +61,6 @@ struct ContentView: View {
 
                         SettingsView(
                             showSignInView: $showSignInView,
-                            user: self.user ?? dummyUser[0],
                             selectedTab: $selectedTab  // selectedTab weitergeben
                         )
                         .tabItem {

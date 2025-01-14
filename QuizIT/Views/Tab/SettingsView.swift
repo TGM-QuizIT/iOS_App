@@ -11,7 +11,7 @@ struct SettingsView: View {
     
     @EnvironmentObject var network: Network
     @Binding var showSignInView: Bool
-    @State var user: User
+    @State private var user: User?
     @Binding var selectedTab: Int
 
     var body: some View {
@@ -21,14 +21,19 @@ struct SettingsView: View {
 
             Image("AvatarM")
                 .padding(8)
+            if let userName = user?.fullName {
+                Text(userName).font(.custom("Poppins-SemiBold", size: 20))
+                    .padding(.top, 10)
+                Text((user?.name ?? "schueler") + "@student.tgm.ac.at").font(
+                    .custom("Poppins-Regular", size: 16)
+                )
+                .foregroundStyle(.darkGrey)
+            } else {
+                CustomLoading()
+            }
+            
 
-            Text(user.fullName).font(.custom("Poppins-SemiBold", size: 20))
-                .padding(.top, 10)
-
-            Text(user.name + "@student.tgm.ac.at").font(
-                .custom("Poppins-Regular", size: 16)
-            )
-            .foregroundStyle(.darkGrey)
+            
 
             SelectYearButton()
                 .padding(.top, 20)
@@ -51,6 +56,18 @@ struct SettingsView: View {
             }
 
             Spacer()
+        }
+        .onAppear {
+            if let loadedUser = UserManager.shared.loadUser() {
+                withAnimation {
+                    print("Benutzer geladen: \(loadedUser.name)")
+                    self.user = loadedUser
+                    self.showSignInView = false
+                }
+            } else {
+                print(
+                    "Kein Benutzer gefunden. Zeige Anmeldeansicht.")
+            }
         }
     }
 }
@@ -78,7 +95,7 @@ extension SettingsView {
                 VStack(alignment: .leading) {
                     Text("Jahrgang auswählen").font(
                         .custom("Roboto-Bold", size: 15))
-                    Text(user.year.description + "xHIT").font(
+                    Text((user?.year.description ?? "0") + "xHIT").font(
                         .custom("Roboto-Regular", size: 15)
                     )
                     .foregroundStyle(.darkGrey)
@@ -150,5 +167,5 @@ struct RoundedCornerShape: Shape {
 }
 
 #Preview {
-    SettingsView(showSignInView: .constant(false), user: dummyUser[0], selectedTab: .constant(3))
+    SettingsView(showSignInView: .constant(false), selectedTab: .constant(3))
 }
