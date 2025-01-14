@@ -136,10 +136,10 @@
 		2C41896B2C91D9C800DE1AAF /* QuizIT */ = {
 			isa = PBXGroup;
 			children = (
+				2C41896C2C91D9C800DE1AAF /* QuizITApp.swift */,
 				2E1D33232D1996AD0080500A /* API */,
 				2CABC2A82CBE7B8B0097A738 /* Info.plist */,
 				2C1079352D07217200EF23C6 /* dummyData.swift */,
-				2C41896C2C91D9C800DE1AAF /* QuizITApp.swift */,
 				2CCC40AA2D1A170F009F9669 /* User */,
 				2CFA19002CB2F0C500FB8228 /* Views */,
 				2CFA18FF2CB2F0BB00FB8228 /* Model */,
@@ -511,7 +511,6 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -542,7 +541,6 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

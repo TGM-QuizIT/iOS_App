@@ -16,6 +16,9 @@ struct FocusView: View {
     @State private var focusList: [Focus] = []
     @State private var loading = true
     
+    @State private var showQuiz = false
+
+    
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -23,43 +26,30 @@ struct FocusView: View {
             if loading {
                 CustomLoading()
             } else {
-                VStack(alignment: .center) {
-                    Text("Schwerpunkte\n" + subject.name)
-                        .font(Font.custom("Poppins-SemiBold", size: 20))
-                        .foregroundStyle(.black)
-                        .multilineTextAlignment(.center)
-                    
-                    AllFocusCard(subject: subject)
-                    
-                    
-                    ForEach(focusList, id: \.self) { focus in
+                    VStack(alignment: .center) {
                         
-                            FocusCard(focus: focus)
+                        NavigationHeader(title: "Schwerpunkte " + subject.name) {
+                            dismiss()
+                        }
                         
+                        AllFocusCard(subject: subject)
+                        
+                        
+                        ForEach(focusList, id: \.self) { focus in
                             
-                        }
-                    
-                    
-                    Spacer()
-                }
-                .toolbar {
-                            ToolbarItem(placement: .navigationBarLeading) {
-                                Button(action: {
-                                    dismiss() // Zurücknavigieren
-                                }) {
-                                    HStack {
-                                        Image(systemName: "chevron.left")
-                                            .foregroundStyle(.black)
-                                        Spacer()
-                                        
-                                        
-                                        
-                                        Spacer()
-                                    }
-                                }
+                                FocusCard(focus: focus)
+                            
+                                
                             }
-                        }
-                .navigationBarBackButtonHidden(true)
+                        
+                        
+                        Spacer()
+                    }
+                    .navigationDestination(isPresented: $showQuiz) {
+                        PerfomQuizView(focus: dummyFocuses[0], subject: Subject(id: 1, name: "GGP", imageAddress: ""), quiz: QuizData.shared.quiz)
+                    }
+                    .navigationBarBackButtonHidden(true)
+                
             }
         }
         .onAppear() {
@@ -89,7 +79,7 @@ extension FocusView {
                             .frame(width: 347, height: 110)
                             .padding(6)
             Button(action: {
-                
+                self.showQuiz = true
             }) {
                 Text("Quiz starten").font(.custom("Poppins-SemiBold", size: 12))
                     .foregroundColor(.black)
@@ -154,7 +144,7 @@ extension FocusView {
                             .frame(width: 347, height: 110)
                             .padding(6)
             Button(action: {
-                
+                self.showQuiz = true
             }) {
                 Text("Quiz starten").font(.custom("Poppins-SemiBold", size: 12))
                     .foregroundColor(.black)

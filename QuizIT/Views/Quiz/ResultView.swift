@@ -46,7 +46,7 @@ struct ResultView: View {
                     
                 }
             }
-            
+            ScrollView {
             HStack {
                 
                 Text("Dein Resultat").font(.custom("Poppins-SemiBold", size: 16))
@@ -77,7 +77,7 @@ struct ResultView: View {
                 Spacer()
             }
             .padding(.leading,22)
-            ScrollView {
+            
                 ForEach(Array(quiz.questions.enumerated()), id: \.1) { index, question in
                     QuestionCard(question: question, qIndex: index)
                 }
