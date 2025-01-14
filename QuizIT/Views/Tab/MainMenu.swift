@@ -7,6 +7,8 @@
 
 import SwiftUI
 import URLImage
+import URLImageStore
+
 
 
 struct MainMenu: View {
@@ -18,7 +20,7 @@ struct MainMenu: View {
     var body: some View {
         VStack {
             if loading {
-                ProgressView()
+                CustomLoading()
             }
             else {
                 VStack {
@@ -122,14 +124,27 @@ extension MainMenu {
                         .padding()
                         .padding(.top, -43)
 
-                    
-                    URLImage(URL(string: subject.imageAddress)!) { image in
+                    URLImage(URL(string: subject.imageAddress)!) {
+                        // This view is displayed before download starts
+                        EmptyView()
+                    } inProgress: { progress in
+                        // Display progress
+                        CustomLoading()
+                    } failure: { error, retry in
+                        // Display error and retry button
+                        VStack {
+                            Text(error.localizedDescription)
+                            Button("Retry", action: retry)
+                        }
+                    } content: { image in
+                        // Downloaded image
                         image
                             .resizable()
                             .frame(width: 270, height: 107)
                             .clipShape(CustomCorners(corners: [.topLeft, .topRight], radius: 20))  // Apply corner radius only to top corners
                             .padding(.top, -43)
                     }
+                    
                 }
                 
                 
