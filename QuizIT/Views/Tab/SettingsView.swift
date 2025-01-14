@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SettingsView: View {
-    
+
     @EnvironmentObject var network: Network
     @Binding var showSignInView: Bool
     @State private var user: User?
@@ -31,9 +31,6 @@ struct SettingsView: View {
             } else {
                 CustomLoading()
             }
-            
-
-            
 
             SelectYearButton()
                 .padding(.top, 20)
@@ -51,8 +48,10 @@ struct SettingsView: View {
             .onTapGesture {
                 UserManager.shared.deleteUser()
                 showSignInView = true
-                
-                selectedTab = 0
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    selectedTab = 0
+                }
+
             }
 
             Spacer()
@@ -109,13 +108,11 @@ extension SettingsView {
 
         }
         .onTapGesture {
-            
-           
+
             network.editUserYear(newYear: 4) { error in
                 if let error = error {
                     //TODO: Was passiert, wenn Bearbeiten des Jahres nicht möglich war
-                }
-                else {
+                } else {
                     if let user = network.user {
                         self.user = user
                     }
