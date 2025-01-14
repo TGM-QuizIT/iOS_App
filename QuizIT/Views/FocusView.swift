@@ -17,6 +17,13 @@ struct FocusView: View {
     @State private var loading = true
     
     @State private var showQuiz = false
+    
+    @State private var questions: [Question] = []
+    @State private var selectedFocus: Focus?
+    
+    @State private var loadingQuiz = false
+
+
 
     
     @Environment(\.dismiss) var dismiss
@@ -37,7 +44,32 @@ struct FocusView: View {
                         
                         ForEach(focusList, id: \.self) { focus in
                             
-                                FocusCard(focus: focus)
+                            FocusCard(focus: focus) {
+                                self.loadingQuiz = true
+                                self.selectedFocus = focus
+                                network.fetchFocusQuiz(id: focus.id) { questions, error in
+                                    if let error = error {
+                                        //display error
+                                        print(error)
+                                    }
+                                    else {
+                                        if let questions = questions {
+                                            if questions == [] {
+                                                //no questions error
+                                                print("no questions in attribute")
+                                            }
+                                            else {
+                                                //questions ready for next view
+                                                self.questions = questions
+                                                self.showQuiz = true
+                                            }
+                                        }
+                                    }
+                                }
+                                self.loadingQuiz = false
+
+                              
+                            }
                             
                                 
                             }
@@ -46,7 +78,7 @@ struct FocusView: View {
                         Spacer()
                     }
                     .navigationDestination(isPresented: $showQuiz) {
-                        PerfomQuizView(focus: dummyFocuses[0], subject: Subject(id: 1, name: "GGP", imageAddress: ""), quiz: QuizData.shared.quiz)
+                        PerfomQuizView(focus: selectedFocus ?? dummyFocuses[0], subject: dummySubjects[0], quiz: Quiz(questions: self.questions))
                     }
                     .navigationBarBackButtonHidden(true)
                 
@@ -137,36 +169,23 @@ extension FocusView {
         }
     }
     
-    private func FocusCard(focus: Focus) -> some View {
+    private func FocusCard(focus: Focus, quizAction: @escaping () -> Void) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color.lightGrey)
                             .frame(width: 347, height: 110)
                             .padding(6)
-            Button(action: {
-                network.fetchFocusQuiz(id: focus.id) { questions, error in
-                    if let error = error {
-                        //display error
-                    }
-                    else {
-                        if let questions = questions {
-                            if questions == [] {
-                                //no questions error
-                            }
-                            else {
-                                //questions ready for next view
-                            }
-                        }
-                    }
+            Button(action: quizAction) {
+                if loadingQuiz {
+                    CustomLoading()
+                } else {
+                    Text("Quiz starten").font(.custom("Poppins-SemiBold", size: 12))
+                        .foregroundColor(.black)
+                        .padding()
+                        .frame(width: 110,height: 30)
+                        .background(Color.white)
+                        .cornerRadius(40)
                 }
-                self.showQuiz = true
-            }) {
-                Text("Quiz starten").font(.custom("Poppins-SemiBold", size: 12))
-                    .foregroundColor(.black)
-                    .padding()
-                    .frame(width: 110,height: 30)
-                    .background(Color.white)
-                    .cornerRadius(40)
             }
             .padding(.top,50)
             .padding(.trailing,200)
