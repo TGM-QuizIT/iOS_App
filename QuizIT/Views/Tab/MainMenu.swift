@@ -23,63 +23,66 @@ struct MainMenu: View {
                 CustomLoading()
             }
             else {
-                VStack {
-                    HStack {
-                        
-                        Image("Logo")
-                            .resizable()
-                            .frame(width: 150, height: 80)
-                            .cornerRadius(20)
-                            .padding(.leading)
-                        
-                        
-                        
-                        Spacer()
-                    }
-                    .padding(.bottom, 10)
-                    VStack(alignment: .leading, spacing: 1) {
+                NavigationStack {
+                    VStack {
                         HStack {
-                            Text("Deine Fächer").font(Font.custom("Poppins-SemiBold", size: 25))
+                            
+                            Image("Logo")
+                                .resizable()
+                                .frame(width: 150, height: 80)
+                                .cornerRadius(20)
                                 .padding(.leading)
+                            
+                            
+                            
                             Spacer()
-                            Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 15))
-                                .padding(.trailing)
                         }
-                        
-                        if self.subjects != [] {
-                            ScrollView(.horizontal) {
-                                HStack {
-                                    ForEach(subjects, id: \.self) { subject in
-                                        SubjectCard(subject: subject)
-                                    }
-                                }
-                                
+                        .padding(.bottom, 10)
+                        VStack(alignment: .leading, spacing: 1) {
+                            HStack {
+                                Text("Deine Fächer").font(Font.custom("Poppins-SemiBold", size: 25))
+                                    .padding(.leading)
+                                Spacer()
+                                Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 15))
+                                    .padding(.trailing)
                             }
-                            .scrollIndicators(.hidden)
+                            
+                            if self.subjects != [] {
+                                ScrollView(.horizontal) {
+                                    HStack {
+                                        ForEach(subjects, id: \.self) { subject in
+                                            NavigationLink(destination: FocusView(subject: subject)) {
+                                                SubjectCard(subject: subject)
+                                            }
+                                        }
+                                    }
+                                    
+                                }
+                                .scrollIndicators(.hidden)
+                            }
+                            
+                            else {
+                                Text("Keine Fächer verfügbar").font(Font.custom("Poppins-Semibold", size: 15))
+                                    .padding(.leading)
+                            }
+                            
+                            HStack {
+                                Text("Deine Statistiken").font(Font.custom("Poppins-SemiBold", size: 25))
+                                    .padding(.leading)
+                                Spacer()
+                                Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 15))
+                                    .padding(.trailing)
+                            }
+                            .padding(.top)
+                            
+                            StatisticCard()
+                            
+                            
                         }
                         
-                        else {
-                            Text("Keine Fächer verfügbar").font(Font.custom("Poppins-Semibold", size: 15))
-                                .padding(.leading)
-                        }
-                        
-                        HStack {
-                            Text("Deine Statistiken").font(Font.custom("Poppins-SemiBold", size: 25))
-                                .padding(.leading)
-                            Spacer()
-                            Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 15))
-                                .padding(.trailing)
-                        }
-                        .padding(.top)
-                        
-                        StatisticCard()
                         
                         
                     }
-                    
-                    
-                    
-                    
                     
                     Spacer()
                 }
