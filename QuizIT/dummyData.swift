@@ -9,7 +9,7 @@ import Foundation
 
 let dummySubjects: [Subject] = [
     Subject(
-        id: 1, name: "Angewandte Mathematik",
+        id: 1, name: "AM",
         imageAddress:
             "https://placehold.co/1600x600.png"
     ),
