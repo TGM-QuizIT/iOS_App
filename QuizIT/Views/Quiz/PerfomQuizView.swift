@@ -9,6 +9,8 @@ import SwiftUI
 
 struct PerfomQuizView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var network: Network
+
     
     @State private var selectedAnswerIndices: Set<Int> = []
     @State private var selectedAnswerScale: CGFloat = 1.0
@@ -17,7 +19,7 @@ struct PerfomQuizView: View {
     @State private var showQuestionDetail: Bool = false
     
     @State private var showResult: Bool = false
-    @State private var result: Double = 0
+    @State private var result: Result?
 
 
     
@@ -115,7 +117,7 @@ struct PerfomQuizView: View {
                 
                 Spacer()
                 
-                // Weiter-Button
+                
                 Button(action: {
                     
                     quiz.questions[currentQuestionIndex].score = calcQuestionResult(question: quiz.questions[currentQuestionIndex])
@@ -130,11 +132,26 @@ struct PerfomQuizView: View {
                         }
                         selectedAnswerIndices.removeAll()
                     } else {
+                        // Result speichern
+                        if let user = network.user {
+                            self.result = Result(id: -1, score: 0, userId: user.id , focus: focus, date: Date())
+                        }
+                        if let result = self.result {
+                            self.result?.score = calcQuizReult(questions: quiz.questions)
+                            
+                            self.network.postFocusResult(result: result) { error in
+                                if let error = error {
+                                    print(error)
+                                } else {
+                                    print("successfull")
+                                }
+                            }
+
+                            print(self.result)
+                            showResult.toggle()
+                        }
                         
-                        self.result = calcQuizReult(questions: quiz.questions)
-                        print(self.result)
-                        showResult.toggle()
-                        print("Quiz beendet!")
+                        
                     }
                 }) {
                     Text(currentQuestionIndex < quiz.questions.count - 1 ? "Weiter" : "Beenden")
@@ -156,7 +173,7 @@ struct PerfomQuizView: View {
                 
             }
             .navigationDestination(isPresented: $showResult) {
-                ResultView(quiz: quiz, result: self.result, focus: dummyFocuses[0], subject: Subject(id: 1, name: "GGP", imageAddress: ""))
+                ResultView(quiz: quiz, result: self.result ?? dummyResults[0], focus: dummyFocuses[0], subject: Subject(id: 1, name: "GGP", imageAddress: ""))
             }
             .navigationBarBackButtonHidden(true)
             .onAppear {

@@ -8,7 +8,7 @@ import Foundation
 
 struct Result: Codable, Identifiable, Hashable {
     let id: Int
-    let score: Double
+    var score: Double
     let userId: Int
     let focus: Focus?
     let date: Date

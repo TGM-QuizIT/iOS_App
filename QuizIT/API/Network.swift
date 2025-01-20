@@ -165,7 +165,7 @@ class Network: ObservableObject {
             "userId": result.userId,
             "focusId": result.focus?.id ?? 1 //TODO: Sinnvoller Standardwert
         ]
-        
+        print(result.userId)
         AF.request("\(self.baseUrl)/result", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: self.headers)
             .validate(statusCode: 200...500)
             .responseDecodable(of: Response.self) { res in

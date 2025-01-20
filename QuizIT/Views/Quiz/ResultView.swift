@@ -13,7 +13,7 @@ struct ResultView: View {
 
     
     var quiz: Quiz
-    var result: Double
+    var result: Result
     var focus: Focus
     var subject: Subject
     
@@ -64,12 +64,12 @@ struct ResultView: View {
                                 .foregroundColor(.blue)
 
                             Circle()
-                        .trim(from: 0.0, to: CGFloat(self.result/5))
+                        .trim(from: 0.0, to: CGFloat(self.result.score/5))
                                 .stroke(style: StrokeStyle(lineWidth: 15, lineCap: .round))
                                 .foregroundColor(.blue)
                                 .rotationEffect(.degrees(-90))
 
-                    Text("\(Int(self.result/5 * 100))%")
+                    Text("\(Int(self.result.score/5 * 100))%")
                         .font(.title2)
                                 .bold()
                         }
@@ -243,5 +243,5 @@ extension ResultView {
 }
 
 #Preview {
-    ResultView(quiz: QuizData.shared.quiz, result: 0.8, focus: dummyFocuses[0], subject: Subject(id: 1, name: "GGP", imageAddress: ""))
+    ResultView(quiz: QuizData.shared.quiz, result: dummyResults[0], focus: dummyFocuses[0], subject: Subject(id: 1, name: "GGP", imageAddress: ""))
 }
