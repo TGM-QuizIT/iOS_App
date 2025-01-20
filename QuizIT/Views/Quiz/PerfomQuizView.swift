@@ -10,7 +10,7 @@ import SwiftUI
 struct PerfomQuizView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var network: Network
-
+    
     
     @State private var selectedAnswerIndices: Set<Int> = []
     @State private var selectedAnswerScale: CGFloat = 1.0
@@ -20,8 +20,8 @@ struct PerfomQuizView: View {
     
     @State private var showResult: Bool = false
     @State private var result: Result?
-
-
+    
+    
     
     var focus: Focus
     var subject: Subject
@@ -132,23 +132,18 @@ struct PerfomQuizView: View {
                         }
                         selectedAnswerIndices.removeAll()
                     } else {
-                        // Result speichern
-                        if let user = network.user {
-                            self.result = Result(id: -1, score: 0, userId: user.id , focus: focus, date: Date())
-                        }
-                        if let result = self.result {
-                            self.result?.score = calcQuizReult(questions: quiz.questions)
-                            
-                            self.network.postFocusResult(result: result) { error in
+                        //self.result?.score = calcQuizReult(questions: quiz.questions)
+                        
+                        self.network.postFocusResult(score: calcQuizReult(questions: quiz.questions), focusId: self.focus.id) { result, error in
+                            if var result = result {
+                                result.focus = self.focus
+                                self.result = result
+                                showResult.toggle()
+                            } else {
                                 if let error = error {
                                     print(error)
-                                } else {
-                                    print("successfull")
                                 }
                             }
-
-                            print(self.result)
-                            showResult.toggle()
                         }
                         
                         
@@ -189,24 +184,24 @@ struct PerfomQuizView: View {
 
 extension PerfomQuizView {
     func handleAnswerSelection(for answerIndex: Int) {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                let isMultipleChoice = quiz.questions[currentQuestionIndex].mChoice
-                
-                if isMultipleChoice {
-                    if selectedAnswerIndices.contains(answerIndex) {
-                        selectedAnswerIndices.remove(answerIndex)
-                    } else {
-                        selectedAnswerIndices.insert(answerIndex)
-                    }
+        withAnimation(.easeInOut(duration: 0.2)) {
+            let isMultipleChoice = quiz.questions[currentQuestionIndex].mChoice
+            
+            if isMultipleChoice {
+                if selectedAnswerIndices.contains(answerIndex) {
+                    selectedAnswerIndices.remove(answerIndex)
                 } else {
-                    if selectedAnswerIndices.contains(answerIndex) {
-                        selectedAnswerIndices.remove(answerIndex)
-                    } else {
-                        selectedAnswerIndices = [answerIndex]
-                    }
+                    selectedAnswerIndices.insert(answerIndex)
+                }
+            } else {
+                if selectedAnswerIndices.contains(answerIndex) {
+                    selectedAnswerIndices.remove(answerIndex)
+                } else {
+                    selectedAnswerIndices = [answerIndex]
                 }
             }
         }
+    }
     
     func answerCard(questionAnswerText: String, isSelected: Bool, scale: CGFloat) -> some View {
         ZStack {
@@ -282,7 +277,7 @@ struct CustomAlertView: View {
             VStack(spacing: 1) {
                 HStack {
                     Spacer()
-                   
+                    
                     Spacer()
                     Button(action: {
                         withAnimation(.easeInOut) {
@@ -295,7 +290,7 @@ struct CustomAlertView: View {
                             .padding()
                     }
                 }
-            
+                
                 
                 
                 ScrollView {
@@ -333,8 +328,8 @@ struct LeftRoundedRectangle: Shape {
         focus: dummyFocuses[0],
         subject: Subject(id: 1, name: "GGP",imageAddress: ""), quiz: QuizData.shared.quiz
     )
-
-
+    
+    
 }
 
 //                HStack(spacing:0) {

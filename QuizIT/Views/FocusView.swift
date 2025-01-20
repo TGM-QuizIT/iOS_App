@@ -152,7 +152,7 @@ extension FocusView {
                         .font(Font.custom("Poppins-SemiBold", size: 16))
                         .padding(.leading, 50)
 
-                    Text("147 Fragen im Pool")
+                    Text("\(focusList.reduce(0) { $0 + $1.questionCount }) Fragen im Pool")
                         .font(Font.custom("Poppins-Regular", size: 12))
                         .padding(.leading, 50)
                         .padding(.bottom, 35)

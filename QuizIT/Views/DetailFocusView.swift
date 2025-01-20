@@ -150,7 +150,7 @@ extension DetailFocusView {
                 }
 
                 Spacer()
-                Text(result.dateToString()).font(
+                Text(result.date.formatted(date: .abbreviated, time: .omitted)).font(
                     .custom("Roboto-Bold", size: 20))
                 Spacer()
                 ZStack {

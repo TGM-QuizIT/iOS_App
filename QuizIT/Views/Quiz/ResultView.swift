@@ -69,12 +69,13 @@ struct ResultView: View {
                                 .foregroundColor(.blue)
                                 .rotationEffect(.degrees(-90))
 
-                    Text("\(Int(self.result.score/5 * 100))%")
+                    Text("\(Int(self.result.score))%")
                         .font(.title2)
                                 .bold()
                         }
                         .frame(width: 85, height: 85)
                 Spacer()
+                
             }
             .padding(.leading,22)
             
