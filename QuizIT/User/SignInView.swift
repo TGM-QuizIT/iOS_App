@@ -90,6 +90,7 @@ struct SignInView: View {
                     .font(.custom("Poppins-SemiBold", size: 12))
                     .foregroundStyle(.red)
             }
+            //TODO: Anzeige / Verschwinden mittels Opacity, damit UI nicht verschoben wird
 
             Image("Logo_SignIn")
                 .resizable()
@@ -117,10 +118,15 @@ struct SignInView: View {
             text, success in
             if success {
                 if let user = network.user {
-                    UserManager.shared.saveUser(user: user)
+                    print(user.blocked)
+                    if user.blocked == false {
+                        UserManager.shared.saveUser(user: user)
+                        self.showSignInView = false
+                    }
+                    else {
+                        self.errorMessage = "Du bist blockiert. Wende dich an deinen KV, um wieder freigeschalten zu werden."
+                    }
                 }
-
-                self.showSignInView = false
             } else {
                 if let t = text {
                     if t == "Invalid Credentials" {
