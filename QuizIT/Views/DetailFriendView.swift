@@ -138,7 +138,7 @@ extension DetailFriendView {
                             .padding()
                             .padding(.top, -43)
                         
-                        URLImage(URL(string:result.focus.imageAddress)!) { image in
+                        URLImage(URL(string:result.focus?.imageAddress ?? "")!) { image in
                             image
                                 .resizable()
                                 .frame(width: 169, height: 65)
@@ -148,7 +148,7 @@ extension DetailFriendView {
                     }
                     
                     VStack(alignment: .center) {
-                        Text(result.focus.name)
+                        Text(result.focus?.name ?? "")
                             .font(Font.custom("Poppins-SemiBold", size: 11))
                             .padding(.top, -10)
                         // Fortschrittsanzeige

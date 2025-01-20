@@ -14,4 +14,5 @@ struct Response: Codable {
     let subjects: [Subject]?
     let focus: [Focus]?
     let questions: [Question]?
+    let result: Result?
 }

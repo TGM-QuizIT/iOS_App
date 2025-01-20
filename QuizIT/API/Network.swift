@@ -157,8 +157,36 @@ class Network: ObservableObject {
             }
     }
     
-    func fetchSubjectQuiz(id: Int, completion: @escaping ([Question]?, String) -> Void) {
+    func fetchSubjectQuiz(id: Int, completion: @escaping ([Question]?, String?) -> Void) {}
+    
+    func postFocusResult(result: Result, completion: @escaping(String?) -> Void) {
+        let parameters: [String: Any] = [
+            "resultScore": result.score,
+            "userId": result.userId,
+            "focusId": result.focus?.id ?? 1 //TODO: Sinnvoller Standardwert
+        ]
         
+        AF.request("\(self.baseUrl)/result", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: self.headers)
+            .validate(statusCode: 200...500)
+            .responseDecodable(of: Response.self) { res in
+                switch res.result {
+                case .success(let response):
+                    if let code = res.response?.statusCode {
+                        switch code {
+                        case 201:
+                            completion(nil)
+                        case 400...500:
+                            if let reason = response.reason {
+                                completion(reason)
+                            }
+                        default:
+                            completion("Unhandeled HTTP-Code")
+                        }
+                    }
+                case .failure(let error):
+                    completion("Request failed! Reason: \(error.localizedDescription)")
+                }
+            }
     }
 
 }

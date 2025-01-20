@@ -6,11 +6,11 @@
 //
 import Foundation
 
-struct Result: Identifiable, Hashable {
+struct Result: Codable, Identifiable, Hashable {
     let id: Int
     let score: Double
     let userId: Int
-    let focus: Focus
+    let focus: Focus?
     let date: Date
     
     init(id: Int, score: Double, userId: Int, focus: Focus, date: Date) {
@@ -24,6 +24,8 @@ struct Result: Identifiable, Hashable {
         case id = "resultId"
         case score = "resultScore"
         case date = "resultDate"
+        case userId
+        case focus
     }
     
     func dateToString() -> String {

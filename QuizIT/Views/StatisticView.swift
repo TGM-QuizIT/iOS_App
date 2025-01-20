@@ -127,7 +127,7 @@ extension StatisticView {
                             .padding()
                             .padding(.top, -43)
                         
-                        URLImage(URL(string:result.focus.imageAddress)!) { image in
+                        URLImage(URL(string:result.focus?.imageAddress ?? "")!) { image in
                             image
                                 .resizable()
                                 .frame(width: 169, height: 65)
@@ -137,7 +137,7 @@ extension StatisticView {
                     }
                     
                     VStack(alignment: .center) {
-                        Text(result.focus.name)
+                        Text(result.focus?.name ?? "")
                             .font(Font.custom("Poppins-SemiBold", size: 11))
                             .padding(.top, -10)
                         // Fortschrittsanzeige
@@ -191,7 +191,7 @@ struct StatisticChartView: View {
             
             Chart(lastResults) { result in
                 BarMark(
-                    x: .value("Fokus", result.focus.name),
+                    x: .value("Fokus", result.focus?.name ?? ""),
                     y: .value("Punkte", result.score)
                 )
                 .foregroundStyle(result.score >= 50 ? Color.blue : Color.red)  // Farbliche Unterscheidung basierend auf dem Score
