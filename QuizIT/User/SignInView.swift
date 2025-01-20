@@ -117,7 +117,12 @@ struct SignInView: View {
             text, success in
             if success {
                 if let user = network.user {
-                    UserManager.shared.saveUser(user: user)
+                    if user.blocked == false {
+                        UserManager.shared.saveUser(user: user)
+                    }
+                    else {
+                        self.errorMessage = "Du bist blockiert. \nWende dich an deinen KV, um wieder freigeschalten zu werden."
+                    }
                 }
 
                 self.showSignInView = false

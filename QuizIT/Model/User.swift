@@ -14,6 +14,7 @@ struct User: Identifiable, Hashable, Codable {
     let year: Int
     let uClass: String
     let role: String
+    let blocked: Bool
 
     init(
         id: Int, name: String, fullName: String, year: Int, uClass: String,
@@ -25,6 +26,7 @@ struct User: Identifiable, Hashable, Codable {
         self.year = year
         self.uClass = uClass
         self.role = role
+        self.blocked = false
     }
     enum CodingKeys: String, CodingKey {
         case id = "userId"
@@ -33,6 +35,7 @@ struct User: Identifiable, Hashable, Codable {
         case year = "userYear"
         case uClass = "userClass"
         case role = "userType"
+        case blocked = "userBlocked"
     }
 
 }
