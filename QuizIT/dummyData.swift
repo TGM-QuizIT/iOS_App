@@ -198,3 +198,51 @@ let dummyUser = [
         id: 5, name: "mturetschek", fullName: "Marcel Turetschek", year: 2,
         uClass: "2BHIT", role: "Schüler"),
 ]
+let dummyChallenges: [Challenge] = [
+    Challenge(
+        id: 1,
+        friendship: dummyFriendships[0],
+        focus: dummyFocuses[0],
+        subject: dummySubjects[0],
+        score1: 85.0,
+        score2: dummyResults[0],
+        date: Date(timeIntervalSince1970: 1_703_000_000)  // Beispiel für ein Datum
+    ),
+    Challenge(
+        id: 2,
+        friendship: dummyFriendships[1],
+        focus: dummyFocuses[1],
+        subject: dummySubjects[1],
+        score1: 78.5,
+        score2: dummyResults[1],
+        date: Date(timeIntervalSince1970: 1_705_000_000)  // Beispiel für ein Datum
+    ),
+    Challenge(
+        id: 3,
+        friendship: dummyFriendships[2],
+        focus: dummyFocuses[2],
+        subject: dummySubjects[2],
+        score1: 90.0,
+        score2: dummyResults[2],
+        date: Date(timeIntervalSince1970: 1_708_000_000)  // Beispiel für ein Datum
+    ),
+    Challenge(
+        id: 4,
+        friendship: dummyFriendships[3],
+        focus: dummyFocuses[0],
+        subject: dummySubjects[0],
+        score1: 88.0,
+        score2: dummyResults[3],
+        date: Date(timeIntervalSince1970: 1_709_000_000)  // Beispiel für ein Datum
+    ),
+    Challenge(
+        id: 5,
+        friendship: dummyFriendships[4],
+        focus: dummyFocuses[1],
+        subject: dummySubjects[1],
+        score1: 80.0,
+        score2: dummyResults[4],
+        date: Date()  // Aktuelles Datum
+    )
+]
+
