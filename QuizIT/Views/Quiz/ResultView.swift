@@ -64,7 +64,7 @@ struct ResultView: View {
                                 .foregroundColor(.blue)
 
                             Circle()
-                        .trim(from: 0.0, to: CGFloat(self.result.score/5))
+                        .trim(from: 0.0, to: CGFloat(self.result.score/100))
                                 .stroke(style: StrokeStyle(lineWidth: 15, lineCap: .round))
                                 .foregroundColor(.blue)
                                 .rotationEffect(.degrees(-90))

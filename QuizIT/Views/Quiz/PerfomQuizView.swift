@@ -194,14 +194,18 @@ extension PerfomQuizView {
                     selectedAnswerIndices.insert(answerIndex)
                 }
             } else {
-                if selectedAnswerIndices.contains(answerIndex) {
-                    selectedAnswerIndices.remove(answerIndex)
-                } else {
-                    selectedAnswerIndices = [answerIndex]
+                // Reset all options for Single-Choice
+                quiz.questions[currentQuestionIndex].options.indices.forEach { index in
+                    quiz.questions[currentQuestionIndex].options[index].selected = false
                 }
+                
+                // Set the newly selected answer
+                quiz.questions[currentQuestionIndex].options[answerIndex].selected = true
+                selectedAnswerIndices = [answerIndex]
             }
         }
     }
+
     
     func answerCard(questionAnswerText: String, isSelected: Bool, scale: CGFloat) -> some View {
         ZStack {
