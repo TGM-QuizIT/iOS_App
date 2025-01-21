@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct Friendship: Identifiable, Hashable {
+struct Friendship: Codable, Identifiable, Hashable {
     let id: Int
     let user2: User
     let pending: Int
@@ -20,8 +20,8 @@ struct Friendship: Identifiable, Hashable {
     }
     enum CodingKeys: String, CodingKey {
         case id = "friendshipId"
-        case user2 = "user2"
-        case since = "friend"
+        case user2 = "friend"
+        case since = "friendshipSince"
         case pending = "friendshipPending"
     }
     

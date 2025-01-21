@@ -84,7 +84,7 @@ class Network: ObservableObject {
                     if let code = res.response?.statusCode {
                         switch code {
                         case 200:
-                            completion(response.focus)
+                            completion(response.focuses)
                         case 400...500:
                             if let reason = response.reason {
                                 //TODO: Fehlerbehandlung
@@ -157,8 +157,45 @@ class Network: ObservableObject {
             }
     }
     
-    func fetchSubjectQuiz(id: Int, completion: @escaping ([Question]?, String) -> Void) {
+    func fetchSubjectQuiz(id: Int, completion: @escaping ([Question]?, String?) -> Void) {}
+    
+    func postFocusResult(score: Double, focusId: Int , completion: @escaping(Result?, String?) -> Void) {
+        let parameters: [String: Any] = [
+            "resultScore": score*20,
+            "userId": self.user?.id,
+            "focusId": focusId
+        ]
         
+        
+        let decoder = JSONDecoder()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        decoder.dateDecodingStrategy = .formatted(formatter)
+        
+        AF.request("\(self.baseUrl)/result", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: self.headers)
+            .validate(statusCode: 200...500)
+            .responseString { response in
+                    print("Raw response: \(response)")
+                }
+            .responseDecodable(of: Response.self, decoder: decoder) { res in
+                switch res.result {
+                case .success(let response):
+                    if let code = res.response?.statusCode {
+                        switch code {
+                        case 201:
+                            completion(response.result, nil)
+                        case 400...500:
+                            if let reason = response.reason {
+                                completion(nil, reason)
+                            }
+                        default:
+                            completion(nil, "Unhandeled HTTP-Code")
+                        }
+                    }
+                case .failure(let error):
+                    completion(nil, "Request failed! Reason: \(error.localizedDescription)")
+                }
+            }
     }
 
 }

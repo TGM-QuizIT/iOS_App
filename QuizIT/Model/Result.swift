@@ -6,11 +6,11 @@
 //
 import Foundation
 
-struct Result: Identifiable, Hashable {
+struct Result: Codable, Identifiable, Hashable {
     let id: Int
-    let score: Double
+    var score: Double
     let userId: Int
-    let focus: Focus
+    var focus: Focus?
     let date: Date
     
     init(id: Int, score: Double, userId: Int, focus: Focus, date: Date) {
@@ -23,13 +23,9 @@ struct Result: Identifiable, Hashable {
     enum CodingKeys: String, CodingKey {
         case id = "resultId"
         case score = "resultScore"
-        case date = "resultDate"
+        case date = "resultDateTime"
+        case userId = "userId"
+        case focus
     }
-    
-    func dateToString() -> String {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd.MM.yyyy"
-            return dateFormatter.string(from: date)
-        }
     
 }

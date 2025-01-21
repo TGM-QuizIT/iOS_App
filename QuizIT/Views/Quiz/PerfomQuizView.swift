@@ -9,6 +9,8 @@ import SwiftUI
 
 struct PerfomQuizView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var network: Network
+    
     
     @State private var selectedAnswerIndices: Set<Int> = []
     @State private var selectedAnswerScale: CGFloat = 1.0
@@ -17,9 +19,9 @@ struct PerfomQuizView: View {
     @State private var showQuestionDetail: Bool = false
     
     @State private var showResult: Bool = false
-    @State private var result: Double = 0
-
-
+    @State private var result: Result?
+    
+    
     
     var focus: Focus
     var subject: Subject
@@ -115,7 +117,7 @@ struct PerfomQuizView: View {
                 
                 Spacer()
                 
-                // Weiter-Button
+                
                 Button(action: {
                     
                     quiz.questions[currentQuestionIndex].score = calcQuestionResult(question: quiz.questions[currentQuestionIndex])
@@ -130,11 +132,21 @@ struct PerfomQuizView: View {
                         }
                         selectedAnswerIndices.removeAll()
                     } else {
+                        //self.result?.score = calcQuizReult(questions: quiz.questions)
                         
-                        self.result = calcQuizReult(questions: quiz.questions)
-                        print(self.result)
-                        showResult.toggle()
-                        print("Quiz beendet!")
+                        self.network.postFocusResult(score: calcQuizReult(questions: quiz.questions), focusId: self.focus.id) { result, error in
+                            if var result = result {
+                                result.focus = self.focus
+                                self.result = result
+                                showResult.toggle()
+                            } else {
+                                if let error = error {
+                                    print(error)
+                                }
+                            }
+                        }
+                        
+                        
                     }
                 }) {
                     Text(currentQuestionIndex < quiz.questions.count - 1 ? "Weiter" : "Beenden")
@@ -156,7 +168,7 @@ struct PerfomQuizView: View {
                 
             }
             .navigationDestination(isPresented: $showResult) {
-                ResultView(quiz: quiz, result: self.result, focus: dummyFocuses[0], subject: Subject(id: 1, name: "GGP", imageAddress: ""))
+                ResultView(quiz: quiz, result: self.result ?? dummyResults[0], focus: dummyFocuses[0], subject: Subject(id: 1, name: "GGP", imageAddress: ""))
             }
             .navigationBarBackButtonHidden(true)
             .onAppear {
@@ -172,24 +184,24 @@ struct PerfomQuizView: View {
 
 extension PerfomQuizView {
     func handleAnswerSelection(for answerIndex: Int) {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                let isMultipleChoice = quiz.questions[currentQuestionIndex].mChoice
-                
-                if isMultipleChoice {
-                    if selectedAnswerIndices.contains(answerIndex) {
-                        selectedAnswerIndices.remove(answerIndex)
-                    } else {
-                        selectedAnswerIndices.insert(answerIndex)
-                    }
+        withAnimation(.easeInOut(duration: 0.2)) {
+            let isMultipleChoice = quiz.questions[currentQuestionIndex].mChoice
+            
+            if isMultipleChoice {
+                if selectedAnswerIndices.contains(answerIndex) {
+                    selectedAnswerIndices.remove(answerIndex)
                 } else {
-                    if selectedAnswerIndices.contains(answerIndex) {
-                        selectedAnswerIndices.remove(answerIndex)
-                    } else {
-                        selectedAnswerIndices = [answerIndex]
-                    }
+                    selectedAnswerIndices.insert(answerIndex)
+                }
+            } else {
+                if selectedAnswerIndices.contains(answerIndex) {
+                    selectedAnswerIndices.remove(answerIndex)
+                } else {
+                    selectedAnswerIndices = [answerIndex]
                 }
             }
         }
+    }
     
     func answerCard(questionAnswerText: String, isSelected: Bool, scale: CGFloat) -> some View {
         ZStack {
@@ -265,7 +277,7 @@ struct CustomAlertView: View {
             VStack(spacing: 1) {
                 HStack {
                     Spacer()
-                   
+                    
                     Spacer()
                     Button(action: {
                         withAnimation(.easeInOut) {
@@ -278,7 +290,7 @@ struct CustomAlertView: View {
                             .padding()
                     }
                 }
-            
+                
                 
                 
                 ScrollView {
@@ -316,8 +328,8 @@ struct LeftRoundedRectangle: Shape {
         focus: dummyFocuses[0],
         subject: Subject(id: 1, name: "GGP",imageAddress: ""), quiz: QuizData.shared.quiz
     )
-
-
+    
+    
 }
 
 //                HStack(spacing:0) {
