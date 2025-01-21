@@ -96,7 +96,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "162"
             endingLineNumber = "162"
-            landmarkName = "postFocusResult(result:completion:)"
+            landmarkName = "fetchSubjectQuiz(id:completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

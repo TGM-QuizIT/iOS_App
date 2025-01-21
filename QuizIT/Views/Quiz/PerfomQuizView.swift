@@ -11,7 +11,6 @@ struct PerfomQuizView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var network: Network
     
-    
     @State private var selectedAnswerIndices: Set<Int> = []
     @State private var selectedAnswerScale: CGFloat = 1.0
     @State private var currentQuestionIndex: Int = 0 // Aktueller Fragenindex
@@ -133,18 +132,32 @@ struct PerfomQuizView: View {
                         selectedAnswerIndices.removeAll()
                     } else {
                         //self.result?.score = calcQuizReult(questions: quiz.questions)
-                        
-                        self.network.postFocusResult(score: calcQuizReult(questions: quiz.questions), focusId: self.focus.id) { result, error in
-                            if var result = result {
-                                result.focus = self.focus
-                                self.result = result
-                                showResult.toggle()
-                            } else {
-                                if let error = error {
-                                    print(error)
+                        if self.focus.id == 0 {
+                            self.network.postSubjectResult(score: calcQuizReult(questions: quiz.questions), subjectId: subject.id) { result, error in
+                                if var result = result {
+                                    result.subject = self.subject
+                                    self.result = result
+                                    showResult.toggle()
+                                } else {
+                                    if let error = error {
+                                        print(error)
+                                    }
+                                }
+                            }
+                        } else {
+                            self.network.postFocusResult(score: calcQuizReult(questions: quiz.questions), focusId: self.focus.id) { result, error in
+                                if var result = result {
+                                    result.focus = self.focus
+                                    self.result = result
+                                    showResult.toggle()
+                                } else {
+                                    if let error = error {
+                                        print(error)
+                                    }
                                 }
                             }
                         }
+                        
                         
                         
                     }
