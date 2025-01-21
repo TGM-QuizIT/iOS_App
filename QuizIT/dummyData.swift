@@ -95,7 +95,7 @@ let dummyFriendships: [Friendship] = [
     Friendship(
         id: 1,
         user2: dummyUser[0],
-        pending: 2,
+        pending: 1,
         since: Date(timeIntervalSince1970: 1_676_000_000)  // 2023-02-19
     ),
     Friendship(

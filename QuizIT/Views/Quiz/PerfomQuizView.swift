@@ -109,6 +109,11 @@ struct PerfomQuizView: View {
                         scale: selectedAnswerIndices.contains(answerIndex) ? 1.1 : 1.0
                     )
                     .onTapGesture {
+                        // Haptisches Feedback
+                        let generator = UIImpactFeedbackGenerator(style: .light)
+                                    generator.prepare()
+                                    generator.impactOccurred()
+                        
                         quiz.questions[currentQuestionIndex].options[answerIndex].selected.toggle()
                         handleAnswerSelection(for: answerIndex)
                     }
