@@ -23,7 +23,6 @@ struct MyFriendsView: View {
                     
                     VStack(alignment: .leading) {
                         Text("Deine Freunde").font(.custom("Poppins-SemiBold", size: 16))
-                            .padding(.top, 10)
                             .padding(.leading)
                         
                         ForEach(currentFriends, id: \.id) { friend in
@@ -39,7 +38,7 @@ struct MyFriendsView: View {
                         }
                         
                         Divider()
-                            .padding(20)
+                            .padding(10)
                         Text("Freundesanfragen").font(.custom("Poppins-SemiBold", size: 16))
                             .padding(.leading)
                         ForEach(friendRequests, id: \.id) { friend in
@@ -65,7 +64,7 @@ struct MyFriendsView: View {
                                 .foregroundColor(.white)
                                 .font(.system(size: 24, weight: .bold))
                         }
-                        .padding(.trailing, 20)
+                        .padding(.trailing, 1)
                         .padding(.bottom, 1)
                         .onTapGesture {
                             showAddFriendView.toggle()
