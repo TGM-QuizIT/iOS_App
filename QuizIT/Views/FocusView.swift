@@ -62,7 +62,7 @@ struct FocusView: View {
                     ForEach(focusList, id: \.self) { focus in
                         NavigationLink(
                             destination: DetailFocusView(
-                                focus: focus, quizHistroy: dummyResults,
+                                focus: focus, results: dummyResults,
                                 challenges: dummyChallenges)
                         ) {
                             FocusCard(focus: focus) {
