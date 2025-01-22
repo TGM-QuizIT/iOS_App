@@ -13,6 +13,10 @@ struct AddFriendView: View {
     @State private var searchText: String = ""
     var user: [User]
     
+    @Binding var showAddFriendView: Bool
+    
+    @State private var showAlert = false
+    
     var filteredUsers: [User] {
             if searchText.isEmpty {
                 return user
@@ -24,14 +28,13 @@ struct AddFriendView: View {
     var body: some View {
            VStack {
                ZStack {
-                   // Title in der Mitte
                    Text("Social")
                        .font(.custom("Poppins-SemiBold", size: 20))
                        .foregroundColor(.black)
                    
                    // Back Button
                    HStack {
-                       Spacer() // Platzhalter
+                       Spacer()
                            Button(action: {
                                dismiss()
                            }) {
@@ -73,13 +76,44 @@ struct AddFriendView: View {
                                    )
                            }
                            .padding(.top, 8)
-               
-               // Filtered User List
-               ScrollView {
-                   ForEach(filteredUsers, id: \.id) { user in
-                       UserCard(user: user)
+               ZStack {
+                   // Filtered User List
+                   ScrollView {
+                       ForEach(filteredUsers, id: \.id) { user in
+                           UserCard(user: user) {
+                               // TODO: Raphi Freund hinzufügen request (user als Parameter)
+                               withAnimation {
+                                          self.showAlert = true
+                                      }
+                               DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                           withAnimation {
+                                               self.showAlert = false
+                                           }
+                                   self.showAddFriendView = false
+                                       }
+                               
+                               
+                               
+                           }
+                       }
+                   }
+                   if showAlert {
+                       VStack {
+                           Spacer()
+                           Text("Freundschaftsanfrage gesendet!")
+                               .font(.custom("Poppins-SemiBold", size: 16))
+                               .padding()
+                               .background(Color.green)
+                               .cornerRadius(10)
+                               .foregroundColor(.white)
+                               .shadow(radius: 5)
+                               .transition(.move(edge: .bottom).combined(with: .opacity))
+                               .padding(.bottom, 20)
+                       }
+                       .frame(maxWidth: .infinity) 
                    }
                }
+               
                Spacer()
            }
            .onAppear {
@@ -89,31 +123,37 @@ struct AddFriendView: View {
 }
 
 extension AddFriendView {
-    func UserCard(user: User) -> some View {
-        ZStack {
-            HStack {
-                Image("Avatar")
-                VStack(alignment: .leading) {
-                    Text(user.fullName).font(
-                        .custom("Poppins-SemiBold", size: 12)
-                    )
-                    .padding(.leading,10)
-                    
-                    Text(user.uClass).font(
-                        .custom("Roboto-Regular", size: 12)
-                    )
-                    .padding(.leading,10)
-                    .foregroundStyle(.darkGrey)
-                    
+    func UserCard(user: User, tapAction: @escaping () -> Void ) -> some View {
+        HStack {
+            ZStack {
+                HStack {
+                    Image("Avatar")
+                    VStack(alignment: .leading) {
+                        Text(user.fullName).font(
+                            .custom("Poppins-SemiBold", size: 12)
+                        )
+                        .padding(.leading,10)
+                        
+                        Text(user.uClass).font(
+                            .custom("Roboto-Regular", size: 12)
+                        )
+                        .padding(.leading,10)
+                        .foregroundStyle(.darkGrey)
+                        
+                    }
+                    Spacer()
                 }
-                Spacer()
+                .padding(.leading)
+                .padding(.top, 16)
             }
-            .padding(.leading)
-            .padding(.top, 16)
         }
+        .onTapGesture {
+            tapAction()
+        }
+        
     }
 }
 
 #Preview {
-    AddFriendView(user: dummyUser)
+    AddFriendView(user: dummyUser, showAddFriendView: .constant(false))
 }

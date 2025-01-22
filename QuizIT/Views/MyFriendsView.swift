@@ -73,7 +73,7 @@ struct MyFriendsView: View {
                 }
             }
             .sheet(isPresented: $showAddFriendView) {
-                AddFriendView(user: dummyUser)
+                AddFriendView(user: dummyUser, showAddFriendView: $showAddFriendView)
             }
             
         }
