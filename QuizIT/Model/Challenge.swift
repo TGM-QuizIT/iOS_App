@@ -11,11 +11,11 @@ struct Challenge: Identifiable, Hashable {
     let friendship: Friendship
     let focus: Focus
     let subject: Subject
-    let score1: Double
+    let score1: Result
     let score2: Result
     let date: Date
     
-    init(id: Int, friendship: Friendship, focus: Focus, subject: Subject, score1: Double, score2: Result, date: Date) {
+    init(id: Int, friendship: Friendship, focus: Focus, subject: Subject, score1: Result, score2: Result, date: Date) {
         self.id = id
         self.friendship = friendship
         self.focus = focus

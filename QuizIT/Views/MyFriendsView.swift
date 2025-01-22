@@ -15,45 +15,69 @@ struct MyFriendsView: View {
     var friendRequests: [Friendship]
 
     var body: some View {
-        VStack {
-            Button(action: {
-                showAddFriendView.toggle()
-            }) {
-                Text("Freund hinzufügen").font(.custom("Poppins-SemiBold", size: 16))
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(width: 220,height: 40)
-                    .background(Color.accentColor)
-                    .cornerRadius(40)
+        ZStack {
+            ScrollView {
+                VStack {
+                    
+                    
+                    
+                    VStack(alignment: .leading) {
+                        Text("Deine Freunde").font(.custom("Poppins-SemiBold", size: 16))
+                            .padding(.top, 10)
+                            .padding(.leading)
+                        
+                        ForEach(currentFriends, id: \.id) { friend in
+                            NavigationLink(
+                                destination: DetailFriendView(
+                                    friendship: friend,
+                                    lastResults: dummyResults),
+                                label: {
+                                    CurrentFriendCard(friend: friend)
+                                }
+                            )
+                            .buttonStyle(PlainButtonStyle())
+                        }
+                        
+                        Divider()
+                            .padding(20)
+                        Text("Freundesanfragen").font(.custom("Poppins-SemiBold", size: 16))
+                            .padding(.leading)
+                        ForEach(friendRequests, id: \.id) { friend in
+                            FriendRequestCard(friend: friend)
+                        }
+                        
+                        Spacer()
+                    }
+                }
+            }
+            
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        ZStack {
+                            Circle()
+                                .fill(Color.blue)
+                                .frame(width: 60, height: 60)
+                                .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+                            
+                            Image(systemName: "plus")
+                                .foregroundColor(.white)
+                                .font(.system(size: 24, weight: .bold))
+                        }
+                        .padding(.trailing, 20)
+                        .padding(.bottom, 1)
+                        .onTapGesture {
+                            showAddFriendView.toggle()
+                        }
+                }
             }
             .sheet(isPresented: $showAddFriendView) {
                 AddFriendView(user: dummyUser)
             }
-
-            VStack(alignment: .leading) {
-                ForEach(currentFriends, id: \.id) { friend in
-                    NavigationLink(
-                        destination: DetailFriendView(
-                            friendship: friend,
-                            lastResults: dummyResults),
-                        label: {
-                            CurrentFriendCard(friend: friend)
-                        }
-                    )
-                    .buttonStyle(PlainButtonStyle())
-                }
-                Text("Freundesanfragen").font(.custom("Poppins-SemiBold", size: 16))
-                    .padding(.top, 30)
-                    .padding(.leading)
-                ForEach(friendRequests, id: \.id) { friend in
-                    FriendRequestCard(friend: friend)
-                }
-                
-                Spacer()
-
-                
-            }
+            
         }
+
         .onAppear {
             // TODO: Raphael Freunde (currentFriends & friendRequests) laden
         }
