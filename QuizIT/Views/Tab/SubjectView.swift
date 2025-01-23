@@ -25,8 +25,11 @@ struct SubjectView: View {
             else {
                 NavigationStack {
                     VStack(spacing: 1) {
-                        yourSubjectsSection()
-                            .padding(.top)
+                        Text("Fach auswählen")
+                            .font(.custom("Poppins-SemiBold", size: 20))
+                            .foregroundColor(.black)
+                            .padding(.top,20)
+                            .padding(.bottom,10)
                         
                         if self.subjects != [] {
                             ScrollView {
@@ -71,22 +74,7 @@ struct SubjectView: View {
 
 
 extension SubjectView {
-    private func yourSubjectsSection() -> some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.white)
-                .frame(width: 340, height: 60)
-                .shadow(radius: 10)
-            
-            HStack {
-                Text("Deine Fächer")
-                    .font(Font.custom("Poppins-SemiBold", size: 18))
-                    .padding(.leading, 40)
-                Spacer()
-                
-            }
-        }
-    }
+    
     
     private func SubjectCard(subject: Subject) -> some View {
         ZStack {
@@ -131,6 +119,7 @@ extension SubjectView {
                 VStack(alignment: .center) {
                     Text(subject.name)
                         .font(Font.custom("Poppins-SemiBold", size: 19))
+                        .foregroundStyle(.black)
                         .padding(.top, -10)
                     
                         Text("Schwerpunkte")

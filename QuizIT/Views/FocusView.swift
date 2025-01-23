@@ -108,6 +108,7 @@ struct FocusView: View {
         .onAppear {
             fetchFocus()
         }
+       
     }
 
     private func fetchFocus() {

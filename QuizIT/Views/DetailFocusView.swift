@@ -144,25 +144,30 @@ struct DetailFocusView: View {
                         subject: dummySubjects[0],
                         quiz: Quiz(questions: self.questions))
                 }
-                .navigationBarBackButtonHidden(true)
+
+                
             }
+
         }
         .onAppear() {
             self.loading = true
-            network.fetchResults(fId: self.focus.id, sId: nil) { results, error in
-                if let error = error {
-                    print(error)
-                    //TODO: Display error of some kind
-                } else {
-                    if let results = results {
-                        self.results = results.sorted { $0.score > $1.score}
+                network.fetchResults(fId: self.focus.id, sId: nil) { results, error in
+                    if let error = error {
+                        print(error)
+                        //TODO: Display error of some kind
+                    } else {
+                        if let results = results {
+                            self.results = results.sorted { $0.score > $1.score}
+                        }
                     }
                 }
-            }
+                
+                //TODO: Fetch challenge history
+                self.loading = false
             
-            //TODO: Fetch challenge history
-            self.loading = false
         }
+        .navigationBarBackButtonHidden(true)
+
         
     }
 }
