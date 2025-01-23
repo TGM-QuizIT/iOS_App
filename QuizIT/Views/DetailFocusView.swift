@@ -14,7 +14,7 @@ struct DetailFocusView: View {
     
     var focus: Focus
     
-    var results: [Result]
+    @State private var results: [Result] = []
     var challenges: [Challenge]
     
     @State private var showQuiz = false
@@ -22,124 +22,147 @@ struct DetailFocusView: View {
     @State private var questions: [Question] = []
     @State private var selectedFocus: Focus?
     
-    @State private var loadingQuiz = false
+    @State private var loading = false
     
     var body: some View {
         VStack {
-            NavigationHeader(title: focus.name) {
-                dismiss()
+            if self.loading {
+                CustomLoading()
             }
-            HStack {
-                Text("Deine Resultate").font(
-                    .custom("Poppins-SemiBold", size: 16)
-                )
-                .padding(.leading, 20)
-                Spacer()
-            }
-            if !self.results.isEmpty {
-                ScrollView {
-                    ForEach(Array(self.results.enumerated()), id: \.1) {
-                        index, result in
-                        QuizHistory(result: result, place: index + 1)
-                    }
-                }
-                .frame(height: UIScreen.main.bounds.height * 0.37)
-                .scrollIndicators(.hidden)
-            } else {
+            else {
                 VStack {
-                    Image("error")
-                        .resizable()
-                        .frame(width: 270)
-                    Text("Du hast noch kein Quiz zu diesem Schwerpunkt gespielt!")
-                        .font(.custom("Poppins-SemiBold", size: 16))
-                        .padding()
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(.darkGrey)
-                    
-                }
-                .frame(height: UIScreen.main.bounds.height * 0.37)
-            }
-            
-            
-            HStack {
-                Text("Herausforderungen").font(
-                    .custom("Poppins-SemiBold", size: 16)
-                )
-                .padding(.leading, 20)
-                Spacer()
-                //                Text("alle anzeigen").font(
-                //                    .custom("Poppins-SemiBold", size: 16)
-                //                )
-                //                .padding(.trailing, 20)
-            }
-            .padding(.top, 16)
-            if !challenges.isEmpty {
-                ScrollView(.horizontal) {
+                    NavigationHeader(title: focus.name) {
+                        dismiss()
+                    }
                     HStack {
-                        ForEach(self.challenges, id: \.self) { challenge in
-                            ChallengeCard(challenge: challenge)
-                        }
+                        Text("Deine Resultate").font(
+                            .custom("Poppins-SemiBold", size: 16)
+                        )
+                        .padding(.leading, 20)
+                        Spacer()
                     }
-                }
-                .scrollIndicators(.hidden)
-            } else {
-                VStack {
-                    Text("Du hast noch keine Herausforderungen!")
-                        .font(.custom("Poppins-SemiBold", size: 16))
-                        .padding()
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(.darkGrey)
-                    
-                }
-                .frame(height: 129)
-            }
-            
-            Button {
-                self.loadingQuiz = true
-                network.fetchFocusQuiz(id: focus.id) {
-                    questions, error in
-                    if let error = error {
-                        //display error
-                        print(error)
-                    } else {
-                        if let questions = questions {
-                            if questions == [] {
-                                //no questions error
-                                print("no questions in attribute")
-                            } else {
-                                //questions ready for next view
-                                self.questions = questions
-                                self.showQuiz = true
+                    if !self.results.isEmpty {
+                        ScrollView {
+                            ForEach(Array(self.results.enumerated()), id: \.1) {
+                                index, result in
+                                QuizHistory(result: result, place: index + 1)
                             }
                         }
+                        .frame(height: UIScreen.main.bounds.height * 0.37)
+                        .scrollIndicators(.hidden)
+                    } else {
+                        VStack {
+                            Image("error")
+                                .resizable()
+                                .frame(width: 270)
+                            Text("Du hast noch kein Quiz zu diesem Schwerpunkt gespielt!")
+                                .font(.custom("Poppins-SemiBold", size: 16))
+                                .padding()
+                                .multilineTextAlignment(.center)
+                                .foregroundStyle(.darkGrey)
+                            
+                        }
+                        .frame(height: UIScreen.main.bounds.height * 0.37)
                     }
+                    
+                    
+                    HStack {
+                        Text("Herausforderungen").font(
+                            .custom("Poppins-SemiBold", size: 16)
+                        )
+                        .padding(.leading, 20)
+                        Spacer()
+                        //                Text("alle anzeigen").font(
+                        //                    .custom("Poppins-SemiBold", size: 16)
+                        //                )
+                        //                .padding(.trailing, 20)
+                    }
+                    .padding(.top, 16)
+                    if !challenges.isEmpty {
+                        ScrollView(.horizontal) {
+                            HStack {
+                                ForEach(self.challenges, id: \.self) { challenge in
+                                    ChallengeCard(challenge: challenge)
+                                }
+                            }
+                        }
+                        .scrollIndicators(.hidden)
+                    } else {
+                        VStack {
+                            Text("Du hast noch keine Herausforderungen!")
+                                .font(.custom("Poppins-SemiBold", size: 16))
+                                .padding()
+                                .multilineTextAlignment(.center)
+                                .foregroundStyle(.darkGrey)
+                            
+                        }
+                        .frame(height: 129)
+                    }
+                    
+                    Button {
+                        self.loading = true
+                        network.fetchFocusQuiz(id: focus.id) {
+                            questions, error in
+                            if let error = error {
+                                //display error
+                                print(error)
+                            } else {
+                                if let questions = questions {
+                                    if questions == [] {
+                                        //no questions error
+                                        print("no questions in attribute")
+                                    } else {
+                                        //questions ready for next view
+                                        self.questions = questions
+                                        self.showQuiz = true
+                                    }
+                                }
+                            }
+                        }
+                        self.loading = false
+                    } label: {
+                        if loading {
+                            CustomLoading()
+                        } else {
+                            Text("Quiz starten").font(
+                                .custom("Poppins-SemiBold", size: 16)
+                            )
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(width: 340, height: 50)
+                            .background(Color.accentColor)
+                            .cornerRadius(10)
+                        }
+                    }
+                    
+                    
+                    Spacer()
                 }
-                self.loadingQuiz = false
-            } label: {
-                if loadingQuiz {
-                    CustomLoading()
+                .navigationDestination(isPresented: $showQuiz) {
+                    PerfomQuizView(
+                        focus: selectedFocus ?? dummyFocuses[0],
+                        subject: dummySubjects[0],
+                        quiz: Quiz(questions: self.questions))
+                }
+                .navigationBarBackButtonHidden(true)
+            }
+        }
+        .onAppear() {
+            self.loading = true
+            network.fetchResults(fId: self.focus.id, sId: nil) { results, error in
+                if let error = error {
+                    print(error)
+                    //TODO: Display error of some kind
                 } else {
-                    Text("Quiz starten").font(
-                        .custom("Poppins-SemiBold", size: 16)
-                    )
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(width: 340, height: 50)
-                    .background(Color.accentColor)
-                    .cornerRadius(10)
+                    if let results = results {
+                        self.results = results.sorted { $0.score > $1.score}
+                    }
                 }
             }
             
-            
-            Spacer()
+            //TODO: Fetch challenge history
+            self.loading = false
         }
-        .navigationDestination(isPresented: $showQuiz) {
-            PerfomQuizView(
-                focus: selectedFocus ?? dummyFocuses[0],
-                subject: dummySubjects[0],
-                quiz: Quiz(questions: self.questions))
-        }
-        .navigationBarBackButtonHidden(true)
         
     }
 }
@@ -278,5 +301,5 @@ extension DetailFocusView {
 }
 
 #Preview {
-    DetailFocusView(focus: dummyFocuses[0], results: dummyResults, challenges: dummyChallenges)
+    DetailFocusView(focus: dummyFocuses[0], challenges: dummyChallenges)
 }
