@@ -36,12 +36,33 @@ struct FocusView: View {
                         dismiss()
                     }
 
-                    AllFocusCard(subject: subject)
+                    AllFocusCard(subject: subject) {
+                        self.loadingQuiz = true
+                        self.selectedFocus = Focus(id: 0, name: subject.name, year: 0, questionCount: 1, imageAddress: "")
+                        network.fetchSubjectQuiz(id: subject.id) { questions, error in
+                            if let error = error {
+                                //display error
+                                print(error)
+                            } else {
+                                if let questions = questions {
+                                    if questions == [] {
+                                        //no questions error
+                                        print("no questions in attribute")
+                                    } else {
+                                        //questions ready for next view
+                                        self.questions = questions
+                                        self.showQuiz = true
+                                    }
+                                }
+                            }
+                        }
+                        self.loadingQuiz = false
+                    }
 
                     ForEach(focusList, id: \.self) { focus in
                         NavigationLink(
                             destination: DetailFocusView(
-                                focus: focus, quizHistroy: dummyResults,
+                                focus: focus, results: dummyResults,
                                 challenges: dummyChallenges)
                         ) {
                             FocusCard(focus: focus) {
@@ -77,8 +98,7 @@ struct FocusView: View {
                 }
                 .navigationDestination(isPresented: $showQuiz) {
                     PerfomQuizView(
-                        focus: selectedFocus ?? dummyFocuses[0],
-                        subject: dummySubjects[0],
+                        focus: selectedFocus ?? dummyFocuses[0], subject: self.subject,
                         quiz: Quiz(questions: self.questions))
                 }
                 .navigationBarBackButtonHidden(true)
@@ -104,15 +124,13 @@ struct FocusView: View {
 }
 
 extension FocusView {
-    private func AllFocusCard(subject: Subject) -> some View {
+    private func AllFocusCard(subject: Subject, quizAction: @escaping () -> Void) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color.lightGrey)
                 .frame(width: 347, height: 110)
                 .padding(6)
-            Button(action: {
-                self.showQuiz = true
-            }) {
+            Button(action: quizAction) {
                 Text("Quiz starten").font(.custom("Poppins-SemiBold", size: 12))
                     .foregroundColor(.black)
                     .padding()

@@ -95,7 +95,7 @@ let dummyFriendships: [Friendship] = [
     Friendship(
         id: 1,
         user2: dummyUser[0],
-        pending: 2,
+        pending: 1,
         since: Date(timeIntervalSince1970: 1_676_000_000)  // 2023-02-19
     ),
     Friendship(
@@ -204,7 +204,7 @@ let dummyChallenges: [Challenge] = [
         friendship: dummyFriendships[0],
         focus: dummyFocuses[0],
         subject: dummySubjects[0],
-        score1: 85.0,
+        score1: dummyResults[0],
         score2: dummyResults[0],
         date: Date(timeIntervalSince1970: 1_703_000_000)  // Beispiel für ein Datum
     ),
@@ -213,7 +213,7 @@ let dummyChallenges: [Challenge] = [
         friendship: dummyFriendships[1],
         focus: dummyFocuses[1],
         subject: dummySubjects[1],
-        score1: 78.5,
+        score1: dummyResults[0],
         score2: dummyResults[1],
         date: Date(timeIntervalSince1970: 1_705_000_000)  // Beispiel für ein Datum
     ),
@@ -222,7 +222,7 @@ let dummyChallenges: [Challenge] = [
         friendship: dummyFriendships[2],
         focus: dummyFocuses[2],
         subject: dummySubjects[2],
-        score1: 90.0,
+        score1: dummyResults[0],
         score2: dummyResults[2],
         date: Date(timeIntervalSince1970: 1_708_000_000)  // Beispiel für ein Datum
     ),
@@ -231,7 +231,7 @@ let dummyChallenges: [Challenge] = [
         friendship: dummyFriendships[3],
         focus: dummyFocuses[0],
         subject: dummySubjects[0],
-        score1: 88.0,
+        score1: dummyResults[0],
         score2: dummyResults[3],
         date: Date(timeIntervalSince1970: 1_709_000_000)  // Beispiel für ein Datum
     ),
@@ -240,7 +240,7 @@ let dummyChallenges: [Challenge] = [
         friendship: dummyFriendships[4],
         focus: dummyFocuses[1],
         subject: dummySubjects[1],
-        score1: 80.0,
+        score1: dummyResults[0],
         score2: dummyResults[4],
         date: Date()  // Aktuelles Datum
     )

@@ -78,6 +78,8 @@ extension DetailFriendView {
                             ? "pending_friend"
                             : friendship.pending == 2
                                 ? "check_white" : "default")
+                .resizable()
+                .frame(width: 15, height: 15)
                 Text(
                     friendship.pending == 0
                         ? "anfreunden"

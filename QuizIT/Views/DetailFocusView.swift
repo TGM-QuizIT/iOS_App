@@ -10,20 +10,20 @@ import SwiftUI
 struct DetailFocusView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var network: Network
-
-
+    
+    
     var focus: Focus
-
-    var quizHistroy: [Result]
+    
+    var results: [Result]
     var challenges: [Challenge]
     
     @State private var showQuiz = false
-
+    
     @State private var questions: [Question] = []
     @State private var selectedFocus: Focus?
-
+    
     @State private var loadingQuiz = false
-
+    
     var body: some View {
         VStack {
             NavigationHeader(title: focus.name) {
@@ -36,36 +36,63 @@ struct DetailFocusView: View {
                 .padding(.leading, 20)
                 Spacer()
             }
-
-            ScrollView {
-                ForEach(Array(self.quizHistroy.enumerated()), id: \.1) {
-                    index, result in
-                    QuizHistory(result: result, place: index + 1)
+            if !self.results.isEmpty {
+                ScrollView {
+                    ForEach(Array(self.results.enumerated()), id: \.1) {
+                        index, result in
+                        QuizHistory(result: result, place: index + 1)
+                    }
                 }
+                .frame(height: UIScreen.main.bounds.height * 0.37)
+                .scrollIndicators(.hidden)
+            } else {
+                VStack {
+                    Image("error")
+                        .resizable()
+                        .frame(width: 270)
+                    Text("Du hast noch kein Quiz zu diesem Schwerpunkt gespielt!")
+                        .font(.custom("Poppins-SemiBold", size: 16))
+                        .padding()
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.darkGrey)
+                    
+                }
+                .frame(height: UIScreen.main.bounds.height * 0.37)
             }
-            .frame(height: 310)
-            .scrollIndicators(.hidden)
-
+            
+            
             HStack {
                 Text("Herausforderungen").font(
                     .custom("Poppins-SemiBold", size: 16)
                 )
                 .padding(.leading, 20)
                 Spacer()
-//                Text("alle anzeigen").font(
-//                    .custom("Poppins-SemiBold", size: 16)
-//                )
-//                .padding(.trailing, 20)
+                //                Text("alle anzeigen").font(
+                //                    .custom("Poppins-SemiBold", size: 16)
+                //                )
+                //                .padding(.trailing, 20)
             }
             .padding(.top, 16)
+            if !challenges.isEmpty {
                 ScrollView(.horizontal) {
                     HStack {
-                    ForEach(self.challenges, id: \.self) { challenge in
-                        ChallengeCard(challenge: challenge)
+                        ForEach(self.challenges, id: \.self) { challenge in
+                            ChallengeCard(challenge: challenge)
+                        }
                     }
                 }
-            }
                 .scrollIndicators(.hidden)
+            } else {
+                VStack {
+                    Text("Du hast noch keine Herausforderungen!")
+                        .font(.custom("Poppins-SemiBold", size: 16))
+                        .padding()
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.darkGrey)
+                    
+                }
+                .frame(height: 129)
+            }
             
             Button {
                 self.loadingQuiz = true
@@ -100,11 +127,10 @@ struct DetailFocusView: View {
                     .frame(width: 340, height: 50)
                     .background(Color.accentColor)
                     .cornerRadius(10)
-                    .padding(10)
                 }
             }
             
-
+            
             Spacer()
         }
         .navigationDestination(isPresented: $showQuiz) {
@@ -114,7 +140,7 @@ struct DetailFocusView: View {
                 quiz: Quiz(questions: self.questions))
         }
         .navigationBarBackButtonHidden(true)
-
+        
     }
 }
 
@@ -124,14 +150,14 @@ extension DetailFocusView {
             RoundedRectangle(cornerRadius: 15)
                 .fill(Color.lightBlue)
                 .frame(width: 350, height: 70)
-
+            
             HStack {
                 if place == 1 {
                     Image("trophy_gold")
                         .resizable()
                         .frame(width: 45, height: 45)
                         .padding(.leading, 44)
-
+                    
                 } else if place == 2 {
                     Image("trophy_silver")
                         .resizable()
@@ -146,9 +172,9 @@ extension DetailFocusView {
                     Text("#" + place.description).font(
                         .custom("Roboto-Bold", size: 20)
                     )
-                    .padding(.leading, 44)
+                    .padding(.leading, 55)
                 }
-
+                
                 Spacer()
                 Text(result.date.formatted(date: .abbreviated, time: .omitted)).font(
                     .custom("Roboto-Bold", size: 20))
@@ -158,7 +184,7 @@ extension DetailFocusView {
                         .stroke(lineWidth: 7)
                         .opacity(0.2)
                         .foregroundColor(.blue)
-
+                    
                     Circle()
                         .trim(from: 0.0, to: CGFloat(result.score / 100))
                         .stroke(
@@ -166,16 +192,16 @@ extension DetailFocusView {
                         )
                         .foregroundColor(.blue)
                         .rotationEffect(.degrees(-90))
-
+                    
                     Text("\(Int(result.score))%")
                         .font(.subheadline)
                         .bold()
                 }
                 .frame(width: 50, height: 50)
                 .padding(.trailing, 44)
-
+                
             }
-
+            
         }
     }
     private func ChallengeCard(challenge: Challenge) -> some View {
@@ -183,9 +209,9 @@ extension DetailFocusView {
             RoundedRectangle(cornerRadius: 15)
                 .fill(Color.base)
                 .frame(width: 200, height: 129)
-                // .shadow(radius: 5)
+            // .shadow(radius: 5)
                 .padding()
-
+            
             VStack {
                 ZStack {
                     Rectangle()
@@ -197,9 +223,9 @@ extension DetailFocusView {
                         )
                         .padding()
                         .padding(.top, -43)
-
+                    
                 }
-
+                
                 VStack(alignment: .center) {
                     Text(challenge.focus.name)
                         .font(Font.custom("Poppins-SemiBold", size: 11))
@@ -209,25 +235,25 @@ extension DetailFocusView {
                         RoundedRectangle(cornerRadius: 5)
                             .fill(Color.lightBlue)
                             .frame(width: 143.28, height: 16)
-
-                        ProgressView(value: challenge.score1 / 100)
+                        
+                        ProgressView(value: challenge.score1.score / 100)
                             .progressViewStyle(
                                 LinearProgressViewStyle(
-                                    tint: challenge.score1 >= 40 ? .blue : .red)
+                                    tint: challenge.score1.score >= 40 ? .blue : .red)
                             )
                             .frame(width: 143.28, height: 50)
                             .scaleEffect(x: 1, y: 4, anchor: .center)
                             .cornerRadius(20)
                             .animation(
                                 .easeInOut(duration: 0.5), value: 0.2 / 100)
-
-                        Text(challenge.score1.description + "%")
+                        
+                        Text(challenge.score1.score.description + "%")
                             .font(.system(size: 12, weight: .bold))
                             .foregroundColor(
-                                challenge.score1 >= 40 ? .white : .black)
+                                challenge.score1.score >= 40 ? .white : .black)
                     }
                     .padding(.top, -15)
-
+                    
                 }
             }
             Spacer()
@@ -243,7 +269,7 @@ extension DetailFocusView {
                 .lineLimit(1)
                 Text(challenge.friendship.user2.uClass).font(
                     .custom("Poppins-Regular", size: 12))
-
+                
             }
             .padding(.bottom, 100)
             .padding(.leading, 70)
@@ -252,5 +278,5 @@ extension DetailFocusView {
 }
 
 #Preview {
-    DetailFocusView(focus: dummyFocuses[0], quizHistroy: dummyResults, challenges: dummyChallenges)
+    DetailFocusView(focus: dummyFocuses[0], results: dummyResults, challenges: dummyChallenges)
 }

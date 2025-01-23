@@ -11,7 +11,6 @@ struct PerfomQuizView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var network: Network
     
-    
     @State private var selectedAnswerIndices: Set<Int> = []
     @State private var selectedAnswerScale: CGFloat = 1.0
     @State private var currentQuestionIndex: Int = 0 // Aktueller Fragenindex
@@ -110,6 +109,11 @@ struct PerfomQuizView: View {
                         scale: selectedAnswerIndices.contains(answerIndex) ? 1.1 : 1.0
                     )
                     .onTapGesture {
+                        // Haptisches Feedback
+                        let generator = UIImpactFeedbackGenerator(style: .light)
+                                    generator.prepare()
+                                    generator.impactOccurred()
+                        
                         quiz.questions[currentQuestionIndex].options[answerIndex].selected.toggle()
                         handleAnswerSelection(for: answerIndex)
                     }
@@ -133,18 +137,32 @@ struct PerfomQuizView: View {
                         selectedAnswerIndices.removeAll()
                     } else {
                         //self.result?.score = calcQuizReult(questions: quiz.questions)
-                        
-                        self.network.postFocusResult(score: calcQuizReult(questions: quiz.questions), focusId: self.focus.id) { result, error in
-                            if var result = result {
-                                result.focus = self.focus
-                                self.result = result
-                                showResult.toggle()
-                            } else {
-                                if let error = error {
-                                    print(error)
+                        if self.focus.id == 0 {
+                            self.network.postSubjectResult(score: calcQuizReult(questions: quiz.questions), subjectId: subject.id) { result, error in
+                                if var result = result {
+                                    result.subject = self.subject
+                                    self.result = result
+                                    showResult.toggle()
+                                } else {
+                                    if let error = error {
+                                        print(error)
+                                    }
+                                }
+                            }
+                        } else {
+                            self.network.postFocusResult(score: calcQuizReult(questions: quiz.questions), focusId: self.focus.id) { result, error in
+                                if var result = result {
+                                    result.focus = self.focus
+                                    self.result = result
+                                    showResult.toggle()
+                                } else {
+                                    if let error = error {
+                                        print(error)
+                                    }
                                 }
                             }
                         }
+                        
                         
                         
                     }
@@ -194,14 +212,18 @@ extension PerfomQuizView {
                     selectedAnswerIndices.insert(answerIndex)
                 }
             } else {
-                if selectedAnswerIndices.contains(answerIndex) {
-                    selectedAnswerIndices.remove(answerIndex)
-                } else {
-                    selectedAnswerIndices = [answerIndex]
+                // Reset all options for Single-Choice
+                quiz.questions[currentQuestionIndex].options.indices.forEach { index in
+                    quiz.questions[currentQuestionIndex].options[index].selected = false
                 }
+                
+                // Set the newly selected answer
+                quiz.questions[currentQuestionIndex].options[answerIndex].selected = true
+                selectedAnswerIndices = [answerIndex]
             }
         }
     }
+
     
     func answerCard(questionAnswerText: String, isSelected: Bool, scale: CGFloat) -> some View {
         ZStack {

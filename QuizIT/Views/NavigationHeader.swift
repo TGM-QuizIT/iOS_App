@@ -34,7 +34,7 @@ struct NavigationHeader: View {
                 .font(.custom("Poppins-SemiBold", size: 20))
                 .foregroundColor(.black)
         }
-        .padding(.top, 16)
+        .padding(.top, 10)
         .padding(.bottom, 8)
         .background(Color.white)
     }
