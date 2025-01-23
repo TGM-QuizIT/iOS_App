@@ -7,21 +7,23 @@
 
 import SwiftUI
 
-struct DetailFocusView: View {
+struct QuizHistoryView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var network: Network
     
     
-    var focus: Focus
+    var focus: Focus?
+    var subject: Subject?
     
     @State private var results: [Result] = []
-    var challenges: [Challenge]
+    @State private var challenges: [Challenge] = []
     
     @State private var showQuiz = false
     
     @State private var questions: [Question] = []
     @State private var selectedFocus: Focus?
     
+    @State private var errorMsg: String = ""
     @State private var loading = false
     
     var body: some View {
@@ -31,7 +33,7 @@ struct DetailFocusView: View {
             }
             else {
                 VStack {
-                    NavigationHeader(title: focus.name) {
+                    NavigationHeader(title: focus?.name ?? subject?.name ?? "") {
                         dismiss()
                     }
                     HStack {
@@ -41,7 +43,7 @@ struct DetailFocusView: View {
                         .padding(.leading, 20)
                         Spacer()
                     }
-                    if !self.results.isEmpty {
+                    if self.errorMsg == "" {
                         ScrollView {
                             ForEach(Array(self.results.enumerated()), id: \.1) {
                                 index, result in
@@ -50,12 +52,15 @@ struct DetailFocusView: View {
                         }
                         .frame(height: UIScreen.main.bounds.height * 0.37)
                         .scrollIndicators(.hidden)
+                        
+                        
+                        
                     } else {
                         VStack {
                             Image("error")
                                 .resizable()
                                 .frame(width: 270)
-                            Text("Du hast noch kein Quiz zu diesem Schwerpunkt gespielt!")
+                            Text(errorMsg)
                                 .font(.custom("Poppins-SemiBold", size: 16))
                                 .padding()
                                 .multilineTextAlignment(.center)
@@ -101,24 +106,48 @@ struct DetailFocusView: View {
                     
                     Button {
                         self.loading = true
-                        network.fetchFocusQuiz(id: focus.id) {
-                            questions, error in
-                            if let error = error {
-                                //display error
-                                print(error)
-                            } else {
-                                if let questions = questions {
-                                    if questions == [] {
-                                        //no questions error
-                                        print("no questions in attribute")
-                                    } else {
-                                        //questions ready for next view
-                                        self.questions = questions
-                                        self.showQuiz = true
+                        if let focus = focus {
+                            network.fetchFocusQuiz(id: focus.id) {
+                                questions, error in
+                                if let error = error {
+                                    //display error
+                                    print(error)
+                                } else {
+                                    if let questions = questions {
+                                        if questions == [] {
+                                            //no questions error
+                                            print("no questions in attribute")
+                                        } else {
+                                            //questions ready for next view
+                                            self.questions = questions
+                                            self.showQuiz = true
+                                        }
                                     }
                                 }
                             }
+                        } else if let subject = subject {
+                            network.fetchSubjectQuiz(id: subject.id) {
+                                questions, error in
+                                if let error = error {
+                                    //display error
+                                    print(error)
+                                } else {
+                                    if let questions = questions {
+                                        if questions == [] {
+                                            //no questions error
+                                            print("no questions in attribute")
+                                        } else {
+                                            //questions ready for next view
+                                            self.questions = questions
+                                            self.showQuiz = true
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            print("Fehler beim Laden der Fragen.")
                         }
+                        
                         self.loading = false
                     } label: {
                         if loading {
@@ -151,10 +180,10 @@ struct DetailFocusView: View {
         }
         .onAppear() {
             self.loading = true
-                network.fetchResults(fId: self.focus.id, sId: nil) { results, error in
+            network.fetchResults(fId: self.focus?.id, sId: self.subject?.id) { results, error in
                     if let error = error {
                         print(error)
-                        //TODO: Display error of some kind
+                        self.errorMsg = "Deine Resultate konnten nicht geladen werden. Versuche es später erneut."
                     } else {
                         if let results = results {
                             self.results = results.sorted { $0.score > $1.score}
@@ -172,7 +201,7 @@ struct DetailFocusView: View {
     }
 }
 
-extension DetailFocusView {
+extension QuizHistoryView {
     func QuizHistory(result: Result, place: Int) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 15)
@@ -306,5 +335,5 @@ extension DetailFocusView {
 }
 
 #Preview {
-    DetailFocusView(focus: dummyFocuses[0], challenges: dummyChallenges)
+    QuizHistoryView(focus: dummyFocuses[0])
 }
