@@ -112,6 +112,12 @@ struct MainMenu: View {
              //TODO: Fehlerbehandlung
             }
         }
+        
+        network.fetchFriendships() { accepted, pending, error in
+            if let error = error {
+                //TODO: Fehlerbehandlung
+            }
+        }
         self.loading = false
     }
 }
