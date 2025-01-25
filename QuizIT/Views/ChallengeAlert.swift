@@ -22,12 +22,12 @@ struct ChallengeAlert: View {
                 HStack {
                     
                     VStack(alignment: .leading) {
-                        Text(challenge.subject.name).font( 
+                        Text("challenge.subject.name").font( //TODO: RAPHI OPTIONAL WRAP
                             .custom("Poppins-Bold", size: 20))
                         .frame(maxWidth: 92)
                         .lineLimit(1)
                         
-                        Text(challenge.focus.name).font(
+                        Text("challenge.focus.name").font( //TODO: RAPHI OPTIONAL WRAP
                             .custom("Poppins-SemiBold", size: 16))
                     }
                     .padding(.leading,50)

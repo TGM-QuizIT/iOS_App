@@ -15,6 +15,7 @@ struct MainMenu: View {
     @EnvironmentObject var network: Network
     
     @State private var subjects: [Subject] = []
+    @State private var stats: Statistic? = nil
     @State private var loading = true
     
     var body: some View {
@@ -74,8 +75,9 @@ struct MainMenu: View {
                                     .padding(.trailing)
                             }
                             .padding(.top)
-                            
-                            StatisticCard()
+                            if let stats = self.stats {
+                                StatisticCard(stats: stats)
+                            }
                             
                             
                         }
@@ -89,18 +91,25 @@ struct MainMenu: View {
             }
         }
         .onAppear {
-            fetchSubjects()
+            handleRequests()
         }
     }
     
-    private func fetchSubjects() {
+    private func handleRequests() {
         self.loading = true
-        network.fetchSubjects() { text in
-            if let t = text {
+        network.fetchSubjects() { error in
+            if let error = error {
                 //TODO: Fehlerbehandlung, wenn Fächer nicht abrufbar waren
             }
             else {
                 self.subjects = network.subjects ?? []
+            }
+        }
+        network.fetchUserStats() { stats, error in
+            if let stats = stats {
+                self.stats = stats
+            } else if let error = error {
+             //TODO: Fehlerbehandlung
             }
         }
         self.loading = false
@@ -184,7 +193,7 @@ extension MainMenu {
 
     }
     
-    private func StatisticCard() -> some View {
+    private func StatisticCard(stats: Statistic) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 20)
                 .fill(Color.accentColor)
@@ -193,14 +202,14 @@ extension MainMenu {
                 .padding()
             HStack {
                 VStack {
-                    Image(systemName: "star.fill")
+                    Image(systemName: "trophy.fill")
                         .font(.title2)
                         .foregroundStyle(Color.white)
                     
-                    Text("Punkte")
+                    Text("Challenges")
                         .font(.title3)
                         .foregroundStyle(Color.white.opacity(0.5))
-                    Text("540")
+                    Text("\(Int(stats.winRate)) %")
                         .font(.title3)
                         .foregroundStyle(Color.white)
                     
@@ -217,10 +226,10 @@ extension MainMenu {
                         .font(.title2)
                         .foregroundStyle(Color.white)
                     
-                    Text("Platz")
+                    Text("TGM-Level")
                         .font(.title3)
                         .foregroundStyle(Color.white.opacity(0.5))
-                    Text("#1540")
+                    Text("#\(stats.rank)")
                         .font(.title3)
                         .foregroundStyle(Color.white)
                 }
@@ -231,14 +240,14 @@ extension MainMenu {
                     .foregroundStyle(.black)
                 
                 VStack {
-                    Image(systemName: "trophy.fill")
+                    Image(systemName: "flag.pattern.checkered")
                         .font(.title2)
                         .foregroundStyle(Color.white)
                     
                     Text("Score")
                         .font(.title3)
                         .foregroundStyle(Color.white.opacity(0.5))
-                    Text("79%")
+                    Text("\(Int(stats.average)) %")
                         .font(.title3)
                         .foregroundStyle(Color.white)
                 }

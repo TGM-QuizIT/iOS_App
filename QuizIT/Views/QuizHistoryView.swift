@@ -284,7 +284,7 @@ extension QuizHistoryView {
                 }
                 
                 VStack(alignment: .center) {
-                    Text(challenge.focus.name)
+                    Text("challenge.focus.name") //TODO: RAPHI OPTIONAL WRAP
                         .font(Font.custom("Poppins-SemiBold", size: 11))
                         .padding(.top, -10)
                     // Fortschrittsanzeige
@@ -293,20 +293,22 @@ extension QuizHistoryView {
                             .fill(Color.lightBlue)
                             .frame(width: 143.28, height: 16)
                         
-                        ProgressView(value: challenge.score1.score / 100)
+                        /*
+                        ProgressView(value: challenge.score1.score / 100) //TODO: RAPHI OPTIONAL WRAP
                             .progressViewStyle(
                                 LinearProgressViewStyle(
-                                    tint: challenge.score1.score >= 40 ? .blue : .red)
+                                    tint: challenge.score1.score >= 40 ? .blue : .red) //TODO: RAPHI OPTIONAL WRAP
                             )
                             .frame(width: 143.28, height: 50)
                             .scaleEffect(x: 1, y: 4, anchor: .center)
                             .cornerRadius(20)
                             .animation(
                                 .easeInOut(duration: 0.5), value: 0.2 / 100)
-                        Text(challenge.score1.score.description + "%")
+                        Text(challenge.score1.score.description + "%") //TODO: RAPHI OPTIONAL WRAP
                             .font(.system(size: 12, weight: .bold))
                             .foregroundColor(
                                 challenge.score1.score >= 40 ? .white : .black)
+                         */
                     }
                     .padding(.top, -15)
                     

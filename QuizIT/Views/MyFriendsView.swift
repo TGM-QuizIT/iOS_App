@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct MyFriendsView: View {
-
+    
     @EnvironmentObject var network: Network
     @State private var showAddFriendView = false
     @State private var loading = false
-
+    
     @State var currentFriends: [Friendship] = []
     @State var friendRequests: [Friendship] = []
-
+    
     var body: some View {
         VStack {
             if self.loading {
@@ -24,9 +24,6 @@ struct MyFriendsView: View {
                 ZStack {
                     ScrollView {
                         VStack {
-                            
-                            
-                            
                             VStack(alignment: .leading) {
                                 Text("Deine Freunde").font(.custom("Poppins-SemiBold", size: 16))
                                     .padding(.leading)
@@ -84,7 +81,7 @@ struct MyFriendsView: View {
                 }
             }
         }
-
+        
         .onAppear {
             self.loading = true
             network.fetchFriendships() { acceptedFriendships, pendingFriendships, reason in
@@ -111,13 +108,13 @@ extension MyFriendsView {
                         .custom("Poppins-SemiBold", size: 12)
                     )
                     .padding(.leading, 10)
-
+                    
                     Text(friend.user2.uClass).font(
                         .custom("Roboto-Regular", size: 12)
                     )
                     .padding(.leading, 10)
                     .foregroundStyle(.darkGrey)
-
+                    
                 }
                 Spacer()
             }
@@ -125,7 +122,7 @@ extension MyFriendsView {
             .padding(.top, 16)
         }
     }
-
+    
     func FriendRequestCard(friend: Friendship) -> some View {
         ZStack {
             HStack {
@@ -135,20 +132,26 @@ extension MyFriendsView {
                         .custom("Poppins-SemiBold", size: 12)
                     )
                     .padding(.leading, 10)
-
+                    
                     Text(friend.user2.uClass).font(
                         .custom("Roboto-Regular", size: 12)
                     )
                     .padding(.leading, 10)
                     .foregroundStyle(.darkGrey)
-
+                    
                 }
                 Spacer()
-
+                
                 Image("Accept")
-
+                    .onTapGesture {
+                        // freundschaftsanfrage annehmen
+                    }
+                
                 Image("Decline")
                     .padding(.horizontal, 10)
+                    .onTapGesture {
+                        // freundschaftsanfrage löschen
+                    }
             }
             .padding(.leading)
             .padding(.top, 16)
