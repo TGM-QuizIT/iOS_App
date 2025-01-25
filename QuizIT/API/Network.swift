@@ -109,7 +109,7 @@ class Network: ObservableObject {
                 }
             }
     }
-    // Stats abfragen
+    //Alle User abfragen
     
     /*------------Subject-Requests---------------*/
     func fetchSubjects(completion: @escaping (String?) -> Void) {
@@ -358,6 +358,62 @@ class Network: ObservableObject {
                 case .failure(let error):
                     print(error.localizedDescription)
                     completion(nil, nil, "Request failed! Reason: \(error.localizedDescription)")
+                }
+            }
+    }
+    
+    func acceptFriendship(id: Int, completion: @escaping(String?) -> Void) {
+        let parameters: [String: Any] = [
+            "id": id
+        ]
+        
+        let decoder = JSONDecoder()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        decoder.dateDecodingStrategy = .formatted(formatter)
+        
+        AF.request("\(self.baseUrl)/friends/accept", method: .put, parameters: parameters, encoding: JSONEncoding.default, headers: self.headers)
+            .validate(statusCode: 200...500)
+            .responseString() { response in
+                print(response)
+            }
+            .responseDecodable(of: Response.self, decoder: decoder) { res in
+                switch res.result {
+                case .success(let response):
+                    if let code = res.response?.statusCode {
+                        switch code {
+                        case 200:
+                            completion(nil)
+                        case 400...500:
+                            completion(response.reason)
+                        default:
+                            completion("Unhandeled HTTP-Code")
+                        }
+                    }
+                case .failure(let error):
+                    completion("Request failed! Reason: \(error)")
+                }
+            }
+    }
+    
+    func declineFriendship(id: Int, completion: @escaping(String?) -> Void) {
+        AF.request("\(self.baseUrl)/friends?id=\(id)", method: .delete, encoding: JSONEncoding.default, headers: self.headers)
+            .validate(statusCode: 200...500)
+            .responseDecodable(of: Response.self) { res in
+                switch res.result {
+                case .success(let response):
+                    if let code = res.response?.statusCode {
+                        switch code {
+                        case 200:
+                            completion(nil)
+                        case 400...500:
+                            completion(response.reason)
+                        default:
+                            completion("Unhandeled HTTP-Code")
+                        }
+                    }
+                case .failure(let error):
+                    completion("Request failed! Reason: \(error.localizedDescription)")
                 }
             }
     }

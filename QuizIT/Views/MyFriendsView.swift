@@ -144,13 +144,44 @@ extension MyFriendsView {
                 
                 Image("Accept")
                     .onTapGesture {
-                        // freundschaftsanfrage annehmen
+                        self.loading = true
+                        network.acceptFriendship(id: friend.id) { error in
+                            if let error = error {
+                                print(error)
+                            } else {
+                                network.fetchFriendships() { acceptedFriendships, pendingFriendships, reason in
+                                    if let acceptedFriendships = acceptedFriendships, let pendingFriendships = pendingFriendships {
+                                        self.currentFriends = acceptedFriendships
+                                        self.friendRequests = pendingFriendships.filter { $0.actionReq == true}
+                                    } else if let reason = reason {
+                                        print(reason)
+                                    }
+                                }
+                            }
+                        }
+                        
+                        self.loading = false
                     }
                 
                 Image("Decline")
                     .padding(.horizontal, 10)
                     .onTapGesture {
-                        // freundschaftsanfrage löschen
+                        self.loading = true
+                        network.declineFriendship(id: friend.id) { error in
+                            if let error = error {
+                                print(error)
+                            } else {
+                                network.fetchFriendships() { acceptedFriendships, pendingFriendships, reason in
+                                    if let acceptedFriendships = acceptedFriendships, let pendingFriendships = pendingFriendships {
+                                        self.currentFriends = acceptedFriendships
+                                        self.friendRequests = pendingFriendships.filter { $0.actionReq == true}
+                                    } else if let reason = reason {
+                                        print(reason)
+                                    }
+                                }
+                            }
+                        }
+                        self.loading = false
                     }
             }
             .padding(.leading)
