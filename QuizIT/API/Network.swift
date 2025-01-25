@@ -109,7 +109,28 @@ class Network: ObservableObject {
                 }
             }
     }
-    //Alle User abfragen
+    
+    func fetchAllUsers(completion: @escaping([User]? ,String?) -> Void) {
+        AF.request("\(self.baseUrl)/user", method: .get, headers: self.headers)
+            .validate(statusCode: 200..<500)
+            .responseDecodable(of: Response.self) { res in
+                switch res.result {
+                case .success(let response):
+                    if let code = res.response?.statusCode {
+                        switch code {
+                        case 200:
+                            completion(response.users, nil)
+                        case 400...500:
+                            completion(nil, response.reason)
+                        default:
+                            completion(nil, "Unhandeled HTTP-Code")
+                        }
+                    }
+                case .failure(let error):
+                    completion(nil, "Request failed! Reason: \(error.localizedDescription)")
+                }
+            }
+    }
     
     /*------------Subject-Requests---------------*/
     func fetchSubjects(completion: @escaping (String?) -> Void) {
