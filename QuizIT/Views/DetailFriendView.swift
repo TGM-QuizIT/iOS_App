@@ -33,7 +33,7 @@ struct DetailFriendView: View {
             )
             .fontWeight(.medium)
 
-            pendingFriendButton(friendship: friendship)
+            //pendingFriendButton(friendship: friendship)
 
             VStack(alignment: .leading) {
                 HStack {
@@ -66,13 +66,14 @@ struct DetailFriendView: View {
 }
 
 extension DetailFriendView {
+    /* TODO: Pending anpassen (kein Freundschafts-Objekt wenn keine Anfrage vorhanden ist)
     func pendingFriendButton(friendship: Friendship) -> some View {
         Button {
 
         } label: {
             HStack(spacing: 8) {
                 Image(
-                    friendship.pending == 0
+                    friendship.actionReq == 0
                         ? "add_friend"
                         : friendship.pending == 1
                             ? "pending_friend"
@@ -122,6 +123,7 @@ extension DetailFriendView {
             .cornerRadius(20)
         }
     }
+     */
     
     private func ResultCard(result: Result) -> some View {
             ZStack {

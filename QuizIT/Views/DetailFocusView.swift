@@ -274,7 +274,6 @@ extension DetailFocusView {
                             .cornerRadius(20)
                             .animation(
                                 .easeInOut(duration: 0.5), value: 0.2 / 100)
-                        
                         Text(challenge.score1.score.description + "%")
                             .font(.system(size: 12, weight: .bold))
                             .foregroundColor(

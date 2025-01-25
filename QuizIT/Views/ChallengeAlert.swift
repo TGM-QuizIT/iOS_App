@@ -22,7 +22,7 @@ struct ChallengeAlert: View {
                 HStack {
                     
                     VStack(alignment: .leading) {
-                        Text(challenge.subject.name).font(
+                        Text(challenge.subject.name).font( 
                             .custom("Poppins-Bold", size: 20))
                         .frame(maxWidth: 92)
                         .lineLimit(1)

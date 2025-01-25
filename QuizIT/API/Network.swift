@@ -9,7 +9,8 @@ import Foundation
 import Alamofire
 
 class Network: ObservableObject {
-    private let baseUrl = "https://projekte.tgm.ac.at/quizit/api"
+    private let baseUrl = "http://192.168.0.237:63000"
+    private let actualUrl = "https://projekte.tgm.ac.at/quizit/api"
     private let headers: HTTPHeaders = [
         "authorization" : Bundle.main.infoDictionary?["API_KEY"] as? String ?? ""
     ]
@@ -59,8 +60,10 @@ class Network: ObservableObject {
                     if let code = res.response?.statusCode {
                         switch code {
                         case 200:
-                            self.subjects = response.subjects
-                            completion(nil)
+                            if let subjects = response.subjects {
+                                self.subjects = subjects.sorted {$0.name < $1.name}
+                                completion(nil)
+                            }
                         case 400...500:
                             if let reason = response.reason {
                                 completion(reason)
@@ -84,7 +87,9 @@ class Network: ObservableObject {
                     if let code = res.response?.statusCode {
                         switch code {
                         case 200:
-                            completion(response.focuses)
+                            if let focuses = response.focuses {
+                                completion(focuses.sorted {$0.name < $1.name})
+                            }
                         case 400...500:
                             if let reason = response.reason {
                                 //TODO: Fehlerbehandlung
@@ -292,6 +297,39 @@ class Network: ObservableObject {
                 }
             }
     }
+    
+    //Parsing error, da userBlocked int statt bool ist (schon gefixt nur neuer pull notwendig)
+    func fetchFriendships(completion: @escaping([Friendship]?, [Friendship]?, String?) -> Void) {
+        let decoder = JSONDecoder()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        decoder.dateDecodingStrategy = .formatted(formatter)
+        
+        AF.request("\(self.baseUrl)/friends?id=\(self.user!.id)", method: .get, headers: self.headers)
+            .validate(statusCode: 200..<500)
+            .responseDecodable(of: Response.self, decoder: decoder) { res in
+                switch res.result {
+                case .success(let response):
+                    if let code = res.response?.statusCode {
+                        switch code {
+                        case 200:
+                            completion(response.acceptedFriendships, response.pendingFriendships, nil)
+                        case 400...500:
+                            if let reason = response.reason {
+                                completion(nil, nil, reason)
+                            }
+                        default:
+                            completion(nil, nil, "Unhandeled HTTP-Code")
+                        }
+                    }
+                case .failure(let error):
+                    print(error.localizedDescription)
+                    completion(nil, nil, "Request failed! Reason: \(error.localizedDescription)")
+                }
+            }
+    }
+    
+    //TODO: Raphael -> postChallenge Request kopieren aus ParsingTest -> Parameter anpassen
     
     
 }
