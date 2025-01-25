@@ -438,7 +438,48 @@ class Network: ObservableObject {
                 }
             }
     }
-    // Accept, Decline, Send
+    
+    func sendFriendshipRequest(id: Int, completion: @escaping(Bool?,String?) -> Void) {
+        let parameters: [String: Any] = [
+            "user1Id": self.user?.id ?? 1, //TODO: Sinnvollen Standardwert bzw. Fehlerbehandlung überlegen
+            "user2Id": id
+        ]
+        
+        let decoder = JSONDecoder()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        decoder.dateDecodingStrategy = .formatted(formatter)
+        
+        AF.request("\(self.baseUrl)/friends", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: self.headers)
+            .validate(statusCode: 200...500)
+            .responseString() { response in
+                print(response)
+            }
+            .responseDecodable(of: Response.self, decoder: decoder) { res in
+                switch res.result {
+                case .success(let response):
+                    if let code = res.response?.statusCode {
+                        switch code {
+                        case 201:
+                            completion(true, nil)
+                        case 400:
+                            if ((response.reason?.contains("already")) != nil) {
+                                completion(false, nil)
+                            } else {
+                                completion(nil, response.reason)
+                            }
+                        case 401...500:
+                            completion(nil, response.reason)
+                        default:
+                            completion(nil, "Unhandeled HTTP-Code")
+                        }
+                    }
+                case .failure(let error):
+                    completion(nil, "Request failed! Reason: \(error)")
+                }
+            }
+    }
+    //Send
     
     /*------------Challenge-Requests---------------*/
     // PostFocus, PostSubject, Delete, assignResult, FriendshipChallenges, SubjectChallenges, DoneChallenges

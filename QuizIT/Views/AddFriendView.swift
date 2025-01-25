@@ -128,7 +128,7 @@ struct AddFriendView: View {
             self.loading = true
             network.fetchAllUsers() { users, error in
                 if let users = users {
-                    self.user = users
+                    self.user = users.filter { $0.id != network.user?.id}
                 } else if let error = error {
                     print(error)
                 }
@@ -164,7 +164,15 @@ extension AddFriendView {
             }
         }
         .onTapGesture {
-            tapAction()
+            network.sendFriendshipRequest(id: user.id) { success, error in
+                if let success = success {
+                    print(success)
+                    tapAction()
+                    //TODO: Unterscheiden, ob Request tatsächlich gesendet wurde (success = true -> Request gesendet; success = false -> User sind bereits befreundet oder angefragt)
+                } else if let error = error {
+                    print(error)
+                }
+            }
         }
         
     }
