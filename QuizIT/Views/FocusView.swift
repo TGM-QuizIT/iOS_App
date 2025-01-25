@@ -35,35 +35,36 @@ struct FocusView: View {
                     NavigationHeader(title: "Schwerpunkte " + subject.name) {
                         dismiss()
                     }
-
-                    AllFocusCard(subject: subject) {
-                        self.loadingQuiz = true
-                        self.selectedFocus = Focus(id: 0, name: subject.name, year: 0, questionCount: 1, imageAddress: "")
-                        network.fetchSubjectQuiz(id: subject.id) { questions, error in
-                            if let error = error {
-                                //display error
-                                print(error)
-                            } else {
-                                if let questions = questions {
-                                    if questions == [] {
-                                        //no questions error
-                                        print("no questions in attribute")
-                                    } else {
-                                        //questions ready for next view
-                                        self.questions = questions
-                                        self.showQuiz = true
+                    NavigationLink(destination: QuizHistoryView(subject: subject)) {
+                        AllFocusCard(subject: subject) {
+                            self.loadingQuiz = true
+                            self.selectedFocus = Focus(id: 0, name: subject.name, year: 0, questionCount: 1, imageAddress: "")
+                            network.fetchSubjectQuiz(id: subject.id) { questions, error in
+                                if let error = error {
+                                    //display error
+                                    print(error)
+                                } else {
+                                    if let questions = questions {
+                                        if questions == [] {
+                                            //no questions error
+                                            print("no questions in attribute")
+                                        } else {
+                                            //questions ready for next view
+                                            self.questions = questions
+                                            self.showQuiz = true
+                                        }
                                     }
                                 }
                             }
+                            self.loadingQuiz = false
                         }
-                        self.loadingQuiz = false
                     }
+                    
 
                     ForEach(focusList, id: \.self) { focus in
                         NavigationLink(
-                            destination: DetailFocusView(
-                                focus: focus,
-                                challenges: dummyChallenges)
+                            destination: QuizHistoryView(
+                                focus: focus)
                         ) {
                             FocusCard(focus: focus) {
                                 self.loadingQuiz = true
@@ -170,9 +171,11 @@ extension FocusView {
                     Text(subject.name)
                         .font(Font.custom("Poppins-SemiBold", size: 16))
                         .padding(.leading, 50)
+                        .foregroundStyle(.black)
 
                     Text("\(focusList.reduce(0) { $0 + $1.questionCount }) Fragen im Pool")
                         .font(Font.custom("Poppins-Regular", size: 12))
+                        .foregroundStyle(.black)
                         .padding(.leading, 50)
                         .padding(.bottom, 35)
                 }
