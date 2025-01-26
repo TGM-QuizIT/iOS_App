@@ -19,8 +19,8 @@ class Network: ObservableObject {
     @Published public var friendships: [Friendship]? = nil //all friendships of a user, which are accepted by both parties
     
     init() {
-        let user = User(id: 1, name: "rtarnoczi", fullName: "Raphael Tarnoczi", year: 4, uClass: "5AHIT", role: "schueler") //TODO: Raphael um Login zu umgehen
-        UserManager.shared.saveUser(user: user)
+        //let user = User(id: 1, name: "rtarnoczi", fullName: "Raphael Tarnoczi", year: 4, uClass: "5AHIT", role: "schueler") //TODO: Raphael um Login zu umgehen
+        //UserManager.shared.saveUser(user: user)
         self.user = UserManager.shared.loadUser()
     }
     
@@ -479,7 +479,6 @@ class Network: ObservableObject {
                 }
             }
     }
-    //Send
     
     /*------------Challenge-Requests---------------*/
     // PostFocus, PostSubject, Delete, assignResult, FriendshipChallenges, SubjectChallenges, DoneChallenges

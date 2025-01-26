@@ -110,6 +110,8 @@ struct MainMenu: View {
                 self.stats = stats
             } else if let error = error {
              //TODO: Fehlerbehandlung
+            } else {
+                self.stats = Statistic(avg: 0, rank: -1, winRate: 0)
             }
         }
         
@@ -235,7 +237,7 @@ extension MainMenu {
                     Text("TGM-Level")
                         .font(.title3)
                         .foregroundStyle(Color.white.opacity(0.5))
-                    Text("#\(stats.rank)")
+                    Text(stats.rank == -1 ? "-" : "\(stats.rank)")
                         .font(.title3)
                         .foregroundStyle(Color.white)
                 }
