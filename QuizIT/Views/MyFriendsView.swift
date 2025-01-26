@@ -8,77 +8,91 @@
 import SwiftUI
 
 struct MyFriendsView: View {
-
+    
+    @EnvironmentObject var network: Network
     @State private var showAddFriendView = false
-
-    var currentFriends: [Friendship]
-    var friendRequests: [Friendship]
-
+    @State private var loading = false
+    
+    @State var currentFriends: [Friendship] = []
+    @State var friendRequests: [Friendship] = []
+    
     var body: some View {
-        ZStack {
-            ScrollView {
-                VStack {
-                    
-                    
-                    
-                    VStack(alignment: .leading) {
-                        Text("Deine Freunde").font(.custom("Poppins-SemiBold", size: 16))
-                            .padding(.leading)
-                        
-                        ForEach(currentFriends, id: \.id) { friend in
-                            NavigationLink(
-                                destination: DetailFriendView(
-                                    friendship: friend,
-                                    lastResults: dummyResults),
-                                label: {
-                                    CurrentFriendCard(friend: friend)
+        VStack {
+            if self.loading {
+                
+            } else {
+                ZStack {
+                    ScrollView {
+                        VStack {
+                            VStack(alignment: .leading) {
+                                Text("Deine Freunde").font(.custom("Poppins-SemiBold", size: 16))
+                                    .padding(.leading)
+                                
+                                ForEach(currentFriends, id: \.id) { friend in
+                                    NavigationLink(
+                                        destination: DetailFriendView(
+                                            friendship: friend,
+                                            lastResults: dummyResults),
+                                        label: {
+                                            CurrentFriendCard(friend: friend)
+                                        }
+                                    )
+                                    .buttonStyle(PlainButtonStyle())
                                 }
-                            )
-                            .buttonStyle(PlainButtonStyle())
+                                
+                                Divider()
+                                    .padding(10)
+                                Text("Freundesanfragen").font(.custom("Poppins-SemiBold", size: 16))
+                                    .padding(.leading)
+                                ForEach(friendRequests, id: \.id) { friend in
+                                    FriendRequestCard(friend: friend)
+                                }
+                                
+                                Spacer()
+                            }
                         }
-                        
-                        Divider()
-                            .padding(10)
-                        Text("Freundesanfragen").font(.custom("Poppins-SemiBold", size: 16))
-                            .padding(.leading)
-                        ForEach(friendRequests, id: \.id) { friend in
-                            FriendRequestCard(friend: friend)
-                        }
-                        
-                        Spacer()
                     }
-                }
-            }
-            
-                VStack {
-                    Spacer()
-                    HStack {
+                    
+                    VStack {
                         Spacer()
-                        ZStack {
-                            Circle()
-                                .fill(Color.blue)
-                                .frame(width: 60, height: 60)
-                                .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
-                            
-                            Image(systemName: "plus")
-                                .foregroundColor(.white)
-                                .font(.system(size: 24, weight: .bold))
+                        HStack {
+                            Spacer()
+                            ZStack {
+                                Circle()
+                                    .fill(Color.blue)
+                                    .frame(width: 60, height: 60)
+                                    .shadow(color: Color.black.opacity(0.2), radius: 5, x: 0, y: 5)
+                                
+                                Image(systemName: "plus")
+                                    .foregroundColor(.white)
+                                    .font(.system(size: 24, weight: .bold))
+                            }
+                            .padding(.trailing, 1)
+                            .padding(.bottom, 1)
+                            .onTapGesture {
+                                showAddFriendView.toggle()
+                            }
                         }
-                        .padding(.trailing, 1)
-                        .padding(.bottom, 1)
-                        .onTapGesture {
-                            showAddFriendView.toggle()
-                        }
+                    }
+                    .sheet(isPresented: $showAddFriendView) {
+                        AddFriendView(user: dummyUser, showAddFriendView: $showAddFriendView)
+                    }
+                    
                 }
             }
-            .sheet(isPresented: $showAddFriendView) {
-                AddFriendView(user: dummyUser, showAddFriendView: $showAddFriendView)
-            }
-            
         }
-
+        
         .onAppear {
-            // TODO: Raphael Freunde (currentFriends & friendRequests) laden
+            self.loading = true
+            network.fetchFriendships() { acceptedFriendships, pendingFriendships, reason in
+                if let acceptedFriendships = acceptedFriendships, let pendingFriendships = pendingFriendships {
+                    self.currentFriends = acceptedFriendships
+                    self.friendRequests = pendingFriendships.filter { $0.actionReq == true}
+                } else if let reason = reason {
+                    print(reason)
+                }
+            }
+            self.loading = false
         }
         
     }
@@ -94,13 +108,13 @@ extension MyFriendsView {
                         .custom("Poppins-SemiBold", size: 12)
                     )
                     .padding(.leading, 10)
-
+                    
                     Text(friend.user2.uClass).font(
                         .custom("Roboto-Regular", size: 12)
                     )
                     .padding(.leading, 10)
                     .foregroundStyle(.darkGrey)
-
+                    
                 }
                 Spacer()
             }
@@ -108,7 +122,7 @@ extension MyFriendsView {
             .padding(.top, 16)
         }
     }
-
+    
     func FriendRequestCard(friend: Friendship) -> some View {
         ZStack {
             HStack {
@@ -118,20 +132,57 @@ extension MyFriendsView {
                         .custom("Poppins-SemiBold", size: 12)
                     )
                     .padding(.leading, 10)
-
+                    
                     Text(friend.user2.uClass).font(
                         .custom("Roboto-Regular", size: 12)
                     )
                     .padding(.leading, 10)
                     .foregroundStyle(.darkGrey)
-
+                    
                 }
                 Spacer()
-
+                
                 Image("Accept")
-
+                    .onTapGesture {
+                        self.loading = true
+                        network.acceptFriendship(id: friend.id) { error in
+                            if let error = error {
+                                print(error)
+                            } else {
+                                network.fetchFriendships() { acceptedFriendships, pendingFriendships, reason in
+                                    if let acceptedFriendships = acceptedFriendships, let pendingFriendships = pendingFriendships {
+                                        self.currentFriends = acceptedFriendships
+                                        self.friendRequests = pendingFriendships.filter { $0.actionReq == true}
+                                    } else if let reason = reason {
+                                        print(reason)
+                                    }
+                                }
+                            }
+                        }
+                        
+                        self.loading = false
+                    }
+                
                 Image("Decline")
                     .padding(.horizontal, 10)
+                    .onTapGesture {
+                        self.loading = true
+                        network.declineFriendship(id: friend.id) { error in
+                            if let error = error {
+                                print(error)
+                            } else {
+                                network.fetchFriendships() { acceptedFriendships, pendingFriendships, reason in
+                                    if let acceptedFriendships = acceptedFriendships, let pendingFriendships = pendingFriendships {
+                                        self.currentFriends = acceptedFriendships
+                                        self.friendRequests = pendingFriendships.filter { $0.actionReq == true}
+                                    } else if let reason = reason {
+                                        print(reason)
+                                    }
+                                }
+                            }
+                        }
+                        self.loading = false
+                    }
             }
             .padding(.leading)
             .padding(.top, 16)
@@ -140,15 +191,5 @@ extension MyFriendsView {
 }
 
 #Preview {
-    MyFriendsView(
-        currentFriends: [
-            dummyFriendships[0],
-            dummyFriendships[1],
-            dummyFriendships[2],
-        ],
-        friendRequests: [
-            dummyFriendships[3],
-            dummyFriendships[4],
-        ]
-    )
+    MyFriendsView()
 }

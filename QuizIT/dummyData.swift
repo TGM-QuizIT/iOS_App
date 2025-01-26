@@ -95,31 +95,31 @@ let dummyFriendships: [Friendship] = [
     Friendship(
         id: 1,
         user2: dummyUser[0],
-        pending: 1,
+        actionReq: false,
         since: Date(timeIntervalSince1970: 1_676_000_000)  // 2023-02-19
     ),
     Friendship(
         id: 2,
         user2: dummyUser[1],
-        pending: 1,
+        actionReq: nil,
         since: Date(timeIntervalSince1970: 1_580_000_000)  // 2020-01-01
     ),
     Friendship(
         id: 3,
         user2: dummyUser[2],
-        pending: 1,
+        actionReq: true,
         since: Date(timeIntervalSince1970: 1_600_000_000)  // 2020-09-13
     ),
     Friendship(
         id: 4,
         user2: dummyUser[3],
-        pending: 2,
+        actionReq: true,
         since: Date(timeIntervalSince1970: 1_700_000_000)  // 2023-12-03
     ),
     Friendship(
         id: 5,
         user2: dummyUser[4],
-        pending: 2,
+        actionReq: nil,
         since: Date()
     ),
 ]

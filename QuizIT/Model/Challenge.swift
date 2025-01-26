@@ -6,16 +6,16 @@
 //
 import Foundation
 
-struct Challenge: Identifiable, Hashable {
+struct Challenge: Codable, Identifiable, Hashable {
     let id: Int
     let friendship: Friendship
-    let focus: Focus
-    let subject: Subject
-    let score1: Result
-    let score2: Result
+    let focus: Focus?
+    let subject: Subject?
+    let score1: Result? //eigener Score
+    let score2: Result? //gegnerischer Score
     let date: Date
     
-    init(id: Int, friendship: Friendship, focus: Focus, subject: Subject, score1: Result, score2: Result, date: Date) {
+    init(id: Int, friendship: Friendship, focus: Focus?, subject: Subject?, score1: Result?, score2: Result?, date: Date) {
         self.id = id
         self.friendship = friendship
         self.focus = focus
@@ -27,9 +27,13 @@ struct Challenge: Identifiable, Hashable {
     
     // CodingKeys
     enum CodingKeys: String, CodingKey {
-        case id = "resultId"
-        case score = "resultScore"
-        case date = "resultDate"
+        case id = "challengeId"
+        case date = "challengeDateTime"
+        case friendship = "friendship"
+        case score1 = "score"
+        case score2 = "friendScore"
+        case focus
+        case subject
     }
     
 }
