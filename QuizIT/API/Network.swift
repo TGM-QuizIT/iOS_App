@@ -9,8 +9,7 @@ import Foundation
 import Alamofire
 
 class Network: ObservableObject {
-    private let baseUrl = "http://192.168.0.237:63000" //TODO: RAPHI URL ANPASSEN NACH PULL
-    private let actualUrl = "https://projekte.tgm.ac.at/quizit/api"
+    private let baseUrl = "https://projekte.tgm.ac.at/quizit/api"
     private let headers: HTTPHeaders = [
         "authorization" : Bundle.main.infoDictionary?["API_KEY"] as? String ?? ""
     ]
@@ -19,8 +18,6 @@ class Network: ObservableObject {
     @Published public var friendships: [Friendship]? = nil //all friendships of a user, which are accepted by both parties
     
     init() {
-        //let user = User(id: 1, name: "rtarnoczi", fullName: "Raphael Tarnoczi", year: 4, uClass: "5AHIT", role: "schueler") //TODO: Raphael um Login zu umgehen
-        //UserManager.shared.saveUser(user: user)
         self.user = UserManager.shared.loadUser()
     }
     
