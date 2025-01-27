@@ -7,68 +7,120 @@
 
 import SwiftUI
 import URLImage
+import URLImageStore
+
+
 
 struct MainMenu: View {
+    @EnvironmentObject var network: Network
     
-    private var subjects: [Subject] = [Subject(subjectId: 1, subjectName: "Angewandte Mathematik", subjectActive: true, subjectImageAddress: "https://firebasestorage.googleapis.com/v0/b/website-projekteserver.appspot.com/o/imagesForApp%2Fmaths.png?alt=media&token=b7d6b8e7-31b1-4f25-a6f9-29d3cb92be32"),Subject(subjectId: 2, subjectName: "SEW", subjectActive: true, subjectImageAddress: "https://cdn.sanity.io/images/tlr8oxjg/production/9f15109746df254c5a030a7ba9239f8a4bb5dadb-1456x816.png?w=3840&q=100&fit=clip&auto=format"),
-                                       Subject(subjectId: 3, subjectName: "GGP", subjectActive: true, subjectImageAddress: "https://images.unsplash.com/photo-1461360370896-922624d12aa1?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8aGlzdG9yeXxlbnwwfHwwfHx8MA%3D%3D")]
-                
-    
-
+    @State private var subjects: [Subject] = []
+    @State private var stats: Statistic? = nil
+    @State private var loading = true
     
     var body: some View {
         VStack {
-            HStack {
-                
-                Image("Logo")
-                    .resizable()
-                    .frame(width: 150, height: 80)
-                    .cornerRadius(20)
-                    .padding(.leading)
-                
-                
-                
-                Spacer()
+            if loading {
+                CustomLoading()
             }
-            .padding(.bottom, 10)
-            VStack(alignment: .leading, spacing: 1) {
-                HStack {
-                    Text("Deine Fächer").font(Font.custom("Poppins-SemiBold", size: 25))
-                        .padding(.leading)
-                    Spacer()
-                    Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 15))
-                        .padding(.trailing)
-                }
-                
-                
-                ScrollView(.horizontal) {
-                    HStack {
-                        ForEach(subjects, id: \.self) { subject in
-                                SubjectCard(subject: subject)
+            else {
+                NavigationStack {
+                    VStack {
+                        HStack {
+                            
+                            Image("Logo")
+                                .resizable()
+                                .frame(width: 150, height: 80)
+                                .cornerRadius(20)
+                                .padding(.leading)
+                            
+                            
+                            
+                            Spacer()
+                        }
+                        .padding(.bottom, 10)
+                        VStack(alignment: .leading, spacing: 1) {
+                            HStack {
+                                Text("Deine Fächer").font(Font.custom("Poppins-SemiBold", size: 25))
+                                    .padding(.leading)
+                                Spacer()
+                                Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 15))
+                                    .padding(.trailing)
                             }
+                            
+                            if self.subjects != [] {
+                                ScrollView(.horizontal) {
+                                    HStack {
+                                        ForEach(subjects, id: \.self) { subject in
+                                            NavigationLink(destination: FocusView(subject: subject)) {
+                                                SubjectCard(subject: subject)
+                                            }
+                                        }
+                                    }
+                                    
+                                }
+                                .scrollIndicators(.hidden)
+                            }
+                            
+                            else {
+                                Text("Keine Fächer verfügbar").font(Font.custom("Poppins-Semibold", size: 15))
+                                    .padding(.leading)
+                            }
+                            
+                            HStack {
+                                Text("Deine Statistiken").font(Font.custom("Poppins-SemiBold", size: 25))
+                                    .padding(.leading)
+                                Spacer()
+                                Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 15))
+                                    .padding(.trailing)
+                            }
+                            .padding(.top)
+                            if let stats = self.stats {
+                                StatisticCard(stats: stats)
+                            }
+                            
+                            
+                        }
+                        
+                        
+                        
                     }
-                
-                }
-                .scrollIndicators(.hidden)
-                
-                HStack {
-                    Text("Deine Statistiken").font(Font.custom("Poppins-SemiBold", size: 25))
-                        .padding(.leading)
+                    
                     Spacer()
-                    Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 15))
-                        .padding(.trailing)
                 }
-                .padding(.top)
-                
-                StatisticCard()
             }
-            
-            
-           
-            
-            
-            Spacer()
         }
+        .onAppear {
+            handleRequests()
+        }
+    }
+    
+    private func handleRequests() {
+        self.loading = true
+        network.fetchSubjects() { error in
+            if let error = error {
+                //TODO: Fehlerbehandlung, wenn Fächer nicht abrufbar waren
+            }
+            else {
+                self.subjects = network.subjects ?? []
+            }
+        }
+        network.fetchUserStats() { stats, error in
+            if let stats = stats {
+                self.stats = stats
+            } else if let error = error {
+             //TODO: Fehlerbehandlung
+            } else {
+                self.stats = Statistic(avg: 0, rank: -1, winRate: 0)
+            }
+        }
+        
+        network.fetchFriendships() { accepted, pending, error in
+            if let error = error {
+                //TODO: Fehlerbehandlung
+            }
+        }
+        self.loading = false
     }
 }
 
@@ -92,26 +144,38 @@ extension MainMenu {
                         .padding()
                         .padding(.top, -43)
 
-                    
-                    URLImage(URL(string: subject.subjectImageAddress)!) { image in
+                    URLImage(URL(string: subject.imageAddress)!) {
+                        // This view is displayed before download starts
+                        EmptyView()
+                    } inProgress: { progress in
+                        // Display progress
+                        CustomLoading()
+                    } failure: { error, retry in
+                        // Display error and retry button
+                        VStack {
+                            Text(error.localizedDescription)
+                            Button("Retry", action: retry)
+                        }
+                    } content: { image in
+                        // Downloaded image
                         image
                             .resizable()
-                            .frame(width: 270, height: 107)
+                            .frame(width: 214, height: 107)
                             .clipShape(CustomCorners(corners: [.topLeft, .topRight], radius: 20))  // Apply corner radius only to top corners
                             .padding(.top, -43)
                     }
+                    
                 }
                 
                 
                 VStack(alignment: .center) {
-                    Text(subject.subjectName)
+                    Text(subject.name)
                         .font(Font.custom("Poppins-SemiBold", size: 19))
+                        .foregroundStyle(.black)
                         .padding(.top, -10)
                                 
                 
-                Button(action: {
-                            // Aktion des Buttons
-                        }) {
+                
                             Text("Schwerpunkte")
                                 .foregroundColor(Color.darkBlue)
                                 .padding()
@@ -126,13 +190,8 @@ extension MainMenu {
                                         .stroke(Color.blue, lineWidth: 1.7)
                                       
                                 )
-                        }
                         .padding(.top,5)
                 }
-               
-                  
-                
-
             }
 
             Spacer()
@@ -142,7 +201,7 @@ extension MainMenu {
 
     }
     
-    private func StatisticCard() -> some View {
+    private func StatisticCard(stats: Statistic) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 20)
                 .fill(Color.accentColor)
@@ -151,14 +210,14 @@ extension MainMenu {
                 .padding()
             HStack {
                 VStack {
-                    Image(systemName: "star.fill")
+                    Image(systemName: "trophy.fill")
                         .font(.title2)
                         .foregroundStyle(Color.white)
                     
-                    Text("Punkte")
+                    Text("Challenges")
                         .font(.title3)
                         .foregroundStyle(Color.white.opacity(0.5))
-                    Text("540")
+                    Text("\(Int(stats.winRate)) %")
                         .font(.title3)
                         .foregroundStyle(Color.white)
                     
@@ -175,10 +234,10 @@ extension MainMenu {
                         .font(.title2)
                         .foregroundStyle(Color.white)
                     
-                    Text("Platz")
+                    Text("TGM-Level")
                         .font(.title3)
                         .foregroundStyle(Color.white.opacity(0.5))
-                    Text("#1540")
+                    Text(stats.rank == -1 ? "-" : "\(stats.rank)")
                         .font(.title3)
                         .foregroundStyle(Color.white)
                 }
@@ -189,14 +248,14 @@ extension MainMenu {
                     .foregroundStyle(.black)
                 
                 VStack {
-                    Image(systemName: "trophy.fill")
+                    Image(systemName: "flag.pattern.checkered")
                         .font(.title2)
                         .foregroundStyle(Color.white)
                     
                     Text("Score")
                         .font(.title3)
                         .foregroundStyle(Color.white.opacity(0.5))
-                    Text("79%")
+                    Text("\(Int(stats.average)) %")
                         .font(.title3)
                         .foregroundStyle(Color.white)
                 }
@@ -212,3 +271,5 @@ extension MainMenu {
 #Preview {
     MainMenu()
 }
+
+

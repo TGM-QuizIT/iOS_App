@@ -1,0 +1,9 @@
+# macOS system files
+.DS_Store
+
+# Configuration files
+API-Keys/Config.xcconfig
+Config.xcconfig
+
+
+QuizIT.xcodeproj/project.xcworkspace/xcuserdata/raphi.xcuserdatad/UserInterfaceState.xcuserstate
