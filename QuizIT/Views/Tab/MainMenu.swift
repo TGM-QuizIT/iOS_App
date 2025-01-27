@@ -160,7 +160,7 @@ extension MainMenu {
                         // Downloaded image
                         image
                             .resizable()
-                            .frame(width: 270, height: 107)
+                            .frame(width: 214, height: 107)
                             .clipShape(CustomCorners(corners: [.topLeft, .topRight], radius: 20))  // Apply corner radius only to top corners
                             .padding(.top, -43)
                     }

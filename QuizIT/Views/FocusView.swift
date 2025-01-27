@@ -161,7 +161,7 @@ extension FocusView {
                 image
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 140, height: 75)
+                    .frame(width: 150, height: 75)
                     .clipped()
                     .padding(.leading, 190)
             }
@@ -229,7 +229,7 @@ extension FocusView {
                 image
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 140, height: 75)
+                    .frame(width: 150, height: 75)
                     .clipped()
                     .padding(.leading, 190)
             }
