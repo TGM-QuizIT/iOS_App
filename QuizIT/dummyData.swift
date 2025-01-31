@@ -56,7 +56,7 @@ let dummyFocuses: [Focus] = [
 let dummyResults: [Result] = [
     Result(
         id: 1,
-        score: 45.5,
+        score: 75.5,
         userId: 101,
         focus: dummyFocuses[0],
         date: Date(timeIntervalSince1970: 1_701_667_200)  // 04.12.2023

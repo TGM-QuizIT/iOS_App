@@ -98,7 +98,7 @@ struct FocusView: View {
                     Spacer()
                 }
                 .navigationDestination(isPresented: $showQuiz) {
-                    PerfomQuizView(
+                    PerformQuizView(
                         focus: selectedFocus ?? dummyFocuses[0], subject: self.subject,
                         quiz: Quiz(questions: self.questions))
                 }

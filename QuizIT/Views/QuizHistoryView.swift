@@ -16,7 +16,7 @@ struct QuizHistoryView: View {
     var subject: Subject?
     
     @State private var results: [Result] = []
-    @State private var challenges: [Challenge] = []
+    @State private var challenges: [Challenge] = dummyChallenges
     
     @State private var showQuiz = false
     
@@ -36,6 +36,40 @@ struct QuizHistoryView: View {
                     NavigationHeader(title: focus?.name ?? subject?.name ?? "") {
                         dismiss()
                     }
+                    
+                    HStack {
+                        Text("Offene Herausforderungen").font(
+                            .custom("Poppins-SemiBold", size: 16)
+                        )
+                        .padding(.leading, 20)
+                        Spacer()
+                        //                Text("alle anzeigen").font(
+                        //                    .custom("Poppins-SemiBold", size: 16)
+                        //                )
+                        //                .padding(.trailing, 20)
+                    }
+                    .padding(.top, 16)
+                    if !challenges.isEmpty {
+                        ScrollView(.horizontal) {
+                            HStack {
+                                ForEach(self.challenges, id: \.self) { challenge in
+                                    ChallengeCard(challenge: challenge)
+                                }
+                            }
+                        }
+                        .scrollIndicators(.hidden)
+                    } else {
+                        VStack {
+                            Text("Du hast noch keine Herausforderungen!")
+                                .font(.custom("Poppins-SemiBold", size: 16))
+                                .padding()
+                                .multilineTextAlignment(.center)
+                                .foregroundStyle(.darkGrey)
+                            
+                        }
+                        .frame(height: 129)
+                    }
+                    
                     HStack {
                         Text("Deine Resultate").font(
                             .custom("Poppins-SemiBold", size: 16)
@@ -71,42 +105,11 @@ struct QuizHistoryView: View {
                     }
                     
                     
-                    HStack {
-                        Text("Herausforderungen").font(
-                            .custom("Poppins-SemiBold", size: 16)
-                        )
-                        .padding(.leading, 20)
-                        Spacer()
-                        //                Text("alle anzeigen").font(
-                        //                    .custom("Poppins-SemiBold", size: 16)
-                        //                )
-                        //                .padding(.trailing, 20)
-                    }
-                    .padding(.top, 16)
-                    if !challenges.isEmpty {
-                        ScrollView(.horizontal) {
-                            HStack {
-                                ForEach(self.challenges, id: \.self) { challenge in
-                                    ChallengeCard(challenge: challenge)
-                                }
-                            }
-                        }
-                        .scrollIndicators(.hidden)
-                    } else {
-                        VStack {
-                            Text("Du hast noch keine Herausforderungen!")
-                                .font(.custom("Poppins-SemiBold", size: 16))
-                                .padding()
-                                .multilineTextAlignment(.center)
-                                .foregroundStyle(.darkGrey)
-                            
-                        }
-                        .frame(height: 129)
-                    }
+                    
                     
                     Button {
                         self.loading = true
-                        if let focus = focus {
+                   /*     if let focus = focus {
                             network.fetchFocusQuiz(id: focus.id) {
                                 questions, error in
                                 if let error = error {
@@ -147,7 +150,7 @@ struct QuizHistoryView: View {
                         } else {
                             print("Fehler beim Laden der Fragen.")
                         }
-                        
+                       */
                         self.loading = false
                     } label: {
                         if loading {
@@ -168,7 +171,7 @@ struct QuizHistoryView: View {
                     Spacer()
                 }
                 .navigationDestination(isPresented: $showQuiz) {
-                    PerfomQuizView(
+                    PerformQuizView(
                         focus: selectedFocus ?? dummyFocuses[0],
                         subject: dummySubjects[0],
                         quiz: Quiz(questions: self.questions))
@@ -179,7 +182,7 @@ struct QuizHistoryView: View {
 
         }
         .onAppear() {
-            self.loading = true
+           /* self.loading = true
             network.fetchResults(fId: self.focus?.id, sId: self.subject?.id) { results, error in
                     if let error = error {
                         print(error)
@@ -190,6 +193,7 @@ struct QuizHistoryView: View {
                         }
                     }
                 }
+            */
                 
                 //TODO: Fetch challenge history
                 self.loading = false
@@ -262,79 +266,79 @@ extension QuizHistoryView {
         }
     }
     private func ChallengeCard(challenge: Challenge) -> some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 15)
-                .fill(Color.base)
-                .frame(width: 200, height: 129)
-            // .shadow(radius: 5)
-                .padding()
-            
-            VStack {
-                ZStack {
-                    Rectangle()
-                        .fill(Color.lightBlue)
-                        .frame(width: 200, height: 65)
-                        .clipShape(
-                            CustomCorners(
-                                corners: [.topLeft, .topRight], radius: 20)
-                        )
-                        .padding()
-                        .padding(.top, -43)
-                    
-                }
+            ZStack {
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(Color.base)
+                    .frame(width: 200, height: 129)
+                // .shadow(radius: 5)
+                    .padding()
                 
-                VStack(alignment: .center) {
-                    Text("challenge.focus.name") //TODO: RAPHI OPTIONAL WRAP
-                        .font(Font.custom("Poppins-SemiBold", size: 11))
-                        .padding(.top, -10)
-                    // Fortschrittsanzeige
+                VStack {
                     ZStack {
-                        RoundedRectangle(cornerRadius: 5)
+                        Rectangle()
                             .fill(Color.lightBlue)
-                            .frame(width: 143.28, height: 16)
-                        
-                        /*
-                        ProgressView(value: challenge.score1.score / 100) //TODO: RAPHI OPTIONAL WRAP
-                            .progressViewStyle(
-                                LinearProgressViewStyle(
-                                    tint: challenge.score1.score >= 40 ? .blue : .red) //TODO: RAPHI OPTIONAL WRAP
+                            .frame(width: 200, height: 75)
+                            .clipShape(
+                                CustomCorners(
+                                    corners: [.topLeft, .topRight], radius: 20)
                             )
-                            .frame(width: 143.28, height: 50)
-                            .scaleEffect(x: 1, y: 4, anchor: .center)
-                            .cornerRadius(20)
-                            .animation(
-                                .easeInOut(duration: 0.5), value: 0.2 / 100)
-                        Text(challenge.score1.score.description + "%") //TODO: RAPHI OPTIONAL WRAP
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundColor(
-                                challenge.score1.score >= 40 ? .white : .black)
-                         */
+                            .padding()
                     }
-                    .padding(.top, -15)
                     
+                    Text(challenge.focus?.name ?? challenge.subject?.name ?? "Unbekannt")
+                        .font(Font.custom("Poppins-SemiBold", size: 11))
+                        .padding(.bottom, 2) // Reduzierter Abstand
+                    
+                    // Fortschrittsanzeige
+                        
+                    ZStack(alignment: .leading) {
+                                // Hintergrund der Fortschrittsanzeige
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.blue, lineWidth: 2) // Blauer Rahmen
+                                    .frame(height: 23)
+                                
+                                // Fortschrittsfüllung
+                                RoundedRectangle(cornerRadius: 20)
+                                    .fill(Color.blue)
+                                    .frame(width: CGFloat(challenge.score1.score)*1.5, height: 23) // Breite basierend auf % (max. 250px)
+                                    .animation(.easeInOut(duration: 0.3), value: challenge.score1.score)
+                                
+                                // Prozentzahl in der Mitte
+                        Text("\(challenge.score1.score.description)%")
+                                    .foregroundColor(.white)
+                                    .bold()
+                                    .frame(width: 150, height: 40)
+                                    .background(Color.clear)
+                            }
+                            .frame(width: 125, height: 30)
                 }
+                .padding(.bottom,40)
+                Spacer()
+                Image("AvatarBackground")
+                    .resizable()
+                    .frame(width: 47, height: 47)
+                    .padding(.trailing, 120)
+                    .padding(.bottom, 120)
+                    .padding(.top,9)
+
+                VStack(alignment: .leading) {
+                    Text(challenge.friendship.user2.fullName)
+                        .font(.custom("Poppins-SemiBold", size: 15))
+                        .frame(width: 120, alignment: .leading)
+                        .lineLimit(1)
+                        .padding(.top,10)
+                        .padding(.leading,95)
+
+                    Text(challenge.friendship.user2.uClass)
+                        .font(.custom("Poppins-Regular", size: 12))
+                        .frame(width: 140, alignment: .leading)
+                        .padding(.leading,100)
+                }
+                .padding(.bottom, 120)
             }
-            Spacer()
-            Image("AvatarBackground")
-                .resizable()
-                .frame(width: 47, height: 47)
-                .padding(.trailing, 120)
-                .padding(.bottom, 100)
-            VStack {
-                Text(challenge.friendship.user2.fullName).font(
-                    .custom("Poppins-SemiBold", size: 15))
-                .frame(maxWidth: 92)
-                .lineLimit(1)
-                Text(challenge.friendship.user2.uClass).font(
-                    .custom("Poppins-Regular", size: 12))
-                
-            }
-            .padding(.bottom, 100)
-            .padding(.leading, 70)
         }
-    }
 }
 
 #Preview {
-    QuizHistoryView(focus: dummyFocuses[0])
+    QuizHistoryView()
 }

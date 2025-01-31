@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PerfomQuizView: View {
+struct PerformQuizView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var network: Network
     
@@ -200,7 +200,7 @@ struct PerfomQuizView: View {
 
 
 
-extension PerfomQuizView {
+extension PerformQuizView {
     func handleAnswerSelection(for answerIndex: Int) {
         withAnimation(.easeInOut(duration: 0.2)) {
             let isMultipleChoice = quiz.questions[currentQuestionIndex].mChoice
@@ -346,7 +346,7 @@ struct LeftRoundedRectangle: Shape {
 }
 
 #Preview {
-    PerfomQuizView(
+    PerformQuizView(
         focus: dummyFocuses[0],
         subject: Subject(id: 1, name: "GGP",imageAddress: ""), quiz: QuizData.shared.quiz
     )
