@@ -56,6 +56,8 @@ struct QuizHistoryView: View {
                                     ChallengeCard(challenge: challenge)
                                 }
                             }
+                            .padding(.leading, 20)
+
                         }
                         .scrollIndicators(.hidden)
                     } else {
@@ -270,8 +272,8 @@ extension QuizHistoryView {
                 RoundedRectangle(cornerRadius: 15)
                     .fill(Color.base)
                     .frame(width: 200, height: 129)
+                
                 // .shadow(radius: 5)
-                    .padding()
                 
                 VStack {
                     ZStack {
@@ -282,38 +284,38 @@ extension QuizHistoryView {
                                 CustomCorners(
                                     corners: [.topLeft, .topRight], radius: 20)
                             )
-                            .padding()
                     }
                     
                     Text(challenge.focus?.name ?? challenge.subject?.name ?? "Unbekannt")
                         .font(Font.custom("Poppins-SemiBold", size: 11))
-                        .padding(.bottom, 2) // Reduzierter Abstand
+                        .padding(.bottom, 2)
                     
                     // Fortschrittsanzeige
                         
                     ZStack(alignment: .leading) {
                                 // Hintergrund der Fortschrittsanzeige
                                 RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color.blue, lineWidth: 2) // Blauer Rahmen
+                            .stroke(Color.blue.opacity(0.7), lineWidth: 2)
                                     .frame(height: 23)
                                 
                                 // Fortschrittsfüllung
                                 RoundedRectangle(cornerRadius: 20)
-                                    .fill(Color.blue)
+                            .fill(Color.blue).opacity(0.7)
                                     .frame(width: CGFloat(challenge.score1.score)*1.5, height: 23) // Breite basierend auf % (max. 250px)
                                     .animation(.easeInOut(duration: 0.3), value: challenge.score1.score)
                                 
                                 // Prozentzahl in der Mitte
                         Text("\(challenge.score1.score.description)%")
-                                    .foregroundColor(.white)
+                            .foregroundColor(.darkGrey)
                                     .bold()
                                     .frame(width: 150, height: 40)
                                     .background(Color.clear)
                             }
                             .frame(width: 125, height: 30)
+
                 }
                 .padding(.bottom,40)
-                Spacer()
+
                 Image("AvatarBackground")
                     .resizable()
                     .frame(width: 47, height: 47)
@@ -329,6 +331,7 @@ extension QuizHistoryView {
                         .padding(.top,10)
                         .padding(.leading,95)
 
+
                     Text(challenge.friendship.user2.uClass)
                         .font(.custom("Poppins-Regular", size: 12))
                         .frame(width: 140, alignment: .leading)
@@ -336,6 +339,7 @@ extension QuizHistoryView {
                 }
                 .padding(.bottom, 120)
             }
+            .padding(.leading, -30)
         }
 }
 

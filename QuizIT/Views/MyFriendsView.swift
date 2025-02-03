@@ -19,7 +19,7 @@ struct MyFriendsView: View {
     var body: some View {
         VStack {
             if self.loading {
-                
+                CustomLoading()
             } else {
                 ZStack {
                     ScrollView {
@@ -89,6 +89,10 @@ struct MyFriendsView: View {
         
         .onAppear {
             self.loading = true
+            
+            
+            
+            
             network.fetchFriendships() { acceptedFriendships, pendingFriendships, reason in
                 if let acceptedFriendships = acceptedFriendships, let pendingFriendships = pendingFriendships {
                     self.currentFriends = acceptedFriendships
