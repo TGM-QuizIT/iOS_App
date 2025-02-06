@@ -91,36 +91,47 @@ struct MainMenu: View {
             }
         }
         .onAppear {
+            self.loading = true
             handleRequests()
         }
     }
     
     private func handleRequests() {
-        self.loading = true
+        let dispatchGroup = DispatchGroup()
+
+        dispatchGroup.enter()
         network.fetchSubjects() { error in
             if let error = error {
-                //TODO: Fehlerbehandlung, wenn Fächer nicht abrufbar waren
-            }
-            else {
+                // TODO: Fehlerbehandlung, wenn Fächer nicht abrufbar waren
+            } else {
                 self.subjects = network.subjects ?? []
             }
+            dispatchGroup.leave()
         }
+
+        dispatchGroup.enter()
         network.fetchUserStats() { stats, error in
             if let stats = stats {
                 self.stats = stats
             } else if let error = error {
-             //TODO: Fehlerbehandlung
+                // TODO: Fehlerbehandlung
             } else {
                 self.stats = Statistic(avg: 0, rank: -1, winRate: 0)
             }
+            dispatchGroup.leave()
         }
-        
+
+        dispatchGroup.enter()
         network.fetchFriendships() { accepted, pending, error in
             if let error = error {
-                //TODO: Fehlerbehandlung
+                // TODO: Fehlerbehandlung
             }
+            dispatchGroup.leave()
         }
-        self.loading = false
+
+        dispatchGroup.notify(queue: .main) {
+            self.loading = false
+        }
     }
 }
 
@@ -160,7 +171,7 @@ extension MainMenu {
                         // Downloaded image
                         image
                             .resizable()
-                            .frame(width: 270, height: 107)
+                            .frame(width: 214, height: 107)
                             .clipShape(CustomCorners(corners: [.topLeft, .topRight], radius: 20))  // Apply corner radius only to top corners
                             .padding(.top, -43)
                     }
@@ -208,50 +219,49 @@ extension MainMenu {
                 .frame(width: 370, height: 110)
                 .shadow(radius: 5)
                 .padding()
-            HStack {
+
+            HStack(spacing: 0) { // Kein zusätzlicher Abstand zwischen den Spalten
                 VStack {
-                    Image(systemName: "trophy.fill")
+                    Image(systemName: "star.fill")
                         .font(.title2)
                         .foregroundStyle(Color.white)
-                    
+
                     Text("Challenges")
                         .font(.title3)
                         .foregroundStyle(Color.white.opacity(0.5))
                     Text("\(Int(stats.winRate)) %")
                         .font(.title3)
                         .foregroundStyle(Color.white)
-                    
-                    
                 }
-                .padding()
-                
+                .frame(maxWidth: .infinity) // Gleichmäßige Verteilung
+
                 Divider()
-                    .frame(width: 10, height: 60)
-                    .foregroundStyle(.black)
-                
+                    .frame(height: 60)
+                    .background(Color.darkGrey)
+
                 VStack {
                     Image(systemName: "graduationcap.fill")
                         .font(.title2)
                         .foregroundStyle(Color.white)
-                    
-                    Text("TGM-Level")
+
+                    Text("Level")
                         .font(.title3)
                         .foregroundStyle(Color.white.opacity(0.5))
                     Text(stats.rank == -1 ? "-" : "\(stats.rank)")
                         .font(.title3)
                         .foregroundStyle(Color.white)
                 }
-                .padding()
-                
+                .frame(maxWidth: .infinity)
+
                 Divider()
-                    .frame(width: 10,height: 60)
-                    .foregroundStyle(.black)
-                
+                    .frame(height: 60)
+                    .background(Color.darkGrey)
+
                 VStack {
-                    Image(systemName: "flag.pattern.checkered")
+                    Image(systemName: "trophy.fill")
                         .font(.title2)
                         .foregroundStyle(Color.white)
-                    
+
                     Text("Score")
                         .font(.title3)
                         .foregroundStyle(Color.white.opacity(0.5))
@@ -259,12 +269,12 @@ extension MainMenu {
                         .font(.title3)
                         .foregroundStyle(Color.white)
                 }
-                .padding()
+                .frame(maxWidth: .infinity)
             }
             .padding(10)
         }
-        
     }
+
 
 }
 

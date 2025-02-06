@@ -108,8 +108,7 @@ extension SubjectView {
                         // Downloaded image
                         image
                             .resizable()
-                            .aspectRatio(24/9, contentMode: .fit)
-                            .frame(width: 347)
+                            .frame(width: 200,height:100)
                             .clipShape(CustomCorners(corners: [.topLeft, .topRight], radius: 20))
                             .padding(.top, -43)
                     }

@@ -19,7 +19,7 @@ struct MyFriendsView: View {
     var body: some View {
         VStack {
             if self.loading {
-                
+                CustomLoading()
             } else {
                 ZStack {
                     ScrollView {
@@ -31,8 +31,7 @@ struct MyFriendsView: View {
                                 ForEach(currentFriends, id: \.id) { friend in
                                     NavigationLink(
                                         destination: DetailFriendView(
-                                            friendship: friend,
-                                            lastResults: dummyResults),
+                                            user: friend.user2, status: 2, friend: friend),
                                         label: {
                                             CurrentFriendCard(friend: friend)
                                         }
@@ -45,7 +44,13 @@ struct MyFriendsView: View {
                                 Text("Freundesanfragen").font(.custom("Poppins-SemiBold", size: 16))
                                     .padding(.leading)
                                 ForEach(friendRequests, id: \.id) { friend in
-                                    FriendRequestCard(friend: friend)
+                                    NavigationLink(
+                                        destination: DetailFriendView(
+                                            user: friend.user2, status: 1),
+                                        label: {
+                                            FriendRequestCard(friend: friend)
+                                        }
+                                    )
                                 }
                                 
                                 Spacer()
@@ -74,8 +79,8 @@ struct MyFriendsView: View {
                             }
                         }
                     }
-                    .sheet(isPresented: $showAddFriendView) {
-                        AddFriendView(user: dummyUser, showAddFriendView: $showAddFriendView)
+                    .navigationDestination(isPresented: $showAddFriendView) {
+                        AddFriendView()
                     }
                     
                 }
@@ -84,6 +89,10 @@ struct MyFriendsView: View {
         
         .onAppear {
             self.loading = true
+            
+            
+            
+            
             network.fetchFriendships() { acceptedFriendships, pendingFriendships, reason in
                 if let acceptedFriendships = acceptedFriendships, let pendingFriendships = pendingFriendships {
                     self.currentFriends = acceptedFriendships
@@ -132,6 +141,8 @@ extension MyFriendsView {
                         .custom("Poppins-SemiBold", size: 12)
                     )
                     .padding(.leading, 10)
+                    .foregroundStyle(.black)
+
                     
                     Text(friend.user2.uClass).font(
                         .custom("Roboto-Regular", size: 12)

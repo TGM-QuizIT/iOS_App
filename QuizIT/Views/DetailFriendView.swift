@@ -11,10 +11,14 @@ import URLImage
 struct DetailFriendView: View {
     
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var network: Network
 
 
-    var friendship: Friendship
-    var lastResults: [Result]
+    
+    var user: User
+    @State var status: Int
+    var friend: Friendship?
+    var challenges: [Result] = dummyResults
 
     var body: some View {
         VStack {
@@ -25,19 +29,46 @@ struct DetailFriendView: View {
             
             Image("AvatarM")
 
-            Text(friendship.user2.fullName).font(
+            Text(user.fullName).font(
                 .custom("Poppins-SemiBold", size: 20))
 
-            Text(friendship.user2.uClass).font(
+            Text(user.uClass).font(
                 .custom("Roboto-Regular", size: 20)
             )
             .fontWeight(.medium)
 
-            //pendingFriendButton(friendship: friendship)
+            pendingFriendButton(status: self.status) {
+                if(self.status == 0) {
+                    network.sendFriendshipRequest(id: user.id) { success, error in
+                        if let success = success {
+                            if(success) {
+                                print("Freundschaftsanfrage an \(user.name) gesendet!")
+                                self.status = 1
+                            } else {
+                                print("User ist bereits befreundet")
+                            }
+                        } else if let error = error {
+                            print(error)
+                        }
+                    }
+                } else if(self.status == 2) {
+                    if let friend = self.friend {
+                        network.declineFriendship(id: friend.id) { error in
+                            if let error = error {
+                                print(error)
+                            } else {
+                                print("Freund: \(friend.user2.name) entfernt")
+                                self.status = 0
+
+                            }
+                        }
+                    }
+                }
+            }
 
             VStack(alignment: .leading) {
                 HStack {
-                    Text(friendship.user2.fullName + "'s Herausforderungen").font(
+                    Text(user.fullName + "'s Herausforderungen").font(
                         .custom("Poppins-SemiBold", size: 16)
                     )
                     .padding(.leading)
@@ -47,7 +78,7 @@ struct DetailFriendView: View {
                 
                 ScrollView(.horizontal) {
                     HStack(spacing:-20) {
-                        ForEach(lastResults, id: \.self) { result in
+                        ForEach(self.challenges, id: \.self) { result in
                             ResultCard(result: result)
                             
                         }
@@ -66,64 +97,66 @@ struct DetailFriendView: View {
 }
 
 extension DetailFriendView {
-    /* TODO: Pending anpassen (kein Freundschafts-Objekt wenn keine Anfrage vorhanden ist)
-    func pendingFriendButton(friendship: Friendship) -> some View {
-        Button {
-
-        } label: {
-            HStack(spacing: 8) {
-                Image(
-                    friendship.actionReq == 0
-                        ? "add_friend"
-                        : friendship.pending == 1
-                            ? "pending_friend"
-                            : friendship.pending == 2
-                                ? "check_white" : "default")
-                .resizable()
-                .frame(width: 15, height: 15)
-                Text(
-                    friendship.pending == 0
-                        ? "anfreunden"
-                        : friendship.pending == 1
-                            ? "ausstehend"
-                            : friendship.pending == 2
-                                ? "befreundet" : "unbekannt"
-                )
-                .foregroundColor(
-                    friendship.pending == 0
-                        ? Color.black
-                        : friendship.pending == 1
+    // TODO: Pending anpassen (kein Freundschafts-Objekt wenn keine Anfrage vorhanden ist)
+    func pendingFriendButton(status: Int, clickAction: @escaping () -> Void) -> some View {
+        ZStack {
+            Button {
+                clickAction()
+            } label: {
+                HStack(spacing: 8) {
+                    Image(
+                        status == 0
+                            ? "add_friend"
+                            : status == 1
+                                ? "pending_friend"
+                                : status == 2
+                                    ? "check_white" : "default")
+                    .resizable()
+                    .frame(width: 15, height: 15)
+                    Text(
+                        status == 0
+                            ? "anfreunden"
+                            : status == 1
+                                ? "ausstehend"
+                                : status == 2
+                                    ? "befreundet" : "unbekannt"
+                    )
+                    .foregroundColor(
+                        status == 0
                             ? Color.black
-                            : friendship.pending == 2
-                                ? Color.white : Color.black
-                )
-                .font(.system(size: 16, weight: .medium))
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(
-                        friendship.pending == 0
-                            ? Color.black
-                            : friendship.pending == 1
+                            : status == 1
                                 ? Color.black
-                                : friendship.pending == 2
-                                    ? Color.accentColor : Color.black,
-                        lineWidth: 1)
-            )
-            .background(
-                friendship.pending == 0
-                    ? Color.white
-                    : friendship.pending == 1
+                                : status == 2
+                                    ? Color.white : Color.black
+                    )
+                    .font(.system(size: 16, weight: .medium))
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(
+                            status == 0
+                                ? Color.black
+                                : status == 1
+                                    ? Color.black
+                                    : status == 2
+                                        ? Color.accentColor : Color.black,
+                            lineWidth: 1)
+                )
+                .background(
+                    status == 0
                         ? Color.white
-                        : friendship.pending == 2
-                            ? Color.accentColor : Color.white
-            )  // Hintergrundfarbe des Buttons
-            .cornerRadius(20)
+                        : status == 1
+                            ? Color.white
+                            : status == 2
+                                ? Color.accentColor : Color.white
+                )
+                .cornerRadius(20)
+            }
         }
+        
     }
-     */
     
     private func ResultCard(result: Result) -> some View {
             ZStack {
@@ -250,5 +283,5 @@ extension DetailFriendView {
 }
 
 #Preview {
-    DetailFriendView(friendship: dummyFriendships[0], lastResults: dummyResults)
+    DetailFriendView(user: dummyUser[0], status: 0)
 }

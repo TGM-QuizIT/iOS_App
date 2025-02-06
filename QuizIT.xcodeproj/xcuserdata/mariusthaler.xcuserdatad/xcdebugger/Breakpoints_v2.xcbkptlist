@@ -55,22 +55,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "F72D67A6-BD06-4D62-80CC-B62BEADA7D95"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "QuizIT/Views/Tab/MainMenu.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "103"
-            endingLineNumber = "103"
-            landmarkName = "fetchSubjects()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "1A8AE047-7D47-491E-954A-F668643A662D"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -96,7 +80,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "162"
             endingLineNumber = "162"
-            landmarkName = "fetchSubjectQuiz(id:completion:)"
+            landmarkName = "fetchFocus(id:completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
