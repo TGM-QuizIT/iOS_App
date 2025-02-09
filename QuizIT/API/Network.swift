@@ -357,7 +357,6 @@ class Network: ObservableObject {
                         }
                     }
                 case .failure(let error):
-                    print(error.localizedDescription)
                     completion(nil, nil, "Request failed! Reason: \(error)")
                 }
             }
@@ -370,9 +369,6 @@ class Network: ObservableObject {
         
         AF.request("\(self.baseUrl)/friends/accept", method: .put, parameters: parameters, encoding: JSONEncoding.default, headers: self.headers)
             .validate(statusCode: 200...500)
-            .responseString() { response in
-                print(response)
-            }
             .responseDecodable(of: Response.self, decoder: self.decoder) { res in
                 switch res.result {
                 case .success(let response):
@@ -422,9 +418,6 @@ class Network: ObservableObject {
         
         AF.request("\(self.baseUrl)/friends", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: self.headers)
             .validate(statusCode: 200...500)
-            .responseString() { response in
-                print(response)
-            }
             .responseDecodable(of: Response.self, decoder: self.decoder) { res in
                 switch res.result {
                 case .success(let response):
@@ -543,9 +536,6 @@ class Network: ObservableObject {
         
         AF.request("\(self.baseUrl)/challenge", method: .put, parameters: parameters, encoding: JSONEncoding.default, headers: self.headers)
             .validate(statusCode: 200...500)
-            .responseString() { response in
-                print(response)
-            }
             .responseDecodable(of: Response.self, decoder: self.decoder) { res in
                 switch res.result {
                 case .success(let response):
