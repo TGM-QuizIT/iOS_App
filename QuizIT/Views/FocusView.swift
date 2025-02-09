@@ -38,7 +38,7 @@ struct FocusView: View {
                     NavigationLink(destination: QuizHistoryView(subject: subject)) {
                         AllFocusCard(subject: subject) {
                             self.loadingQuiz = true
-                            self.selectedFocus = Focus(id: 0, name: subject.name, year: 0, questionCount: 1, imageAddress: "")
+                            self.selectedFocus = Focus(id: 0, name: subject.name, year: 0, questionCount: 1, imageAddress: "", subjectId: 0)
                             network.fetchSubjectQuiz(id: subject.id) { questions, error in
                                 if let error = error {
                                     //display error
@@ -114,10 +114,11 @@ struct FocusView: View {
 
     private func fetchFocus() {
         self.loading = true
-        network.fetchFocus(id: self.subject.id) { focus in
+        network.fetchFocus(id: self.subject.id) { focus, error in
             if let focus = focus {
                 self.focusList = focus
-            } else {
+            } else if let error = error {
+                //TODO: Fehlerbehandlung
                 self.focusList = []
             }
         }

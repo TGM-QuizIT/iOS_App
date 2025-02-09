@@ -11,7 +11,7 @@ struct Challenge: Codable, Identifiable, Hashable {
     let friendship: Friendship
     let focus: Focus?
     let subject: Subject?
-    let score1: Result //eigener Score
+    let score1: Result? //eigener Score
     let score2: Result? //gegnerischer Score
     let date: Date
     

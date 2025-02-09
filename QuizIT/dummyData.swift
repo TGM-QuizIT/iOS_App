@@ -33,7 +33,8 @@ let dummyFocuses: [Focus] = [
         year: 4,
         questionCount: 50,
         imageAddress:
-            "https://placehold.co/1600x600.png"
+            "https://placehold.co/1600x600.png",
+        subjectId: 1
     ),
     Focus(
         id: 2,
@@ -41,7 +42,8 @@ let dummyFocuses: [Focus] = [
         year: 4,
         questionCount: 45,
         imageAddress:
-            "https://placehold.co/1600x600.png"
+            "https://placehold.co/1600x600.png",
+        subjectId: 1
     ),
     Focus(
         id: 3,
@@ -49,7 +51,8 @@ let dummyFocuses: [Focus] = [
         year: 4,
         questionCount: 40,
         imageAddress:
-            "https://placehold.co/1600x600.png"
+            "https://placehold.co/1600x600.png",
+        subjectId: 1
     ),
 ]
 
