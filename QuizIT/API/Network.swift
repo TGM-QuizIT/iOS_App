@@ -59,8 +59,12 @@ class Network: ObservableObject {
     }
     
     func editUserYear(newYear: Int, completion: @escaping (String?) -> Void) {
+        guard let id = self.user?.id else {
+            //throw UserError.missingUserObject(message: "The ID is null.")
+            return
+        }
         let parameters: [String: Any] = [
-            "userId": self.user?.id as Any,
+            "userId": id,
             "userYear": newYear
         ]
         
@@ -91,8 +95,8 @@ class Network: ObservableObject {
             }
     }
     
-    func fetchUserStats(completion: @escaping(Statistic? ,String?) -> Void) {
-        AF.request("\(self.baseUrl)/user/stats?id=\(self.user?.id ?? 1)", method: .get, headers: self.headers) //TODO: Sinnvollen Standardwert überlegen
+    func fetchUserStats(id: Int, completion: @escaping(Statistic? ,String?) -> Void) {
+        AF.request("\(self.baseUrl)/user/stats?id=\(id)", method: .get, headers: self.headers)
             .validate(statusCode: 200..<500)
             .responseDecodable(of: Response.self) { res in
                 switch res.result {
@@ -137,7 +141,11 @@ class Network: ObservableObject {
     
     /*------------Subject-Requests---------------*/
     func fetchSubjects(completion: @escaping (String?) -> Void) {
-        AF.request("\(self.baseUrl)/subject?id=\(self.user?.id ?? 1)", method: .get, headers: self.headers) //TODO: Sinnvollen Standardwert überlegen
+        guard let id = self.user?.id else {
+            //throw UserError.missingUserObject(message: "The ID is null.")
+            return
+        }
+        AF.request("\(self.baseUrl)/subject?id=\(id)", method: .get, headers: self.headers)
             .validate(statusCode: 200..<500)
             .responseDecodable(of: Response.self) { res in
                 switch res.result {
@@ -165,7 +173,11 @@ class Network: ObservableObject {
     
     /*------------Focus-Requests---------------*/
     func fetchFocus(id: Int, completion: @escaping ([Focus]?, String?) -> Void) {
-        AF.request("\(self.baseUrl)/focus?id=\(id)&year=\(self.user?.year ?? 1)&active=1", method: .get, headers: self.headers) //TODO: Sinnvollen Standardwert überlegen
+        guard let year = self.user?.year else {
+            //throw UserError.missingUserObject(message: "The year is null.")
+            return
+        }
+        AF.request("\(self.baseUrl)/focus?id=\(id)&year=\(year)&active=1", method: .get, headers: self.headers)
             .validate(statusCode: 200..<500)
             .responseDecodable(of: Response.self) { res in
                 switch res.result {
@@ -242,9 +254,13 @@ class Network: ObservableObject {
     
     /*------------Result-Requests---------------*/
     func postFocusResult(score: Double, focusId: Int , completion: @escaping(Result?, String?) -> Void) {
+        guard let id = self.user?.id else {
+            //throw UserError.missingUserID(message: "The ID is null.")
+            return
+        }
         let parameters: [String: Any] = [
             "resultScore": score*20,
-            "userId": self.user?.id as Any,
+            "userId": id,
             "focusId": focusId
         ]
         
@@ -272,9 +288,13 @@ class Network: ObservableObject {
     }
     
     func postSubjectResult(score: Double, subjectId: Int, completion: @escaping(Result?, String?) -> Void) {
+        guard let id = self.user?.id else {
+            //throw UserError.missingUserID(message: "The ID is null.")
+            return
+        }
         let parameters: [String: Any] = [
             "resultScore": score*20,
-            "userId": self.user?.id as Any,
+            "userId": id,
             "subjectId": subjectId
         ]
         
@@ -302,11 +322,15 @@ class Network: ObservableObject {
     }
     
     func fetchResults(fId: Int?, sId: Int?, completion: @escaping([Result]?, String?) -> Void) {
+        guard let id = self.user?.id else {
+            //throw UserError.missingUserID(message: "The ID is null.")
+            return
+        }
         let url: String
-        if let id = fId {
-            url = "\(self.baseUrl)/result?userId=\(self.user!.id)&focusId=\(id)"
-        } else if let id = sId {
-            url = "\(self.baseUrl)/result?userId=\(self.user!.id)&subjectId=\(id)"
+        if let fId = fId {
+            url = "\(self.baseUrl)/result?userId=\(id)&focusId=\(fId)"
+        } else if let sId = sId {
+            url = "\(self.baseUrl)/result?userId=\(id)&subjectId=\(sId)"
         } else {
             completion(nil, "Es wurde keine ID für ein Fach oder Schwerpunkt übergeben.")
             return
@@ -337,8 +361,11 @@ class Network: ObservableObject {
     
     /*------------Friendship-Requests---------------*/
     func fetchFriendships(completion: @escaping([Friendship]?, [Friendship]?, String?) -> Void) {
-        
-        AF.request("\(self.baseUrl)/friends?id=\(self.user!.id)", method: .get, headers: self.headers)
+        guard let id = self.user?.id else {
+            //throw UserError.missingUserID(message: "The ID is null.")
+            return
+        }
+        AF.request("\(self.baseUrl)/friends?id=\(id)", method: .get, headers: self.headers)
             .validate(statusCode: 200..<500)
             .responseDecodable(of: Response.self, decoder: self.decoder) { res in
                 switch res.result {
@@ -410,10 +437,14 @@ class Network: ObservableObject {
             }
     }
     
-    func sendFriendshipRequest(id: Int, completion: @escaping(Bool?,String?) -> Void) {
+    func sendFriendshipRequest(friendId: Int, completion: @escaping(Bool?,String?) -> Void) {
+        guard let id = self.user?.id else {
+            //throw UserError.missingUserID(message: "The ID is null.")
+            return
+        }
         let parameters: [String: Any] = [
-            "user1Id": self.user?.id ?? 1, //TODO: Sinnvollen Standardwert bzw. Fehlerbehandlung überlegen
-            "user2Id": id
+            "user1Id": id,
+            "user2Id": friendId
         ]
         
         AF.request("\(self.baseUrl)/friends", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: self.headers)
@@ -445,10 +476,14 @@ class Network: ObservableObject {
     
     /*------------Challenge-Requests---------------*/
     func postFocusChallenge(friendshipId: Int, focusId: Int, completion: @escaping(Challenge?, String?) -> Void) {
+        guard let id = self.user?.id else {
+            //throw UserError.missingUserID(message: "The ID is null.")
+            return
+        }
         let parameters: [String: Any] = [
             "friendshipId": friendshipId,
             "focusId": focusId,
-            "userId": self.user?.id ?? 1 //TODO: Sinnvollen Standardwert überlegen
+            "userId": id
         ]
         
         AF.request("\(self.baseUrl)/challenge", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: self.headers)
@@ -475,10 +510,14 @@ class Network: ObservableObject {
     }
     
     func postSubjectChallenge(friendshipId: Int, subjectId: Int, completion: @escaping(Challenge?, String?) -> Void) {
+        guard let id = self.user?.id else {
+            //throw UserError.missingUserID(message: "The ID is null.")
+            return
+        }
         let parameters: [String: Any] = [
             "friendshipId": friendshipId,
             "subjectId": subjectId,
-            "userId": self.user?.id ?? 1 //TODO: Sinnvollen Standardwert überlegen
+            "userId": id
         ]
         
         AF.request("\(self.baseUrl)/challenge/subject", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: self.headers)
@@ -558,7 +597,11 @@ class Network: ObservableObject {
     }
     
     func fetchFriendshipsChallenges(friendshipId: Int, completion: @escaping([Challenge]?, [Challenge]?, String?) -> Void) {
-        AF.request("\(self.baseUrl)/challenge/friendship?friendshipId=\(friendshipId)&userId=\(self.user?.id ?? 1)", method: .get, headers: self.headers) //TODO: Sinnvollen Standardwert überlegen
+        guard let id = self.user?.id else {
+            //throw UserError.missingUserID(message: "The ID is null.")
+            return
+        }
+        AF.request("\(self.baseUrl)/challenge/friendship?friendshipId=\(friendshipId)&userId=\(id)", method: .get, headers: self.headers)
             .validate(statusCode: 200..<500)
             .responseDecodable(of: Response.self, decoder: self.decoder) { res in
                 switch res.result {
@@ -582,7 +625,11 @@ class Network: ObservableObject {
     }
     
     func fetchSubjectChallenges(subjectId: Int,completion: @escaping([Challenge]?, [Challenge]?, String?) -> Void) {
-        AF.request("\(self.baseUrl)/challenge?subjectId=\(subjectId)&userId=\(self.user?.id ?? 1)", method: .get, headers: self.headers) //TODO: Sinnvollen Standardwert überlegen
+        guard let id = self.user?.id else {
+            //throw UserError.missingUserID(message: "The ID is null.")
+            return
+        }
+        AF.request("\(self.baseUrl)/challenge?subjectId=\(subjectId)&userId=\(id)", method: .get, headers: self.headers)
             .validate(statusCode: 200..<500)
             .responseDecodable(of: Response.self, decoder: decoder) { res in
                 switch res.result {
@@ -606,7 +653,11 @@ class Network: ObservableObject {
     }
     
     func fetchDoneChallenges(completion: @escaping([Challenge]?, String?) -> Void) {
-        AF.request("\(self.baseUrl)/challenge/done?userId=\(self.user?.id ?? 1)", method: .get, headers: self.headers) //TODO: Sinnvollen Standardwert überlegen
+        guard let id = self.user?.id else {
+            //throw UserError.missingUserID(message: "The ID is null.")
+            return
+        }
+        AF.request("\(self.baseUrl)/challenge/done?userId=\(id)", method: .get, headers: self.headers)
             .validate(statusCode: 200..<500)
             .responseDecodable(of: Response.self, decoder: self.decoder) { res in
                 switch res.result {
@@ -630,7 +681,11 @@ class Network: ObservableObject {
     }
     
     func fetchOpenChallenges(completion: @escaping([Challenge]?, String?) -> Void) {
-        AF.request("\(self.baseUrl)/challenge/open?userId=\(self.user?.id ?? 1)", method: .get, headers: self.headers) //TODO: Sinnvollen Standardwert überlegen
+        guard let id = self.user?.id else {
+            //throw UserError.missingUserID(message: "The ID is null.")
+            return
+        }
+        AF.request("\(self.baseUrl)/challenge/open?userId=\(id)", method: .get, headers: self.headers)
             .validate(statusCode: 200..<500)
             .responseDecodable(of: Response.self, decoder: decoder) { res in
                 switch res.result {

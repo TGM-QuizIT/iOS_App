@@ -110,7 +110,11 @@ struct MainMenu: View {
         }
 
         dispatchGroup.enter()
-        network.fetchUserStats() { stats, error in
+        guard let id = network.user?.id else {
+            //throw UserError.missingUserObject(message: "The ID is null.")
+            return
+        }
+        network.fetchUserStats(id: id) { stats, error in
             if let stats = stats {
                 self.stats = stats
             } else if let error = error {
