@@ -239,21 +239,39 @@ struct QuizHistoryView: View {
         }
         .onAppear {
             self.loading = true
-            network.fetchResults(fId: self.focus?.id, sId: self.subject?.id) {
-                results, error in
+            let dispatchGroup = DispatchGroup()
+
+            dispatchGroup.enter()
+            network.fetchResults(fId: self.focus?.id, sId: self.subject?.id) { results, error in
                 if let error = error {
-                    print(error)
-                    self.errorMsg =
-                        "Deine Resultate konnten nicht geladen werden. Versuche es später erneut."
+                    self.errorMsg = "Deine Resultate konnten nicht geladen werden. Versuche es später erneut."
                 } else {
                     if let results = results {
                         self.results = results.sorted { $0.score > $1.score }
                     }
                 }
+                dispatchGroup.leave()
             }
-            //TODO: Fetch challenge history
-            self.loading = false
 
+            dispatchGroup.enter()
+            guard let subjectId = subject?.id ?? focus?.subjectId else {
+                self.errorMsg = "Es wurde keine ID gefunden."
+                return
+            }
+
+            network.fetchSubjectChallenges(subjectId: subjectId) { openChallenges, finishedChallenges, error in
+                if let openChallenges = openChallenges, let finishedChallenges = finishedChallenges {
+                    self.openChallenges = openChallenges
+                    self.finishedChallenges = finishedChallenges
+                } else if let error = error {
+                    self.errorMsg = "Es konnten keine Challenges gefunden werden."
+                }
+                dispatchGroup.leave()
+            }
+
+            dispatchGroup.notify(queue: .main) {
+                self.loading = false
+            }
         }
         .navigationBarBackButtonHidden(true)
 

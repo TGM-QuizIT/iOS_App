@@ -19,80 +19,109 @@ struct DetailFriendView: View {
     @State var status: Int
     var friend: Friendship?
     var challenges: [Result] = dummyResults
+    @State var loading = false
+    @State var stats: Statistic = Statistic(avg: 0, rank: -1, winRate: 0)
 
     var body: some View {
         VStack {
-            
-            NavigationHeader(title: "Social") {
-                dismiss()
+            if self.loading {
+                ProgressView()
             }
-            
-            Image("AvatarM")
-
-            Text(user.fullName).font(
-                .custom("Poppins-SemiBold", size: 20))
-
-            Text(user.uClass).font(
-                .custom("Roboto-Regular", size: 20)
-            )
-            .fontWeight(.medium)
-
-            pendingFriendButton(status: self.status) {
-                if(self.status == 0) {
-                    network.sendFriendshipRequest(id: user.id) { success, error in
-                        if let success = success {
-                            if(success) {
-                                print("Freundschaftsanfrage an \(user.name) gesendet!")
-                                self.status = 1
-                            } else {
-                                print("User ist bereits befreundet")
-                            }
-                        } else if let error = error {
-                            print(error)
-                        }
+            else {
+                VStack {
+                    
+                    NavigationHeader(title: "Social") {
+                        dismiss()
                     }
-                } else if(self.status == 2) {
-                    if let friend = self.friend {
-                        network.declineFriendship(id: friend.id) { error in
-                            if let error = error {
-                                print(error)
-                            } else {
-                                print("Freund: \(friend.user2.name) entfernt")
-                                self.status = 0
-
-                            }
-                        }
-                    }
-                }
-            }
-
-            VStack(alignment: .leading) {
-                HStack {
-                    Text(user.fullName + "'s Herausforderungen").font(
-                        .custom("Poppins-SemiBold", size: 16)
+                    
+                    Image("AvatarM")
+                    
+                    Text(user.fullName).font(
+                        .custom("Poppins-SemiBold", size: 20))
+                    
+                    Text(user.uClass).font(
+                        .custom("Roboto-Regular", size: 20)
                     )
-                    .padding(.leading)
-                    .padding(.top,20)
+                    .fontWeight(.medium)
+                    
+                    pendingFriendButton(status: self.status) {
+                        if(self.status == 0) {
+                            network.sendFriendshipRequest(friendId: user.id) { success, error in
+                                if let success = success {
+                                    if(success) {
+                                        print("Freundschaftsanfrage an \(user.name) gesendet!")
+                                        self.status = 1
+                                    } else {
+                                        print("User ist bereits befreundet")
+                                    }
+                                } else if let error = error {
+                                    print(error)
+                                }
+                            }
+                        } else if(self.status == 2) {
+                            if let friend = self.friend {
+                                network.declineFriendship(id: friend.id) { error in
+                                    if let error = error {
+                                        print(error)
+                                    } else {
+                                        print("Freund: \(friend.user2.name) entfernt")
+                                        self.status = 0
+                                        
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text(user.fullName + "'s Herausforderungen").font(
+                                .custom("Poppins-SemiBold", size: 16)
+                            )
+                            .padding(.leading)
+                            .padding(.top,20)
+                            Spacer()
+                        }
+                        
+                        ScrollView(.horizontal) {
+                            HStack(spacing:-20) {
+                                ForEach(self.challenges, id: \.self) { result in
+                                    ResultCard(result: result)
+                                    
+                                }
+                            }
+                        }
+                        .scrollIndicators(.hidden)
+                        
+                        StatisticCard(stats: self.stats)
+                        
+                    }
+                    
                     Spacer()
                 }
-                
-                ScrollView(.horizontal) {
-                    HStack(spacing:-20) {
-                        ForEach(self.challenges, id: \.self) { result in
-                            ResultCard(result: result)
-                            
-                        }
-                    }
-                }
-                .scrollIndicators(.hidden)
-                
-                StatisticCard()
-                
             }
+        }
+        .onAppear {
+            self.loading = true
+            let dispatchGroup = DispatchGroup()
 
-            Spacer()
+            dispatchGroup.enter()
+            network.fetchUserStats(id: user.id) { stats, error in
+                if let stats = stats {
+                    self.stats = stats
+                } else if let error = error {
+                    //TODO: Fehlerbehandlung
+                }
+                dispatchGroup.leave()
+            }
+            
+            //Challenges einer Freundschaft fetchen
+            dispatchGroup.notify(queue: .main) {
+                self.loading = false
+            }
         }
         .navigationBarBackButtonHidden(true)
+        
     }
 }
 
@@ -216,66 +245,64 @@ extension DetailFriendView {
                 Spacer()
             }
     }
-    private func StatisticCard() -> some View {
+    private func StatisticCard(stats: Statistic) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 20)
                 .fill(Color.accentColor)
                 .frame(width: 370, height: 110)
                 .shadow(radius: 5)
                 .padding()
-            HStack {
+
+            HStack(spacing: 0) { // Kein zusätzlicher Abstand zwischen den Spalten
                 VStack {
                     Image(systemName: "star.fill")
                         .font(.title2)
                         .foregroundStyle(Color.white)
-                    
-                    Text("Punkte")
+
+                    Text("Challenges")
                         .font(.title3)
                         .foregroundStyle(Color.white.opacity(0.5))
-                    Text("540")
+                    Text("\(Int(stats.winRate)) %")
                         .font(.title3)
                         .foregroundStyle(Color.white)
-                    
-                    
                 }
-                .padding()
-                
+                .frame(maxWidth: .infinity) // Gleichmäßige Verteilung
+
                 Divider()
-                    .frame(width: 10, height: 60)
-                    .foregroundStyle(.black)
-                
+                    .frame(height: 60)
+                    .background(Color.darkGrey)
+
                 VStack {
                     Image(systemName: "graduationcap.fill")
                         .font(.title2)
                         .foregroundStyle(Color.white)
-                    
-                    Text("Platz")
+
+                    Text("Level")
                         .font(.title3)
                         .foregroundStyle(Color.white.opacity(0.5))
-                    Text("#1540")
+                    Text(stats.rank == -1 ? "-" : "\(stats.rank)")
                         .font(.title3)
                         .foregroundStyle(Color.white)
                 }
-                .padding()
-                
-                
+                .frame(maxWidth: .infinity)
+
                 Divider()
-                    .frame(width: 10,height: 60)
-                    .foregroundStyle(.black)
-                
+                    .frame(height: 60)
+                    .background(Color.darkGrey)
+
                 VStack {
                     Image(systemName: "trophy.fill")
                         .font(.title2)
                         .foregroundStyle(Color.white)
-                    
+
                     Text("Score")
                         .font(.title3)
                         .foregroundStyle(Color.white.opacity(0.5))
-                    Text("79%")
+                    Text("\(Int(stats.average)) %")
                         .font(.title3)
                         .foregroundStyle(Color.white)
                 }
-                .padding()
+                .frame(maxWidth: .infinity)
             }
             .padding(10)
         }
