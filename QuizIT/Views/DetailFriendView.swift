@@ -39,7 +39,7 @@ struct DetailFriendView: View {
 
             pendingFriendButton(status: self.status) {
                 if(self.status == 0) {
-                    network.sendFriendshipRequest(id: user.id) { success, error in
+                    network.sendFriendshipRequest(friendId: user.id) { success, error in
                         if let success = success {
                             if(success) {
                                 print("Freundschaftsanfrage an \(user.name) gesendet!")
@@ -97,7 +97,6 @@ struct DetailFriendView: View {
 }
 
 extension DetailFriendView {
-    // TODO: Pending anpassen (kein Freundschafts-Objekt wenn keine Anfrage vorhanden ist)
     func pendingFriendButton(status: Int, clickAction: @escaping () -> Void) -> some View {
         ZStack {
             Button {
