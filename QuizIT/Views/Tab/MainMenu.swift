@@ -125,8 +125,7 @@ struct MainMenu: View {
             }
         }
         .onAppear {
-            
-            handleRequests()
+       handleRequests()
         }
     }
     
@@ -345,24 +344,25 @@ extension MainMenu {
                         .frame(height: 23)
 
                     // Fortschrittsfüllung
+                    let score = Int(challenge.score2?.score ?? 50)
+
                     RoundedRectangle(cornerRadius: 20)
                         .fill(Color.blue).opacity(0.7)
                         .frame(
-                            width: CGFloat(challenge.score1?.score ?? 50) * 1.5, //TODO: Sinnvollen Standardwert bzw. Optional Binding
+                            width: CGFloat(score) * 1.5,
                             height: 23
-                        )  // Breite basierend auf % (max. 250px)
-                        .animation(
-                            .easeInOut(duration: 0.3),
-                            value: challenge.score1?.score ?? 50) //TODO: Sinnvollen Standardwert bzw. Optional Binding
+                        )
+                        .animation(.easeInOut(duration: 0.3), value: score)
 
                     // Prozentzahl in der Mitte
-                    Text("\(challenge.score1?.score.description ?? "50")%")
+                    Text("\(score)%")
                         .foregroundColor(.darkGrey)
                         .bold()
                         .frame(width: 150, height: 40)
                         .background(Color.clear)
                 }
                 .frame(width: 125, height: 30)
+
 
             }
             .padding(.bottom, 40)
