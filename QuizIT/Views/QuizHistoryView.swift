@@ -123,7 +123,7 @@ struct QuizHistoryView: View {
                                 Spacer()
                             }
                             if self.errorMsg == "" {
-                                ScrollView {
+                                VStack {
                                     ForEach(
                                         Array(self.results.enumerated()),
                                         id: \.1
@@ -133,9 +133,6 @@ struct QuizHistoryView: View {
                                             result: result, place: index + 1)
                                     }
                                 }
-                                .frame(
-                                    height: UIScreen.main.bounds.height * 0.37
-                                )
                                 .scrollIndicators(.hidden)
 
                             } else {

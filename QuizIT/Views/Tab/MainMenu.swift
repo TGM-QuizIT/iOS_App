@@ -15,8 +15,9 @@ struct MainMenu: View {
     @EnvironmentObject var network: Network
     
     @State private var subjects: [Subject] = []
+    @State private var challenges: [Challenge] = dummyChallenges
     @State private var stats: Statistic? = nil
-    @State private var loading = true
+    @State private var loading = false
     
     var body: some View {
         VStack {
@@ -25,63 +26,87 @@ struct MainMenu: View {
             }
             else {
                 NavigationStack {
-                    VStack {
-                        HStack {
-                            
-                            Image("Logo")
-                                .resizable()
-                                .frame(width: 150, height: 80)
-                                .cornerRadius(20)
-                                .padding(.leading)
-                            
-                            
-                            
-                            Spacer()
-                        }
-                        .padding(.bottom, 10)
-                        VStack(alignment: .leading, spacing: 1) {
+                    ScrollView {
+                        VStack {
                             HStack {
-                                Text("Deine Fächer").font(Font.custom("Poppins-SemiBold", size: 25))
+                                
+                                Image("Logo")
+                                    .resizable()
+                                    .frame(width: 150, height: 80)
+                                    .cornerRadius(20)
                                     .padding(.leading)
+                                
+                                
+                                
                                 Spacer()
-                                Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 15))
-                                    .padding(.trailing)
                             }
-                            
-                            if self.subjects != [] {
-                                ScrollView(.horizontal) {
-                                    HStack {
-                                        ForEach(subjects, id: \.self) { subject in
-                                            NavigationLink(destination: FocusView(subject: subject)) {
-                                                SubjectCard(subject: subject)
+                            .padding(.bottom, 10)
+                            VStack(alignment: .leading, spacing: 1) {
+                                HStack {
+                                    Text("Deine Fächer").font(Font.custom("Poppins-SemiBold", size: 16))
+                                        .padding(.leading)
+                                    Spacer()
+                                    Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 12))
+                                        .padding(.trailing)
+                                }
+                                
+                                if self.subjects != [] {
+                                    ScrollView(.horizontal) {
+                                        HStack {
+                                            ForEach(subjects, id: \.self) { subject in
+                                                NavigationLink(destination: FocusView(subject: subject)) {
+                                                    SubjectCard(subject: subject)
+                                                }
                                             }
                                         }
+                                        .padding(.top)
                                     }
+                                    .scrollIndicators(.hidden)
+                                }
+                                
+                                else {
+                                    Text("Keine Fächer verfügbar").font(Font.custom("Poppins-Semibold", size: 15))
+                                        .padding(.leading)
+                                }
+                                
+                                HStack {
+                                    Text("Herausforderungen").font(Font.custom("Poppins-SemiBold", size: 16))
+                                        .padding(.leading)
+                                    Spacer()
+                                    Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 12))
+                                        .padding(.trailing)
+                                }
+                                .padding(.top, 24)
+                                
+                                if self.challenges != [] {
+                                    ScrollView(.horizontal) {
+                                        HStack {
+                                            ForEach(challenges, id: \.self) { challenge in
+                                                OpenChallengeCard(challenge: challenge)
+                                            }
+                                        }
+                                        .padding(.top)
+                                    }
+                                    .scrollIndicators(.hidden)
                                     
                                 }
-                                .scrollIndicators(.hidden)
+                                
+                                
+                                HStack {
+                                    Text("Deine Statistiken").font(Font.custom("Poppins-SemiBold", size: 16))
+                                        .padding(.leading)
+                                    Spacer()
+                                    Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 12))
+                                        .padding(.trailing)
+                                }
+                                .padding(.top,24)
+                                if let stats = self.stats {
+                                    StatisticCard(stats: stats)
+                                }
+                                
+                                
                             }
-                            
-                            else {
-                                Text("Keine Fächer verfügbar").font(Font.custom("Poppins-Semibold", size: 15))
-                                    .padding(.leading)
-                            }
-                            
-                            HStack {
-                                Text("Deine Statistiken").font(Font.custom("Poppins-SemiBold", size: 25))
-                                    .padding(.leading)
-                                Spacer()
-                                Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 15))
-                                    .padding(.trailing)
-                            }
-                            .padding(.top)
-                            if let stats = self.stats {
-                                StatisticCard(stats: stats)
-                            }
-                            
-                            
                         }
-                        
                         
                         
                     }
@@ -276,6 +301,87 @@ extension MainMenu {
                 .frame(maxWidth: .infinity)
             }
             .padding(10)
+        }
+    }
+    
+    private func OpenChallengeCard(challenge: Challenge) -> some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 15)
+                .fill(Color.base)
+                .frame(width: 200, height: 129)
+
+            // .shadow(radius: 5)
+
+            VStack {
+                ZStack {
+                    Rectangle()
+                        .fill(Color.lightBlue)
+                        .frame(width: 200, height: 75)
+                        .clipShape(
+                            CustomCorners(
+                                corners: [.topLeft, .topRight], radius: 20)
+                        )
+                }
+
+                Text(
+                    challenge.focus?.name ?? challenge.subject?.name
+                        ?? "Unbekannt"
+                )
+                .font(Font.custom("Poppins-SemiBold", size: 11))
+                .padding(.bottom, 2)
+
+                // Fortschrittsanzeige
+
+                ZStack(alignment: .leading) {
+                    // Hintergrund der Fortschrittsanzeige
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(Color.blue.opacity(0.7), lineWidth: 2)
+                        .frame(height: 23)
+
+                    // Fortschrittsfüllung
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(Color.blue).opacity(0.7)
+                        .frame(
+                            width: CGFloat(challenge.score1?.score ?? 50) * 1.5, //TODO: Sinnvollen Standardwert bzw. Optional Binding
+                            height: 23
+                        )  // Breite basierend auf % (max. 250px)
+                        .animation(
+                            .easeInOut(duration: 0.3),
+                            value: challenge.score1?.score ?? 50) //TODO: Sinnvollen Standardwert bzw. Optional Binding
+
+                    // Prozentzahl in der Mitte
+                    Text("\(challenge.score1?.score.description ?? "50")%")
+                        .foregroundColor(.darkGrey)
+                        .bold()
+                        .frame(width: 150, height: 40)
+                        .background(Color.clear)
+                }
+                .frame(width: 125, height: 30)
+
+            }
+            .padding(.bottom, 40)
+
+            Image("AvatarBackground")
+                .resizable()
+                .frame(width: 47, height: 47)
+                .padding(.trailing, 120)
+                .padding(.bottom, 120)
+                .padding(.top, 9)
+
+            VStack(alignment: .leading) {
+                Text(challenge.friendship.user2.fullName)
+                    .font(.custom("Poppins-SemiBold", size: 15))
+                    .frame(width: 120, alignment: .leading)
+                    .lineLimit(1)
+                    .padding(.top, 10)
+                    .padding(.leading, 95)
+
+                Text(challenge.friendship.user2.uClass)
+                    .font(.custom("Poppins-Regular", size: 12))
+                    .frame(width: 140, alignment: .leading)
+                    .padding(.leading, 100)
+            }
+            .padding(.bottom, 120)
         }
     }
 

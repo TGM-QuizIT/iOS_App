@@ -126,7 +126,6 @@ struct DetailFriendView: View {
 }
 
 extension DetailFriendView {
-    // TODO: Pending anpassen (kein Freundschafts-Objekt wenn keine Anfrage vorhanden ist)
     func pendingFriendButton(status: Int, clickAction: @escaping () -> Void) -> some View {
         ZStack {
             Button {
