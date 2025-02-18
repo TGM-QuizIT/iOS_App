@@ -15,7 +15,7 @@ struct MainMenu: View {
     @EnvironmentObject var network: Network
     
     @State private var subjects: [Subject] = []
-    @State private var challenges: [Challenge] = dummyChallenges
+    @State private var challenges: [Challenge] = []
     @State private var stats: Statistic? = nil
     @State private var loading = false
     
@@ -76,7 +76,6 @@ struct MainMenu: View {
                                     Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 12))
                                         .padding(.trailing)
                                 }
-                                .padding(.top, 24)
                                 
                                 if self.challenges != [] {
                                     ScrollView(.horizontal) {
@@ -86,6 +85,7 @@ struct MainMenu: View {
                                             }
                                         }
                                         .padding(.top)
+                                        .padding(.leading)
                                     }
                                     .scrollIndicators(.hidden)
                                     
@@ -99,7 +99,6 @@ struct MainMenu: View {
                                     Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 12))
                                         .padding(.trailing)
                                 }
-                                .padding(.top,24)
                                 if let stats = self.stats {
                                     StatisticCard(stats: stats)
                                 }
@@ -116,12 +115,12 @@ struct MainMenu: View {
             }
         }
         .onAppear {
-            self.loading = true
             handleRequests()
         }
     }
     
     private func handleRequests() {
+        self.loading = true
         let dispatchGroup = DispatchGroup()
 
         dispatchGroup.enter()
@@ -249,60 +248,46 @@ extension MainMenu {
                 .shadow(radius: 5)
                 .padding()
 
-            HStack(spacing: 0) { // Kein zusätzlicher Abstand zwischen den Spalten
-                VStack {
-                    Image(systemName: "star.fill")
-                        .font(.title2)
-                        .foregroundStyle(Color.white)
-
-                    Text("Challenges")
-                        .font(.title3)
-                        .foregroundStyle(Color.white.opacity(0.5))
-                    Text("\(Int(stats.winRate)) %")
-                        .font(.title3)
-                        .foregroundStyle(Color.white)
-                }
-                .frame(maxWidth: .infinity) // Gleichmäßige Verteilung
-
+            HStack(spacing: 0) {
+                statColumn(icon: "star.fill", title: "Challenges", value: "\(Int(stats.winRate)) %")
+                
                 Divider()
                     .frame(height: 60)
                     .background(Color.darkGrey)
 
-                VStack {
-                    Image(systemName: "graduationcap.fill")
-                        .font(.title2)
-                        .foregroundStyle(Color.white)
-
-                    Text("Level")
-                        .font(.title3)
-                        .foregroundStyle(Color.white.opacity(0.5))
-                    Text(stats.rank == -1 ? "-" : "\(stats.rank)")
-                        .font(.title3)
-                        .foregroundStyle(Color.white)
-                }
-                .frame(maxWidth: .infinity)
-
+                statColumn(icon: "graduationcap.fill", title: "Level", value: stats.rank == -1 ? "-" : "\(stats.rank)")
+                
                 Divider()
                     .frame(height: 60)
                     .background(Color.darkGrey)
 
-                VStack {
-                    Image(systemName: "trophy.fill")
-                        .font(.title2)
-                        .foregroundStyle(Color.white)
-
-                    Text("Score")
-                        .font(.title3)
-                        .foregroundStyle(Color.white.opacity(0.5))
-                    Text("\(Int(stats.average)) %")
-                        .font(.title3)
-                        .foregroundStyle(Color.white)
-                }
-                .frame(maxWidth: .infinity)
+                statColumn(icon: "trophy.fill", title: "Score", value: "\(Int(stats.average)) %")
             }
             .padding(10)
         }
     }
+
+    @ViewBuilder
+    private func statColumn(icon: String, title: String, value: String) -> some View {
+        VStack(spacing: 4) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundStyle(Color.white)
+                .frame(height: 24)
+
+            Text(title)
+                .font(.headline)
+                .foregroundStyle(Color.white.opacity(0.5))
+                .frame(height: 18)
+
+            Text(value)
+                .font(.headline)
+                .foregroundStyle(Color.white)
+                .frame(height: 22)
+        }
+        .frame(maxWidth: .infinity, alignment: .center)
+    }
+
     
     private func OpenChallengeCard(challenge: Challenge) -> some View {
         ZStack {
@@ -383,7 +368,9 @@ extension MainMenu {
             }
             .padding(.bottom, 120)
         }
+        .frame(width: 200)
     }
+        
 
 
 }
