@@ -17,7 +17,8 @@ class Network: ObservableObject {
     
     @Published public var user: User? = nil
     @Published public var subjects: [Subject]? = nil
-    @Published public var friendships: [Friendship]? = nil //all friendships of a user, which are accepted by both parties
+    @Published public var acceptedFriendships: [Friendship]? = nil //all friendships of a user, which are accepted by both parties
+    @Published public var pendingFriendships: [Friendship]? = nil //all friendships of a user, which are still pending
     
     init() {
         self.user = UserManager.shared.loadUser()
@@ -373,7 +374,8 @@ class Network: ObservableObject {
                     if let code = res.response?.statusCode {
                         switch code {
                         case 200:
-                            self.friendships = response.acceptedFriendships
+                            self.acceptedFriendships = response.acceptedFriendships
+                            self.pendingFriendships = response.pendingFriendships
                             completion(response.acceptedFriendships, response.pendingFriendships, nil)
                         case 400...500:
                             if let reason = response.reason {
@@ -402,6 +404,9 @@ class Network: ObservableObject {
                     if let code = res.response?.statusCode {
                         switch code {
                         case 200:
+                            if let index = self.pendingFriendships?.firstIndex(where: { $0.id == id}), let friendship = self.pendingFriendships?.remove(at: index) {
+                                self.acceptedFriendships?.append(friendship)
+                            }
                             completion(nil)
                         case 400...500:
                             completion(response.reason)
@@ -424,6 +429,7 @@ class Network: ObservableObject {
                     if let code = res.response?.statusCode {
                         switch code {
                         case 200:
+                            self.pendingFriendships?.removeAll { $0.id == id}
                             completion(nil)
                         case 400...500:
                             completion(response.reason)
@@ -455,6 +461,9 @@ class Network: ObservableObject {
                     if let code = res.response?.statusCode {
                         switch code {
                         case 201:
+                            if let friendship = response.friendship {
+                                self.pendingFriendships?.append(friendship)
+                            }
                             completion(true, nil)
                         case 400:
                             if ((response.reason?.contains("already")) != nil) {

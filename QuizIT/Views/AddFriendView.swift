@@ -13,15 +13,15 @@ struct AddFriendView: View {
 
     @State private var searchText: String = ""
     @State private var loading = false
-    @State var user: [User] = []
+    @State var users: [User] = []
 
     @State private var showAlert = false
 
     var filteredUsers: [User] {
         if searchText.isEmpty {
-            return user
+            return users
         } else {
-            return user.filter {
+            return users.filter {
                 $0.fullName.lowercased().contains(searchText.lowercased())
             }
         }
@@ -105,9 +105,12 @@ struct AddFriendView: View {
             self.loading = true
             network.fetchAllUsers { users, error in
                 if let users = users {
-                    self.user = users.filter { $0.id != network.user?.id }
+                    let acceptedIds = Set(network.acceptedFriendships?.map { $0.user2.id } ?? [])
+                    self.users = users.filter { user in
+                        return user.id != network.user?.id && !acceptedIds.contains(user.id)
+                    }
                 } else if let error = error {
-                    print(error)
+                    //Fehlerbehandlung
                 }
                 self.loading = false
             }
