@@ -167,6 +167,16 @@ struct MainMenu: View {
             }
             dispatchGroup.leave()
         }
+        
+        dispatchGroup.enter()
+        network.fetchOpenChallenges() { challenges, error in
+            if let challenges = challenges {
+                self.challenges = challenges.filter { $0.score1 == nil}
+            } else if let error = error {
+                //TODO: Fehlerbehandlung
+            }
+            dispatchGroup.leave()
+        }
 
         dispatchGroup.notify(queue: .main) {
             self.loading = false
