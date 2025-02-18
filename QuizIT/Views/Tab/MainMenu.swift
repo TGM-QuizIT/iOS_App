@@ -41,7 +41,7 @@ struct MainMenu: View {
                                 Spacer()
                             }
                             .padding(.bottom, 10)
-                            VStack(alignment: .leading, spacing: 1) {
+                            VStack(spacing: 1) {
                                 HStack {
                                     Text("Deine Fächer").font(Font.custom("Poppins-SemiBold", size: 16))
                                         .padding(.leading)
@@ -68,7 +68,6 @@ struct MainMenu: View {
                                     Text("Keine Fächer verfügbar").font(Font.custom("Poppins-Semibold", size: 15))
                                         .padding(.leading)
                                 }
-                                
                                 HStack {
                                     Text("Herausforderungen").font(Font.custom("Poppins-SemiBold", size: 16))
                                         .padding(.leading)
@@ -88,7 +87,18 @@ struct MainMenu: View {
                                         .padding(.leading)
                                     }
                                     .scrollIndicators(.hidden)
-                                    
+                                } else {
+                                    VStack {
+                                        Text("Es konnten keine Herausforderungen gefunden werden.")
+                                            .font(
+                                                .custom(
+                                                    "Poppins-SemiBold", size: 16)
+                                            )
+                                            .padding()
+                                            .multilineTextAlignment(.center)
+                                            .foregroundStyle(.darkGrey)
+                                    }
+                                    .frame(height: 200)
                                 }
                                 
                                 
@@ -115,6 +125,7 @@ struct MainMenu: View {
             }
         }
         .onAppear {
+            
             handleRequests()
         }
     }
