@@ -137,17 +137,18 @@ struct QuizHistoryView: View {
 
                             } else {
                                 VStack {
-                                    Image("error")
-                                        .resizable()
-                                        .frame(width: 270)
-                                    Text(errorMsg)
-                                        .font(
-                                            .custom(
-                                                "Poppins-SemiBold", size: 16)
-                                        )
-                                        .padding()
-                                        .multilineTextAlignment(.center)
-                                        .foregroundStyle(.darkGrey)
+//                                    Image("error")
+//                                        .resizable()
+//                                        .frame(width: 270)
+//                                    Text(errorMsg)
+//                                        .font(
+//                                            .custom(
+//                                                "Poppins-SemiBold", size: 16)
+//                                        )
+//                                        .padding()
+//                                        .multilineTextAlignment(.center)
+//                                        .foregroundStyle(.darkGrey)
+                                Image("no_results_placeholder")
 
                                 }
                                 .frame(

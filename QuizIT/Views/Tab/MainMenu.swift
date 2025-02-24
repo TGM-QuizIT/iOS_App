@@ -18,11 +18,16 @@ struct MainMenu: View {
     @State private var challenges: [Challenge] = []
     @State private var stats: Statistic? = nil
     @State private var loading = false
+    @State private var error = false
     
     var body: some View {
         VStack {
             if loading {
                 CustomLoading()
+            } else if error {
+                Image("internet_error_placeholder")
+                    .resizable()
+                    .frame(width: 280,height: 212)
             }
             else {
                 NavigationStack {
@@ -136,7 +141,10 @@ struct MainMenu: View {
         dispatchGroup.enter()
         network.fetchSubjects() { error in
             if let error = error {
-                // TODO: Fehlerbehandlung, wenn Fächer nicht abrufbar waren
+                // TODO: Fehlerbehandlung, wenn Fächer nicht abrufbar waren#
+                self.error = true
+                self.loading = false
+                
             } else {
                 self.subjects = network.subjects ?? []
             }
