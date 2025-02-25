@@ -46,8 +46,8 @@
             filePath = "QuizIT/Views/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "19"
-            endingLineNumber = "19"
+            startingLineNumber = "18"
+            endingLineNumber = "18"
             landmarkName = "ContentView"
             landmarkType = "14">
          </BreakpointContent>
@@ -81,22 +81,6 @@
             startingLineNumber = "162"
             endingLineNumber = "162"
             landmarkName = "fetchFocus(id:completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "ED5018D4-9C59-40B2-A4C1-0D61D5DD4A6C"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "QuizIT/Views/Tab/MainMenu.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "142"
-            endingLineNumber = "142"
-            landmarkName = "handleRequests()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

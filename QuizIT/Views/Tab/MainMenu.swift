@@ -19,6 +19,7 @@ struct MainMenu: View {
     @State private var stats: Statistic? = nil
     @State private var loading = false
     @State private var error = false
+    @State private var selectedChallenge: Challenge?
     
     var body: some View {
         VStack {
@@ -86,6 +87,9 @@ struct MainMenu: View {
                                         HStack {
                                             ForEach(challenges, id: \.self) { challenge in
                                                 OpenChallengeCard(challenge: challenge)
+                                                    .onTapGesture {
+                                                                                                            selectedChallenge = challenge
+                                                                                                        }
                                             }
                                         }
                                         .padding(.top)
@@ -132,6 +136,11 @@ struct MainMenu: View {
         .onAppear {
        handleRequests()
         }
+        .sheet(item: $selectedChallenge) { challenge in
+                    ChallengeAlert(challenge: challenge)
+                .presentationDetents([.height(326)]) // Definiert verschiedene Größen für das Bottom-Sheet
+                        .presentationDragIndicator(.visible) // Zeigt den Drag-Indikator an
+                }
     }
     
     private func handleRequests() {
