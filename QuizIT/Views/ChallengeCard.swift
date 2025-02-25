@@ -8,80 +8,131 @@
 import SwiftUI
 
 struct ChallengeCard: View {
-    
+
     var challenge: Challenge
-    
+
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 15)
-                .fill(Color.base)
-                .frame(width: 200, height: 129)
-            // .shadow(radius: 5)
+                .fill(Color.lightBlue)
+                .frame(width: 328, height: 226)
+                .shadow(radius: 2)
                 .padding()
-            
-            VStack {
-                ZStack {
-                    Rectangle()
-                        .fill(Color.lightBlue)
-                        .frame(width: 200, height: 65)
-                        .clipShape(
-                            CustomCorners(
-                                corners: [.topLeft, .topRight], radius: 20)
-                        )
-                        .padding()
-                        .padding(.top, -43)
-                    
-                }
-                
-                VStack(alignment: .center) {
-                    Text("challenge.focus.name") //TODO: RAPHI OPTIONAL WRAP
-                        .font(Font.custom("Poppins-SemiBold", size: 11))
-                        .padding(.top, -10)
-                    // Fortschrittsanzeige
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 5)
-                            .fill(Color.lightBlue)
-                            .frame(width: 143.28, height: 16)
-                        
-                        /*
-                        ProgressView(value: challenge.score1.score / 100) //TODO: RAPHI OPTIONAL WRAP
-                            .progressViewStyle(
-                                LinearProgressViewStyle(
-                                    tint: challenge.score1.score >= 40 ? .blue : .red) //TODO: RAPHI OPTIONAL WRAP
-                            )
-                            .frame(width: 143.28, height: 50)
-                            .scaleEffect(x: 1, y: 4, anchor: .center)
-                            .cornerRadius(20)
-                            .animation(
-                                .easeInOut(duration: 0.5), value: 0.2 / 100)
-                        Text(challenge.score1.score.description + "%") //TODO: RAPHI OPTIONAL WRAP
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundColor(
-                                challenge.score1.score >= 40 ? .white : .black)
-                         */
+
+            VStack(alignment: .leading) {
+                if let subject = challenge.subject {
+                    VStack(alignment: .leading) {
+                        Text(subject.name)
+                            .font(.custom("Poppins-Bold", size: 20))
                     }
-                    .padding(.top, -15)
-                    
+                    .padding(.top, 30)
+                    .padding(.leading, 30)
                 }
+
+                if let focus = challenge.focus {
+                    VStack(alignment: .leading) {
+                        Text("Fach")
+                            .font(.custom("Poppins-Bold", size: 20))
+                        Text(focus.name)
+                            .font(.custom("Poppins-Bold", size: 16))
+                    }
+                    .padding(.top, 30)
+                    .padding(.leading, 30)
+                }
+
+                Spacer()
             }
-            Spacer()
-            Image("AvatarBackground")
-                .resizable()
-                .frame(width: 47, height: 47)
-                .padding(.trailing, 120)
-                .padding(.bottom, 100)
-            VStack {
-                Text(challenge.friendship.user2.fullName).font(
-                    .custom("Poppins-SemiBold", size: 15))
-                .frame(maxWidth: 92)
-                .lineLimit(1)
-                Text(challenge.friendship.user2.uClass).font(
-                    .custom("Poppins-Regular", size: 12))
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            Button(action: {
+            }) {
+                Image(systemName: "xmark")
+                    .foregroundColor(.gray)
+                    .font(.system(size: 20, weight: .bold))
+                    .padding(.bottom, 180)
+                    .padding(.leading, 280)
+            }
+            HStack {
+                Image("AvatarBackground")
+                    .resizable()
+                    .frame(width: 47, height: 47)
+                    .padding(.leading, 30)
+
+                Spacer()
+                VStack {
+                    Text(challenge.friendship.user2.fullName)
+                        .font(.custom("Poppins-SemiBold", size: 15))
+                    Text(challenge.friendship.user2.uClass)
+                        .font(.custom("Poppins-Regular", size: 12))
+                }
+                Spacer()
+
+                // Kreis
+                ZStack {
+                    Circle()
+                        .stroke(lineWidth: 7)
+                        .opacity(0.2)
+                        .foregroundColor(.enemyRed)
+
+                    Circle()
+                        .trim(
+                            from: 0.0,
+                            to: CGFloat((challenge.score2?.score ?? 0) / 100)
+                        )
+                        .stroke(
+                            style: StrokeStyle(lineWidth: 7, lineCap: .round)
+                        )
+                        .foregroundColor(.enemyRed)
+                        .rotationEffect(.degrees(-90))
+
+                    Text("\(Int(challenge.score2?.score ?? 0))%")
+                        .font(.caption)
+                        .bold()
+                }
+                .frame(width: 49, height: 49)
+                .padding(.trailing, 44)
+            }
+
+            HStack(spacing:20) {
+                Button(action: {
+                            print("Button gedrückt!")
+                        }) {
+                            HStack {
+                                Text("Ablehnen")
+                                    .font(.custom("Roboto-Bold", size: 15))
+                                    .foregroundColor(.black)
+                                
+                                Image("xmark_custom")
+                                    .resizable()
+                                    .frame(width: 21,height: 21)
+                            }
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 10)
+                            .background(Color.white)
+                            .cornerRadius(10)
+                        }
+                Button(action: {
+                            print("Button gedrückt!")
+                        }) {
+                            HStack {
+                                Text("Annehmen")
+                                    .font(.custom("Roboto-Bold", size: 15))
+                                    .foregroundColor(.black)
+                                
+                                Image("check_custom")
+                                    .resizable()
+                                    .frame(width: 17,height: 17)
+                            }
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 10)
+                            .background(Color.white)
+                            .cornerRadius(10)
+                        }
                 
             }
-            .padding(.bottom, 100)
-            .padding(.leading, 70)
+            .padding(.top,140)
         }
+        .frame(width: 328, height: 226)
     }
 }
 
