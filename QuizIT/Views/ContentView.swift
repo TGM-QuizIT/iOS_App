@@ -12,30 +12,38 @@ struct ContentView: View {
     @EnvironmentObject var network: Network
 
     @State private var user: User?
-
-    @State private var showSignInView = true
-
+    @State private var showSignInView = false
+    @State private var startingApp = true
     @State private var selectedTab: Int = 0
 
     var body: some View {
 
         ZStack {
+            if startingApp {
+                ZStack {
+                    Image("AppIcon")
+                }
+                .onAppear {
+                    if let loadedUser = UserManager.shared.loadUser() {
+                        withAnimation {
+                            print("Benutzer geladen: \(loadedUser.name)")
+                            self.user = loadedUser
+                            self.startingApp = false
+                        }
+                    } else {
+                        self.showSignInView = true
+                        print(
+                            "Kein Benutzer gefunden. Zeige Anmeldeansicht.")
+                        self.startingApp = false
+                    }
+                }
+            }
+            
             if self.showSignInView {
                 SignInView(showSignInView: self.$showSignInView)
                     .transition(.move(edge: .bottom))
                     .zIndex(1)
-                    .onAppear {
-                        if let loadedUser = UserManager.shared.loadUser() {
-                            withAnimation {
-                                print("Benutzer geladen: \(loadedUser.name)")
-                                self.user = loadedUser
-                                self.showSignInView = false
-                            }
-                        } else {
-                            print(
-                                "Kein Benutzer gefunden. Zeige Anmeldeansicht.")
-                        }
-                    }
+                    
             } else {
                 ZStack {
                     TabView(selection: $selectedTab) {
