@@ -10,6 +10,8 @@ import SwiftUI
 struct ResultView: View {
     
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var network: Network
+
 
     
     var quiz: Quiz
@@ -17,6 +19,9 @@ struct ResultView: View {
     var focus: Focus?
     var subject: Subject?
     var quizType: Int
+    @State private var friends: [Friendship] = dummyFriendships
+    @State private var selectedFriend: [Friendship] = []
+    @State private var showFriends: Bool = false
     
     var body: some View {
         VStack {
@@ -94,6 +99,19 @@ struct ResultView: View {
                     
                     VStack {
                         Button {
+                            // Freundschaften abfragen und auswählen
+                            
+                            // sheet anzeigen
+                            self.showFriends = true
+                            
+                            if quizType == 0 { // Subject Quiz
+                                // Challenge erstellen
+
+                            } else if quizType == 1 { // Focus Quiz
+                                // Challenge erstellen
+
+                            }
+                            // result zu challenge assignen (mit result id und challenge id)
                             
                         } label: {
                             ZStack {
@@ -114,28 +132,51 @@ struct ResultView: View {
                             }
                             .padding(.trailing,20)
                         }
-                        Button {
-                            
-                        } label: {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 8)
-                                    .foregroundStyle(.lightBlue)
-                                    .frame(width: 185,height: 40)
-                                HStack {
-                                    Image("history")
-                                        .resizable()
-                                        .frame(width: 30,height: 30)
-                                        .padding(.leading,5)
+                        if quizType == 0 {
+                            NavigationLink(destination: QuizHistoryView(subject: self.subject, quizType: self.quizType)) {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .foregroundStyle(.lightBlue)
+                                        .frame(width: 185,height: 40)
+                                    HStack {
+                                        Image("history")
+                                            .resizable()
+                                            .frame(width: 30,height: 30)
+                                            .padding(.leading,5)
 
-                                    
-                                    Spacer()
-                                    Text("Verlauf").font(.custom("Poppins-SemiBold", size: 12))
-                                        .foregroundStyle(.black)
-                                        .padding(.trailing, 65)
+                                        
+                                        Spacer()
+                                        Text("Verlauf").font(.custom("Poppins-SemiBold", size: 12))
+                                            .foregroundStyle(.black)
+                                            .padding(.trailing, 65)
+                                    }
                                 }
+                                .padding(.trailing,20)
                             }
-                            .padding(.trailing,20)
                         }
+                        if quizType == 1 {
+                            NavigationLink(destination: QuizHistoryView(focus: self.focus, quizType: self.quizType)) {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .foregroundStyle(.lightBlue)
+                                        .frame(width: 185,height: 40)
+                                    HStack {
+                                        Image("history")
+                                            .resizable()
+                                            .frame(width: 30,height: 30)
+                                            .padding(.leading,5)
+
+                                        
+                                        Spacer()
+                                        Text("Verlauf").font(.custom("Poppins-SemiBold", size: 12))
+                                            .foregroundStyle(.black)
+                                            .padding(.trailing, 65)
+                                    }
+                                }
+                                .padding(.trailing,20)
+                            }
+                        }
+                        
                     }
                 }
             
@@ -150,10 +191,57 @@ struct ResultView: View {
             
         }
         .navigationBarBackButtonHidden(true)
+        .sheet(isPresented: $showFriends) {
+            VStack {
+                NavigationHeader(title: "Freund auswählen") {
+                    showFriends = false
+                }
+
+                // Freundesliste
+                ScrollView {
+                    ForEach(friends, id: \.id) { friend in
+                        HStack {
+                            UserCard(user: friend)
+                            Spacer()
+                            if selectedFriend.contains(where: { $0.id == friend.id }) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.blue)
+                            }
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            if let index = selectedFriend.firstIndex(where: { $0.id == friend.id }) {
+                                selectedFriend.remove(at: index)
+                            } else {
+                                selectedFriend.append(friend)
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                }
+
+                // Fertig-Button
+                Button("Fertig") {
+                    showFriends = false
+                }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+                .padding(.horizontal)
+            }
+            .presentationDetents([.medium, .large])
+        }
+
+
+
+
 
         Spacer()
     }
 }
+
 
 extension ResultView {
     func QuestionCard(question: Question, qIndex: Int) -> some View {
@@ -307,6 +395,34 @@ extension ResultView {
             // Option nicht ausgewählt und nicht richtig
             return ""
         }
+    }
+    func UserCard(user: User) -> some View {
+        HStack {
+            ZStack {
+                HStack {
+                    Image("Avatar")
+                    VStack(alignment: .leading) {
+                        Text(user.fullName).font(
+                            .custom("Poppins-SemiBold", size: 12)
+                        )
+                        .padding(.leading, 10)
+                        .foregroundStyle(.black)
+
+                        Text(user.uClass).font(
+                            .custom("Roboto-Regular", size: 12)
+                        )
+                        .padding(.leading, 10)
+                        .foregroundStyle(.darkGrey)
+
+                    }
+                    Spacer()
+                }
+                .padding(.leading)
+                .padding(.top, 16)
+            }
+        }
+        
+
     }
 }
 
