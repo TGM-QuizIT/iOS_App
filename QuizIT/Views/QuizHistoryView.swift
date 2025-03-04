@@ -22,6 +22,7 @@ struct QuizHistoryView: View {
 
     @State private var questions: [Question] = []
     @State private var selectedFocus: Focus?
+    var quizType: Int
 
     @State private var errorMsg: String = ""
     @State private var loading = false
@@ -178,6 +179,7 @@ struct QuizHistoryView: View {
                                                     "no questions in attribute")
                                             } else {
                                                 //questions ready for next view
+                                                self.selectedFocus = focus
                                                 self.questions = questions
                                                 self.showQuiz = true
                                             }
@@ -229,7 +231,7 @@ struct QuizHistoryView: View {
                     PerformQuizView(
                         focus: selectedFocus ?? dummyFocuses[0],
                         subject: dummySubjects[0],
-                        quiz: Quiz(questions: self.questions))
+                        quiz: Quiz(questions: self.questions), quizType: self.quizType)
                 }
 
             }
@@ -533,5 +535,5 @@ extension QuizHistoryView {
 }
 
 #Preview {
-    QuizHistoryView()
+    QuizHistoryView(quizType: 0)
 }

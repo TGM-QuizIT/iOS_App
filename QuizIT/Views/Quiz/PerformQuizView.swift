@@ -22,9 +22,10 @@ struct PerformQuizView: View {
     
     
     
-    var focus: Focus
-    var subject: Subject
+    var focus: Focus?
+    var subject: Subject?
     @State var quiz: Quiz
+    var quizType: Int
     
     var body: some View {
         NavigationStack {
@@ -32,10 +33,18 @@ struct PerformQuizView: View {
             VStack {
                 VStack(spacing: 0) {
                     ZStack {
-                        Text(focus.name)
-                            .font(Font.custom("Poppins-Regular", size: 20))
-                            .fontWeight(.bold)
-                            .multilineTextAlignment(.center)
+                        if let focus = focus {
+                            Text(focus.name)
+                                .font(Font.custom("Poppins-Regular", size: 20))
+                                .fontWeight(.bold)
+                                .multilineTextAlignment(.center)
+                        } else if let subject = subject {
+                            Text(subject.name)
+                                .font(Font.custom("Poppins-Regular", size: 20))
+                                .fontWeight(.bold)
+                                .multilineTextAlignment(.center)
+                        }
+                       
                         
                         HStack {
                             Text("\(currentQuestionIndex + 1)/\(quiz.questions.count)") // Frage-Fortschritt
@@ -137,7 +146,8 @@ struct PerformQuizView: View {
                         selectedAnswerIndices.removeAll()
                     } else {
                         //self.result?.score = calcQuizReult(questions: quiz.questions)
-                        if self.focus.id == 0 {
+                        if self.quizType == 0 {
+                            if let subject = self.subject {
                             self.network.postSubjectResult(score: calcQuizReult(questions: quiz.questions), subjectId: subject.id) { result, error in
                                 if var result = result {
                                     result.subject = self.subject
@@ -148,16 +158,19 @@ struct PerformQuizView: View {
                                         print(error)
                                     }
                                 }
+                                }
                             }
-                        } else {
-                            self.network.postFocusResult(score: calcQuizReult(questions: quiz.questions), focusId: self.focus.id) { result, error in
-                                if var result = result {
-                                    result.focus = self.focus
-                                    self.result = result
-                                    showResult.toggle()
-                                } else {
-                                    if let error = error {
-                                        print(error)
+                        } else if self.quizType == 1 {
+                            if let focus = self.focus {
+                                self.network.postFocusResult(score: calcQuizReult(questions: quiz.questions), focusId: focus.id) { result, error in
+                                    if var result = result {
+                                        result.focus = self.focus
+                                        self.result = result
+                                        showResult.toggle()
+                                    } else {
+                                        if let error = error {
+                                            print(error)
+                                        }
                                     }
                                 }
                             }
@@ -186,7 +199,7 @@ struct PerformQuizView: View {
                 
             }
             .navigationDestination(isPresented: $showResult) {
-                ResultView(quiz: quiz, result: self.result ?? dummyResults[0], focus: self.focus, subject: self.subject)
+                ResultView(quiz: quiz, result: self.result ?? dummyResults[0], focus: self.focus ?? dummyFocuses[0], subject: self.subject ?? dummySubjects[0], quizType: self.quizType)
             }
             .navigationBarBackButtonHidden(true)
             .onAppear {
@@ -344,15 +357,15 @@ struct LeftRoundedRectangle: Shape {
         return path
     }
 }
-
-#Preview {
-    PerformQuizView(
-        focus: dummyFocuses[0],
-        subject: Subject(id: 1, name: "GGP",imageAddress: ""), quiz: QuizData.shared.quiz
-    )
-    
-    
-}
+//
+//#Preview {
+//    PerformQuizView(
+//        focus: dummyFocuses[0],
+//        subject: Subject(id: 1, name: "GGP",imageAddress: ""), quiz: QuizData.shared.quiz
+//    )
+//    
+//    
+//}
 
 //                HStack(spacing:0) {
 //                    LeftRoundedRectangle(cornerRadius: 20)

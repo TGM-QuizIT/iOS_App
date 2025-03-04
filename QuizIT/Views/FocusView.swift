@@ -20,6 +20,7 @@ struct FocusView: View {
 
     @State private var questions: [Question] = []
     @State private var selectedFocus: Focus?
+    @State private var quizType: Int = 0
 
     @State private var loadingQuiz = false
 
@@ -35,7 +36,7 @@ struct FocusView: View {
                     NavigationHeader(title: "Schwerpunkte " + subject.name) {
                         dismiss()
                     }
-                    NavigationLink(destination: QuizHistoryView(subject: subject)) {
+                    NavigationLink(destination: QuizHistoryView(subject: subject, quizType: 0)) {
                         AllFocusCard(subject: subject) {
                             self.loadingQuiz = true
                             self.selectedFocus = Focus(id: 0, name: subject.name, year: 0, questionCount: 1, imageAddress: "", subjectId: 0)
@@ -51,6 +52,7 @@ struct FocusView: View {
                                         } else {
                                             //questions ready for next view
                                             self.questions = questions
+                                            self.quizType = 0
                                             self.showQuiz = true
                                         }
                                     }
@@ -64,7 +66,7 @@ struct FocusView: View {
                     ForEach(focusList, id: \.self) { focus in
                         NavigationLink(
                             destination: QuizHistoryView(
-                                focus: focus)
+                                focus: focus, quizType: 1)
                         ) {
                             FocusCard(focus: focus) {
                                 self.loadingQuiz = true
@@ -82,6 +84,7 @@ struct FocusView: View {
                                             } else {
                                                 //questions ready for next view
                                                 self.questions = questions
+                                                self.quizType = 1
                                                 self.showQuiz = true
                                             }
                                         }
@@ -100,7 +103,7 @@ struct FocusView: View {
                 .navigationDestination(isPresented: $showQuiz) {
                     PerformQuizView(
                         focus: selectedFocus ?? dummyFocuses[0], subject: self.subject,
-                        quiz: Quiz(questions: self.questions))
+                        quiz: Quiz(questions: self.questions), quizType: self.quizType)
                 }
                 .navigationBarBackButtonHidden(true)
 

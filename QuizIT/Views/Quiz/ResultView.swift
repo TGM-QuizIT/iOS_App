@@ -14,25 +14,36 @@ struct ResultView: View {
     
     var quiz: Quiz
     var result: Result
-    var focus: Focus
-    var subject: Subject
+    var focus: Focus?
+    var subject: Subject?
+    var quizType: Int
     
     var body: some View {
         VStack {
             
             ZStack {
-                Text(focus.name)
-                    .font(Font.custom("Poppins-Regular", size: 20))
-                    .fontWeight(.bold)
-                    .multilineTextAlignment(.center)
-                
-                HStack {
-                    Text(subject.name)
-                        .font(Font.custom("Roboto-Regular", size: 20))
+                if quizType == 0 {
+                    Text(subject?.name ?? "Fehler")
+                        .font(Font.custom("Poppins-Regular", size: 20))
                         .fontWeight(.bold)
                         .multilineTextAlignment(.center)
-                        .padding(.horizontal, 32)
-                        .padding(.vertical,10)
+                }
+                if quizType == 1 {
+                    Text(focus?.name ?? "Fehler")
+                        .font(Font.custom("Poppins-Regular", size: 20))
+                        .fontWeight(.bold)
+                        .multilineTextAlignment(.center)
+                }
+                
+                HStack {
+                    if quizType == 1 {
+                        Text(subject?.name ?? "Fehler")
+                            .font(Font.custom("Roboto-Regular", size: 20))
+                            .fontWeight(.bold)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 32)
+                            .padding(.vertical,10)
+                    }
                     Spacer()
                     
                     Button {
@@ -300,5 +311,5 @@ extension ResultView {
 }
 
 #Preview {
-    ResultView(quiz: QuizData.shared.quiz, result: dummyResults[0], focus: dummyFocuses[0], subject: Subject(id: 1, name: "GGP", imageAddress: ""))
+    ResultView(quiz: QuizData.shared.quiz, result: dummyResults[0], focus: dummyFocuses[0], subject: Subject(id: 1, name: "GGP", imageAddress: ""), quizType: 0)
 }
