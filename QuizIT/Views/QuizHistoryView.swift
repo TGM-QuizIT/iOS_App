@@ -240,7 +240,7 @@ struct QuizHistoryView: View {
             let dispatchGroup = DispatchGroup()
 
             dispatchGroup.enter()
-            network.fetchResults(fId: self.focus?.id, sId: self.subject?.id) { results, error in
+            network.fetchResults(fId: self.focus?.id, sId: self.subject?.id, amount: nil) { results, error in
                 if let error = error {
                     self.errorMsg = "Deine Resultate konnten nicht geladen werden. Versuche es später erneut."
                 } else {

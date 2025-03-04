@@ -11,43 +11,109 @@ import Charts
 
 struct StatisticView: View {
     
-    var lastResults: [Result]
+    @EnvironmentObject var network: Network
+    
+    @State private var lastResults: [Result] = []
+    @State private var stats: Statistic? = nil
+    @State private var challenges: [Challenge] = []
+    
+    @State private var loading = false
+    @State private var error = false
     
     var body: some View {
-        ScrollView {
-            VStack {
-                StatisticCard()
-                
-                HStack {
-                    Text("Quiz Verlauf").font(.custom("Poppins-SemiBold", size: 16))
-                        .padding(.leading,20)
-                    Spacer()
-                }
-                ScrollView(.horizontal) {
-                    HStack(spacing:-20) {
-                        ForEach(lastResults, id: \.self) { result in
-                            ResultCard(result: result)
-                            
+        VStack {
+            if (loading) {
+                ProgressView()
+            } else if (error) {
+                //TODO: Display error
+            }else {
+                ScrollView {
+                    VStack {
+                        if let stats = self.stats {
+                            StatisticCard(stats: stats)
                         }
+                        
+                        HStack {
+                            Text("Quiz Verlauf").font(.custom("Poppins-SemiBold", size: 16))
+                                .padding(.leading,20)
+                            Spacer()
+                        }
+                        ScrollView(.horizontal) {
+                            HStack(spacing:-20) {
+                                ForEach(lastResults, id: \.self) { result in
+                                    ResultCard(result: result)
+                                    
+                                }
+                            }
+                        }
+                        .scrollIndicators(.hidden)
+                        
+                        // StatisticChartView(lastResults: lastResults)
+                        
+                        
+                    }
+                    .onAppear {
+                        // TODO: Raphael Statistik laden
                     }
                 }
-                .scrollIndicators(.hidden)
-
-                // StatisticChartView(lastResults: lastResults)
-                
-                
-            }
-            .onAppear {
-                // TODO: Raphael Statistik laden
             }
         }
+        .onAppear() {
+            handleRequests()
+        }
         
+    
+    }
+    
+    private func handleRequests() {
+        self.loading = true
+        self.error = false
         
+        let dispatchGroup = DispatchGroup()
+        
+        dispatchGroup.enter()
+        network.fetchResults(fId: nil, sId: nil, amount: 7) { results, error in
+            if let results = results {
+                self.lastResults = results
+            } else if error != nil {
+                self.error = true
+            }
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.enter()
+        guard let id = network.user?.id else {
+            //throw UserError.missingUserObject(message: "The ID is null.")
+            return
+        }
+        network.fetchUserStats(id: id) { stats, error in
+            if let stats = stats {
+                self.stats = stats
+            } else if error != nil {
+                self.error = true
+            }
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.enter()
+        network.fetchDoneChallenges() { challenges, error in
+            if let challenges = challenges {
+                self.challenges = challenges
+            } else if error != nil {
+                self.error = true
+            }
+            dispatchGroup.leave()
+        }
+        
+
+        dispatchGroup.notify(queue: .main) {
+            self.loading = false
+        }
     }
 }
 
 extension StatisticView {
-    private func StatisticCard() -> some View {
+    private func StatisticCard(stats: Statistic) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 20)
                 .fill(Color.accentColor)
@@ -60,10 +126,10 @@ extension StatisticView {
                         .font(.title2)
                         .foregroundStyle(Color.white)
                     
-                    Text("Punkte")
+                    Text("Challenges")
                         .font(.title3)
                         .foregroundStyle(Color.white.opacity(0.5))
-                    Text("540")
+                    Text("\(Int(stats.winRate)) %")
                         .font(.title3)
                         .foregroundStyle(Color.white)
                     
@@ -80,10 +146,10 @@ extension StatisticView {
                         .font(.title2)
                         .foregroundStyle(Color.white)
                     
-                    Text("Platz")
+                    Text("Level")
                         .font(.title3)
                         .foregroundStyle(Color.white.opacity(0.5))
-                    Text("#1540")
+                    Text(stats.rank == -1 ? "-" : "\(stats.rank)")
                         .font(.title3)
                         .foregroundStyle(Color.white)
                 }
@@ -101,7 +167,7 @@ extension StatisticView {
                     Text("Score")
                         .font(.title3)
                         .foregroundStyle(Color.white.opacity(0.5))
-                    Text("79%")
+                    Text("\(Int(stats.average)) %")
                         .font(.title3)
                         .foregroundStyle(Color.white)
                 }
@@ -118,6 +184,7 @@ extension StatisticView {
                    // .shadow(radius: 5)
                     .padding()
                 
+                //TODO: Add Subject aswell
                 VStack {
                     ZStack {
                         Rectangle()
@@ -172,7 +239,7 @@ extension StatisticView {
 }
 
 #Preview {
-    StatisticView(lastResults: dummyResults)
+    StatisticView()
 }
 
 

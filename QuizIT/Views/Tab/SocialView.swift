@@ -34,7 +34,7 @@ struct SocialView: View {
                     MyFriendsView()
                         .padding()
                 } else if selectedTab == "Statistik" {
-                    StatisticView(lastResults: dummyResults)
+                    StatisticView()
                         .padding()
                 }
                 

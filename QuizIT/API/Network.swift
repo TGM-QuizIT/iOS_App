@@ -9,7 +9,8 @@ import Foundation
 import Alamofire
 
 class Network: ObservableObject {
-    private let baseUrl = "https://projekte.tgm.ac.at/quizit/api"
+    //private let baseUrl = "https://projekte.tgm.ac.at/quizit/api"
+    private let baseUrl = "http://10.2.24.50:63300"
     private let headers: HTTPHeaders = [
         "authorization" : Bundle.main.infoDictionary?["API_KEY"] as? String ?? ""
     ]
@@ -322,23 +323,29 @@ class Network: ObservableObject {
             }
     }
     
-    func fetchResults(fId: Int?, sId: Int?, completion: @escaping([Result]?, String?) -> Void) {
+    func fetchResults(fId: Int?, sId: Int?, amount: Int?, completion: @escaping([Result]?, String?) -> Void) {
         guard let id = self.user?.id else {
             //throw UserError.missingUserID(message: "The ID is null.")
             return
         }
-        let url: String
+        var url: String
         if let fId = fId {
             url = "\(self.baseUrl)/result?userId=\(id)&focusId=\(fId)"
         } else if let sId = sId {
             url = "\(self.baseUrl)/result?userId=\(id)&subjectId=\(sId)"
         } else {
-            completion(nil, "Es wurde keine ID für ein Fach oder Schwerpunkt übergeben.")
-            return
+            url = "\(self.baseUrl)/result?userId=\(id)"
+        }
+        
+        if let amount = amount {
+            url.append("&amount=\(amount)")
         }
         
         AF.request(url, method: .get, headers: self.headers)
             .validate(statusCode: 200..<500)
+            .responseString() { response in
+                print(response)
+            }
             .responseDecodable(of: Response.self, decoder: self.decoder) { res in
                 switch res.result {
                 case .success(let response):
