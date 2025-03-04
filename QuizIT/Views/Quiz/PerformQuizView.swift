@@ -19,6 +19,7 @@ struct PerformQuizView: View {
     
     @State private var showResult: Bool = false
     @State private var result: Result?
+    var challenge: Challenge?
     
     
     
@@ -174,6 +175,11 @@ struct PerformQuizView: View {
                                     }
                                 }
                             }
+                        }
+                        if var challenge = self.challenge {
+                            challenge.score1 = result
+                            
+                            //TODO: Challenge zu Result assignen
                         }
                         
                         
