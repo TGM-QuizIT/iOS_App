@@ -196,12 +196,13 @@ struct ResultView: View {
                 NavigationHeader(title: "Freund auswählen") {
                     showFriends = false
                 }
+                .padding(.top,10)
 
                 // Freundesliste
                 ScrollView {
                     ForEach(friends, id: \.id) { friend in
                         HStack {
-                            UserCard(user: friend)
+                            UserCard(user: friend.user2)
                             Spacer()
                             if selectedFriend.contains(where: { $0.id == friend.id }) {
                                 Image(systemName: "checkmark.circle.fill")
@@ -220,16 +221,19 @@ struct ResultView: View {
                     }
                 }
 
-                // Fertig-Button
-                Button("Fertig") {
+                Button {
                     showFriends = false
+                } label: {
+                    Text("Senden").font(
+                        .custom("Poppins-SemiBold", size: 16)
+                    )
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(width: 340, height: 50)
+                    .background(Color.accentColor)
+                    .cornerRadius(10)
                 }
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(Color.blue)
-                .foregroundColor(.white)
-                .cornerRadius(10)
-                .padding(.horizontal)
+                
             }
             .presentationDetents([.medium, .large])
         }
