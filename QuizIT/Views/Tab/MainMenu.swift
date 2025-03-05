@@ -168,7 +168,7 @@ struct MainMenu: View {
         network.fetchUserStats(id: id) { stats, error in
             if let stats = stats {
                 self.stats = stats
-            } else if let error = error {
+            } else if error != nil {
                 // TODO: Fehlerbehandlung
             } else {
                 self.stats = Statistic(avg: 0, rank: -1, winRate: 0)
@@ -178,7 +178,7 @@ struct MainMenu: View {
 
         dispatchGroup.enter()
         network.fetchFriendships() { accepted, pending, error in
-            if let error = error {
+            if error != nil {
                 // TODO: Fehlerbehandlung
             }
             dispatchGroup.leave()
@@ -188,7 +188,7 @@ struct MainMenu: View {
         network.fetchOpenChallenges() { challenges, error in
             if let challenges = challenges {
                 self.challenges = challenges.filter { $0.score1 == nil}
-            } else if let error = error {
+            } else if error != nil {
                 //TODO: Fehlerbehandlung
             }
             dispatchGroup.leave()

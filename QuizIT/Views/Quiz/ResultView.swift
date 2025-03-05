@@ -19,9 +19,10 @@ struct ResultView: View {
     var focus: Focus?
     var subject: Subject?
     var quizType: Int
-    @State private var friends: [Friendship] = dummyFriendships
+    @State private var friends: [Friendship] = []
     @State private var selectedFriend: [Friendship] = []
     @State private var showFriends: Bool = false
+    @State private var loading: Bool = false
     
     var body: some View {
         VStack {
@@ -99,19 +100,10 @@ struct ResultView: View {
                     
                     VStack {
                         Button {
-                            // Freundschaften abfragen und auswählen
-                            
-                            // sheet anzeigen
-                            self.showFriends = true
-                            
-                            if quizType == 0 { // Subject Quiz
-                                // Challenge erstellen
-
-                            } else if quizType == 1 { // Focus Quiz
-                                // Challenge erstellen
-
+                            DispatchQueue.main.async {
+                                self.showFriends = true
                             }
-                            // result zu challenge assignen (mit result id und challenge id)
+
                             
                         } label: {
                             ZStack {
@@ -191,52 +183,126 @@ struct ResultView: View {
             
         }
         .navigationBarBackButtonHidden(true)
-        .sheet(isPresented: $showFriends) {
-            VStack {
-                NavigationHeader(title: "Freund auswählen") {
-                    showFriends = false
-                }
-                .padding(.top,10)
-
-                // Freundesliste
-                ScrollView {
-                    ForEach(friends, id: \.id) { friend in
-                        HStack {
-                            UserCard(user: friend.user2)
-                            Spacer()
-                            if selectedFriend.contains(where: { $0.id == friend.id }) {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .foregroundColor(.blue)
-                            }
-                        }
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            if let index = selectedFriend.firstIndex(where: { $0.id == friend.id }) {
-                                selectedFriend.remove(at: index)
-                            } else {
-                                selectedFriend.append(friend)
-                            }
-                        }
-                        .padding(.horizontal)
+            .sheet(isPresented: $showFriends) {
+                VStack {
+                    NavigationHeader(title: "Freund auswählen") {
+                        showFriends = false
                     }
-                }
+                    .padding(.top,10)
 
-                Button {
-                    showFriends = false
-                } label: {
-                    Text("Senden").font(
-                        .custom("Poppins-SemiBold", size: 16)
-                    )
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(width: 340, height: 50)
-                    .background(Color.accentColor)
-                    .cornerRadius(10)
+                    // Freundesliste
+                    if (loading) {
+                        CustomLoading()
+                    } else {
+                        ScrollView {
+                            ForEach(self.friends, id: \.id) { friend in
+                                HStack {
+                                    UserCard(user: friend.user2)
+                                    Spacer()
+                                    if selectedFriend.contains(where: { $0.id == friend.id }) {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .foregroundColor(.blue)
+                                    }
+                                }
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    if let index = selectedFriend.firstIndex(where: { $0.id == friend.id }) {
+                                        selectedFriend.remove(at: index)
+                                    } else {
+                                        selectedFriend.append(friend)
+                                    }
+                                }
+                                .padding(.horizontal)
+                            }
+                        }
+                    }
+
+                    Button {
+                        self.loading = true
+                        let dispatchGroup = DispatchGroup()
+                        for friend in selectedFriend {
+                            var cId: Int = -1
+                            if quizType == 0 {
+                                guard let id = self.subject?.id else {
+                                    //throw new Error
+                                    return
+                                }
+                                
+                                
+                                dispatchGroup.enter()
+                                network.postSubjectChallenge(friendshipId: friend.id, subjectId: id) { challenge, error in
+                                    if let challenge = challenge {
+                                        cId = challenge.id
+                                    } else if error != nil {
+                                        //TODO: Fehlerbehandlung
+                                    }
+                                    dispatchGroup.enter()
+                                    network.assignResultToChallenge(challengeId: cId, resultId: self.result.id) { challenge, error in
+                                        if error != nil {
+                                            //TODO: Fehlerbehandlung
+                                        }
+                                        dispatchGroup.leave()
+                                    }
+                                    dispatchGroup.leave()
+                                }
+                                
+                                //TODO: Assign Result to Challenge
+
+                            }
+                            else if quizType == 1 {
+                                guard let id = self.focus?.id else {
+                                    //throw new Error
+                                    return
+                                }
+                                
+                                
+                                dispatchGroup.enter()
+                                network.postFocusChallenge(friendshipId: friend.id, focusId: id) { challenge, error in
+                                    if let challenge = challenge {
+                                        cId = challenge.id
+                                    } else if error != nil {
+                                        //TODO: Fehlerbehandlung
+                                    }
+                                    dispatchGroup.enter()
+                                    network.assignResultToChallenge(challengeId: cId, resultId: self.result.id) { challenge, error in
+                                        if error != nil {
+                                            //TODO: Fehlerbehandlung
+                                        }
+                                        dispatchGroup.leave()
+                                    }
+                                    dispatchGroup.leave()
+                                }
+                            }
+                            dispatchGroup.enter()
+                            network.assignResultToChallenge(challengeId: cId, resultId: self.result.id) { challenge, error in
+                                if error != nil {
+                                    //TODO: Fehlerbehandlung
+                                }
+                                dispatchGroup.leave()
+                            }
+                        }
+                        
+                        dispatchGroup.notify(queue: .main) {
+                            self.loading = false
+                        }
+                        showFriends = false
+                    } label: {
+                        Text("Senden").font(
+                            .custom("Poppins-SemiBold", size: 16)
+                        )
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(width: 340, height: 50)
+                        .background(Color.accentColor)
+                        .cornerRadius(10)
+                    }
+                    
                 }
-                
+                .onAppear() {
+                    self.friends = network.acceptedFriendships ?? []
+                }
+                .presentationDetents([.medium, .large])
             }
-            .presentationDetents([.medium, .large])
-        }
 
 
 

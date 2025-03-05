@@ -19,7 +19,7 @@ struct PerformQuizView: View {
     
     @State private var showResult: Bool = false
     @State private var result: Result?
-    var challenge: Challenge?
+    @State var challenge: Challenge?
     
     
     
@@ -177,9 +177,21 @@ struct PerformQuizView: View {
                             }
                         }
                         if var challenge = self.challenge {
-                            challenge.score1 = result
                             
-                            //TODO: Challenge zu Result assignen
+                            let dispatchGroup = DispatchGroup()
+                            guard let rId = result?.id else {
+                                //throw new Error missing result
+                                return
+                            }
+                            dispatchGroup.enter()
+                            network.assignResultToChallenge(challengeId: challenge.id, resultId: rId) { challenge, error in
+                                if let challenge = challenge {
+                                    self.challenge = challenge
+                                } else if error != nil {
+                                    //TODO: Fehlerbehandlung
+                                }
+                                dispatchGroup.leave()
+                            }
                         }
                         
                         
