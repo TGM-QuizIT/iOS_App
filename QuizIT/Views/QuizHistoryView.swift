@@ -230,7 +230,7 @@ struct QuizHistoryView: View {
                 .navigationDestination(isPresented: $showQuiz) {
                     PerformQuizView(
                         focus: selectedFocus ?? dummyFocuses[0],
-                        subject: dummySubjects[0],
+                        subject: subject,
                         quiz: Quiz(questions: self.questions), quizType: self.quizType)
                 }
 
