@@ -140,7 +140,11 @@ struct MainMenu: View {
                     ChallengeAlert(challenge: challenge)
                 .presentationDetents([.height(326)]) // Definiert verschiedene Größen für das Bottom-Sheet
                         .presentationDragIndicator(.visible) // Zeigt den Drag-Indikator an
+                        .onDisappear() {
+                            handleRequests()
+                        }
                 }
+                
     }
     
     private func handleRequests() {

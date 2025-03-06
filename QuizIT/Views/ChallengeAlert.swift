@@ -10,6 +10,9 @@ import SwiftUI
 struct ChallengeAlert: View {
 
     var challenge: Challenge
+    
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var network: Network
 
     var body: some View {
         ZStack {
@@ -103,7 +106,13 @@ struct ChallengeAlert: View {
                     .cornerRadius(10)
                 }
                 Button(action: {
-                    print("Button gedrückt!")
+                    network.deleteChallenge(challengeId: self.challenge.id) { error in
+                        if error != nil {
+                            //TODO: Fehlerbehandlung
+                        } else {
+                            dismiss()
+                        }
+                    }
                 }) {
                     HStack {
                         Text("Ablehnen")
