@@ -9,8 +9,8 @@ import Foundation
 import Alamofire
 
 class Network: ObservableObject {
-    //private let baseUrl = "https://projekte.tgm.ac.at/quizit/api"
-    private let baseUrl = "http://10.2.24.50:63300"
+    private let baseUrl = "https://projekte.tgm.ac.at/quizit/api"
+    //private let baseUrl = "http://10.2.24.50:63300"
     private let headers: HTTPHeaders = [
         "authorization" : Bundle.main.infoDictionary?["API_KEY"] as? String ?? ""
     ]
