@@ -497,5 +497,5 @@ extension ResultView {
 }
 
 #Preview {
-    ResultView(quiz: QuizData.shared.quiz, result: dummyResults[0], focus: dummyFocuses[0], subject: Subject(id: 1, name: "GGP", imageAddress: ""), quizType: 0)
+    ResultView(quiz: QuizDataDummy.shared.quiz, result: dummyResults[0], focus: dummyFocuses[0], subject: Subject(id: 1, name: "GGP", imageAddress: ""), quizType: 0)
 }

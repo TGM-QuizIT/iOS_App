@@ -13,6 +13,7 @@ struct ChallengeAlert: View {
     
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var network: Network
+    @EnvironmentObject var quizData: QuizData
 
     var body: some View {
         ZStack {
@@ -88,7 +89,53 @@ struct ChallengeAlert: View {
                 
                 
                 Button(action: {
-                    print("Button gedrückt!")
+                    if let subject = challenge.subject {
+                        network.fetchSubjectQuiz(id: subject.id) {
+                            questions, error in
+                            if let error = error {
+                                //display error
+                                print(error)
+                            } else {
+                                if let questions = questions {
+                                    if questions == [] {
+                                        //no questions error
+                                        print(
+                                            "no questions in attribute")
+                                    } else {
+                                        //questions ready for next view
+                                        quizData.subject = subject
+                                        quizData.quizType = 0
+                                        quizData.questions = questions
+                                        quizData.showQuiz = true
+                                        dismiss()
+                                    }
+                                }
+                            }
+                        }
+                    } else if let focus = challenge.focus {
+                        network.fetchFocusQuiz(id: focus.id) {
+                            questions, error in
+                            if let error = error {
+                                //display error
+                                print(error)
+                            } else {
+                                if let questions = questions {
+                                    if questions == [] {
+                                        //no questions error
+                                        print(
+                                            "no questions in attribute")
+                                    } else {
+                                        //questions ready for next view
+                                        quizData.focus = focus
+                                        quizData.quizType = 1
+                                        quizData.questions = questions
+                                        quizData.showQuiz = true
+                                        dismiss()
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }) {
                     HStack {
                         Text("Annehmen")

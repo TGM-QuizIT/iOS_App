@@ -10,15 +10,16 @@ import SwiftUI
 struct QuizHistoryView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var network: Network
+    @EnvironmentObject var quizData: QuizData
 
     var focus: Focus?
     var subject: Subject?
 
     @State private var results: [Result] = []
-    @State private var openChallenges: [Challenge] = dummyChallenges
-    @State private var finishedChallenges: [Challenge] = dummyChallenges
+    @State private var openChallenges: [Challenge] = []
+    @State private var finishedChallenges: [Challenge] = []
 
-    @State private var showQuiz = false
+    
 
     @State private var questions: [Question] = []
     @State private var selectedFocus: Focus?
@@ -179,9 +180,9 @@ struct QuizHistoryView: View {
                                                     "no questions in attribute")
                                             } else {
                                                 //questions ready for next view
-                                                self.selectedFocus = focus
-                                                self.questions = questions
-                                                self.showQuiz = true
+                                                quizData.focus = focus
+                                                quizData.questions = questions
+                                                quizData.showQuiz = true
                                             }
                                         }
                                     }
@@ -200,8 +201,9 @@ struct QuizHistoryView: View {
                                                     "no questions in attribute")
                                             } else {
                                                 //questions ready for next view
-                                                self.questions = questions
-                                                self.showQuiz = true
+                                                quizData.subject = subject
+                                                quizData.questions = questions
+                                                quizData.showQuiz = true
                                             }
                                         }
                                     }
@@ -227,12 +229,7 @@ struct QuizHistoryView: View {
                         .padding(.bottom, 20)
                     }
                 }
-                .navigationDestination(isPresented: $showQuiz) {
-                    PerformQuizView(
-                        focus: selectedFocus ?? dummyFocuses[0],
-                        subject: subject,
-                        quiz: Quiz(questions: self.questions), quizType: self.quizType)
-                }
+               
 
             }
 
@@ -377,15 +374,15 @@ extension QuizHistoryView {
                     RoundedRectangle(cornerRadius: 20)
                         .fill(Color.blue).opacity(0.7)
                         .frame(
-                            width: CGFloat(challenge.score1?.score ?? 50) * 1.5, //TODO: Sinnvollen Standardwert bzw. Optional Binding
+                            width: CGFloat(challenge.score2?.score ?? 0) * 1.5, //TODO: Sinnvollen Standardwert bzw. Optional Binding
                             height: 23
                         )  // Breite basierend auf % (max. 250px)
                         .animation(
                             .easeInOut(duration: 0.3),
-                            value: challenge.score1?.score ?? 50) //TODO: Sinnvollen Standardwert bzw. Optional Binding
+                            value: challenge.score2?.score ?? 0) //TODO: Sinnvollen Standardwert bzw. Optional Binding
 
                     // Prozentzahl in der Mitte
-                    Text("\(challenge.score1?.score.description ?? "50")%")
+                    Text("\(challenge.score2?.score.description ?? "0")%")
                         .foregroundColor(.darkGrey)
                         .bold()
                         .frame(width: 150, height: 40)
@@ -451,7 +448,7 @@ extension QuizHistoryView {
                         Circle()
                             .trim(
                                 from: 0.0,
-                                to: CGFloat(challenge.score1?.score ?? 50  / 100) //TODO: Sinnvollen Standardwert bzw. Optional Binding
+                                to: CGFloat((challenge.score1?.score ?? 0) / 100) //TODO: Sinnvollen Standardwert bzw. Optional Binding
                             )
                             .stroke(
                                 style: StrokeStyle(
@@ -460,7 +457,7 @@ extension QuizHistoryView {
                             .foregroundColor(.blue)
                             .rotationEffect(.degrees(-90))
 
-                        Text("\(Int(challenge.score1?.score ?? 50))%").font( //TODO: Sinnvollen Standardwert bzw. Optional Binding
+                        Text("\(Int(challenge.score1?.score ?? 0))%").font( //TODO: Sinnvollen Standardwert bzw. Optional Binding
                             .custom("Roboto-Bold", size: 16)
                         )
                         .bold()
@@ -483,7 +480,7 @@ extension QuizHistoryView {
                             .trim(
                                 from: 0.0,
                                 to: CGFloat(
-                                    (challenge.score2?.score ?? 0) / 100)
+                                    ((challenge.score2?.score ?? 0) / 100))
                             )
                             .stroke(
                                 style: StrokeStyle(

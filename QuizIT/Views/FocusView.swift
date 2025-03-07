@@ -9,18 +9,15 @@ import SwiftUI
 import URLImage
 
 struct FocusView: View {
+    @EnvironmentObject var network: Network
+    @EnvironmentObject var quizData: QuizData
+
 
     var subject: Subject
 
-    @EnvironmentObject var network: Network
     @State private var focusList: [Focus] = []
     @State private var loading = true
 
-    @State private var showQuiz = false
-
-    @State private var questions: [Question] = []
-    @State private var selectedFocus: Focus?
-    @State private var quizType: Int = 0
 
     @State private var loadingQuiz = false
 
@@ -39,7 +36,6 @@ struct FocusView: View {
                     NavigationLink(destination: QuizHistoryView(subject: subject, quizType: 0)) {
                         AllFocusCard(subject: subject) {
                             self.loadingQuiz = true
-                            self.selectedFocus = Focus(id: 0, name: subject.name, year: 0, questionCount: 1, imageAddress: "", subjectId: 0)
                             network.fetchSubjectQuiz(id: subject.id) { questions, error in
                                 if let error = error {
                                     //display error
@@ -51,9 +47,9 @@ struct FocusView: View {
                                             print("no questions in attribute")
                                         } else {
                                             //questions ready for next view
-                                            self.questions = questions
-                                            self.quizType = 0
-                                            self.showQuiz = true
+                                            quizData.questions = questions
+                                            quizData.quizType = 0
+                                            quizData.showQuiz = true
                                         }
                                     }
                                 }
@@ -70,7 +66,7 @@ struct FocusView: View {
                         ) {
                             FocusCard(focus: focus) {
                                 self.loadingQuiz = true
-                                self.selectedFocus = focus
+                                quizData.focus = focus
                                 network.fetchFocusQuiz(id: focus.id) {
                                     questions, error in
                                     if let error = error {
@@ -83,9 +79,9 @@ struct FocusView: View {
                                                 print("no questions in attribute")
                                             } else {
                                                 //questions ready for next view
-                                                self.questions = questions
-                                                self.quizType = 1
-                                                self.showQuiz = true
+                                                quizData.questions = questions
+                                                quizData.quizType = 1
+                                                quizData.showQuiz = true
                                             }
                                         }
                                     }
@@ -99,11 +95,6 @@ struct FocusView: View {
                     }
 
                     Spacer()
-                }
-                .navigationDestination(isPresented: $showQuiz) {
-                    PerformQuizView(
-                        focus: selectedFocus ?? dummyFocuses[0], subject: self.subject,
-                        quiz: Quiz(questions: self.questions), quizType: self.quizType)
                 }
                 .navigationBarBackButtonHidden(true)
 
