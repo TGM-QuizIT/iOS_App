@@ -22,7 +22,7 @@ struct StartQuizView: View {
                 }
             }
             .navigationDestination(isPresented: $showQuiz) {
-                PerformQuizView(focus: dummyFocuses[0], subject: Subject(id: 1, name: "GGP", imageAddress: ""), quiz: QuizDataDummy.shared.quiz, quizType: 0)
+                PerformQuizView(focus: dummyFocuses[0], subject: Subject(id: 1, name: "GGP", imageAddress: ""), quiz: QuizDataDummy.shared.quiz, quizType: .subject)
         }
         
         }

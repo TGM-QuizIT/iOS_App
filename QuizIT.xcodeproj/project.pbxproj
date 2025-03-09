@@ -55,6 +55,7 @@
 		2CFA19082CB2FB7E00FB8228 /* CustomLoading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFA19072CB2FB7E00FB8228 /* CustomLoading.swift */; };
 		2E1D33222D1996710080500A /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 2E1D33212D1996710080500A /* Alamofire */; };
 		2E1D33422D199B6A0080500A /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E1D33412D199B6A0080500A /* Response.swift */; };
+		2EC5F9B32D7DBB2D005AA923 /* QuizType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC5F9B22D7DBB2A005AA923 /* QuizType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -105,6 +106,7 @@
 		2CFA19032CB2F34C00FB8228 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		2CFA19072CB2FB7E00FB8228 /* CustomLoading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomLoading.swift; sourceTree = "<group>"; };
 		2E1D33412D199B6A0080500A /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
+		2EC5F9B22D7DBB2A005AA923 /* QuizType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -226,6 +228,7 @@
 		2CFA18FF2CB2F0BB00FB8228 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				2EC5F9B22D7DBB2A005AA923 /* QuizType.swift */,
 				2C4BE69F2CE8D55F00E12685 /* Quiz.swift */,
 				2CFA18FB2CB2F06E00FB8228 /* Question.swift */,
 				2CA247622CEF930C003EEA04 /* Option.swift */,
@@ -373,6 +376,7 @@
 				2C61E3EC2CAD7AAB00B09BF7 /* SubjectView.swift in Sources */,
 				2C9545252CF5EB7C00957B14 /* StartQuizView.swift in Sources */,
 				2C11BF9F2CFF20BF00EDE904 /* StatisticView.swift in Sources */,
+				2EC5F9B32D7DBB2D005AA923 /* QuizType.swift in Sources */,
 				2C1079362D07217900EF23C6 /* dummyData.swift in Sources */,
 				2C4E47702CAC0A1B00633AA3 /* MainMenu.swift in Sources */,
 				2CFA18FC2CB2F06E00FB8228 /* Question.swift in Sources */,

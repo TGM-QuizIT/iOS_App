@@ -18,7 +18,7 @@ struct ResultView: View {
     var result: Result
     var focus: Focus?
     var subject: Subject?
-    var quizType: Int
+    var quizType: QuizType
     @State private var friends: [Friendship] = []
     @State private var selectedFriend: [Friendship] = []
     @State private var showFriends: Bool = false
@@ -28,13 +28,13 @@ struct ResultView: View {
         VStack {
             
             ZStack {
-                if quizType == 0 {
+                if quizType == .subject {
                     Text(subject?.name ?? "Fehler")
                         .font(Font.custom("Poppins-Regular", size: 20))
                         .fontWeight(.bold)
                         .multilineTextAlignment(.center)
                 }
-                if quizType == 1 {
+                if quizType == .focus {
                     Text(focus?.name ?? "Fehler")
                         .font(Font.custom("Poppins-Regular", size: 20))
                         .fontWeight(.bold)
@@ -42,7 +42,7 @@ struct ResultView: View {
                 }
                 
                 HStack {
-                    if quizType == 1 {
+                    if quizType == .focus {
                         Text(subject?.name ?? "Fehler")
                             .font(Font.custom("Roboto-Regular", size: 20))
                             .fontWeight(.bold)
@@ -124,7 +124,7 @@ struct ResultView: View {
                             }
                             .padding(.trailing,20)
                         }
-                        if quizType == 0 {
+                        if quizType == .subject {
                             NavigationLink(destination: QuizHistoryView(subject: self.subject, quizType: self.quizType)) {
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 8)
@@ -146,7 +146,7 @@ struct ResultView: View {
                                 .padding(.trailing,20)
                             }
                         }
-                        if quizType == 1 {
+                        if quizType == .focus {
                             NavigationLink(destination: QuizHistoryView(focus: self.focus, quizType: self.quizType)) {
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 8)
@@ -222,7 +222,7 @@ struct ResultView: View {
                         let dispatchGroup = DispatchGroup()
                         for friend in selectedFriend {
                             var cId: Int = -1
-                            if quizType == 0 {
+                            if quizType == .subject {
                                 guard let id = self.subject?.id else {
                                     //throw new Error
                                     return
@@ -249,7 +249,7 @@ struct ResultView: View {
                                 //TODO: Assign Result to Challenge
 
                             }
-                            else if quizType == 1 {
+                            else if quizType == .focus {
                                 guard let id = self.focus?.id else {
                                     //throw new Error
                                     return
@@ -497,5 +497,5 @@ extension ResultView {
 }
 
 #Preview {
-    ResultView(quiz: QuizDataDummy.shared.quiz, result: dummyResults[0], focus: dummyFocuses[0], subject: Subject(id: 1, name: "GGP", imageAddress: ""), quizType: 0)
+    ResultView(quiz: QuizDataDummy.shared.quiz, result: dummyResults[0], focus: dummyFocuses[0], subject: Subject(id: 1, name: "GGP", imageAddress: ""), quizType: .subject)
 }

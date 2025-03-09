@@ -25,7 +25,7 @@ struct PerformQuizView: View {
     var focus: Focus?
     var subject: Subject?
     @State var quiz: Quiz
-    var quizType: Int
+    var quizType: QuizType
     @State var challenge: Challenge?
     
     var body: some View {
@@ -182,7 +182,7 @@ struct PerformQuizView: View {
     
     private func handleRequests() {
         let dispatchGroup = DispatchGroup()
-        if self.quizType == 0 {
+        if self.quizType == .subject {
             if let subject = self.subject {
                 dispatchGroup.enter()
                 self.network.postSubjectResult(score: calcQuizReult(questions: quiz.questions), subjectId: subject.id) { result, error in
@@ -198,7 +198,7 @@ struct PerformQuizView: View {
                     dispatchGroup.leave()
                 }
             }
-        } else if self.quizType == 1 {
+        } else if self.quizType == .focus {
             if let focus = self.focus {
                 dispatchGroup.enter()
                 self.network.postFocusResult(score: calcQuizReult(questions: quiz.questions), focusId: focus.id) { result, error in

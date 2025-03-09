@@ -23,7 +23,7 @@ struct QuizHistoryView: View {
 
     @State private var questions: [Question] = []
     @State private var selectedFocus: Focus?
-    var quizType: Int
+    var quizType: QuizType
 
     @State private var errorMsg: String = ""
     @State private var loading = false
@@ -537,5 +537,5 @@ extension QuizHistoryView {
 }
 
 #Preview {
-    QuizHistoryView(quizType: 0)
+    QuizHistoryView(quizType: .subject)
 }
