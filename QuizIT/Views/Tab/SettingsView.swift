@@ -40,6 +40,12 @@ struct SettingsView: View {
 
             ListButton(icon: "info.circle", title: "Über uns")
                 .padding(.top, 10)
+                .onTapGesture {
+                    guard let url = URL(string: "https://projekte.tgm.ac.at/quizit") else {
+                        return
+                    }
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
 
             ListButton(
                 icon: "rectangle.portrait.and.arrow.forward", title: "Abmelden"

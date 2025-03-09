@@ -106,6 +106,7 @@ struct ChallengeAlert: View {
                                         quizData.subject = subject
                                         quizData.quizType = 0
                                         quizData.questions = questions
+                                        quizData.challenge = self.challenge
                                         quizData.showQuiz = true
                                         dismiss()
                                     }
@@ -129,6 +130,7 @@ struct ChallengeAlert: View {
                                         quizData.focus = focus
                                         quizData.quizType = 1
                                         quizData.questions = questions
+                                        quizData.challenge = self.challenge
                                         quizData.showQuiz = true
                                         dismiss()
                                     }

@@ -14,4 +14,5 @@ class QuizData: ObservableObject {
     @Published var showQuiz: Bool = false
     @Published var subject: Subject = dummySubjects[0]
     @Published var focus: Focus = dummyFocuses[0]
+    @Published var challenge: Challenge?
 }
