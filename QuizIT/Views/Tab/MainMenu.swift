@@ -150,7 +150,20 @@ struct MainMenu: View {
     private func handleRequests() {
         self.loading = true
         let dispatchGroup = DispatchGroup()
-
+        
+        dispatchGroup.enter()
+        network.checkBlocked() { blocked, error in
+            if let blocked = blocked {
+                if blocked {
+                    //TODO: User wird abgemeldet und SignInView wird präsentiert
+                    return
+                }
+            } else if let error = error {
+                //TODO: Fehlerbehandlung
+            }
+            dispatchGroup.leave()
+        }
+        
         dispatchGroup.enter()
         network.fetchSubjects() { error in
             if let error = error {
