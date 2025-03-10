@@ -112,7 +112,7 @@ struct PerformQuizView: View {
                 }
                 
                 // Antworten
-                ForEach(0..<quiz.questions[currentQuestio   nIndex].options.count, id: \.self) { answerIndex in
+                ForEach(0..<quiz.questions[currentQuestionIndex].options.count, id: \.self) { answerIndex in
                     answerCard(
                         questionAnswerText: quiz.questions[currentQuestionIndex].options[answerIndex].text,
                         isSelected: selectedAnswerIndices.contains(answerIndex),
@@ -139,9 +139,9 @@ struct PerformQuizView: View {
                     if currentQuestionIndex < quiz.questions.count - 1 {
                         withAnimation(.easeInOut(duration: 0.5)) {
                             currentQuestionIndex += 1
-                            if showQuestionDetail {
-                                showQuestionDetail.toggle()
-                            }
+//                            if showQuestionDetail {
+//                                showQuestionDetail.toggle()
+//                            }
                             progressValue = Double(currentQuestionIndex + 1) / Double(quiz.questions.count)
                         }
                         selectedAnswerIndices.removeAll()
@@ -298,28 +298,28 @@ extension PerformQuizView {
     func calcQuestionResult(question: Question) -> Double {
         var result: Double = 0
         var questionSelected = false
+        let optionValue = 1.0 / Double(question.options.count)
+
         for option in question.options {
             if option.selected && option.correct {
                 questionSelected = true
-                result += 0.25
+                result += optionValue
             } else if !option.selected && !option.correct {
-                result += 0.25
+                result += optionValue
             } else if option.selected && !option.correct {
                 questionSelected = true
-                if !(result == 0) {
-                    result -= 0.25
-                }
+                result -= optionValue
             } else if !option.selected && option.correct {
-                if !(result == 0) {
-                    result -= 0.25
-                }
+                result -= optionValue
             }
         }
+
         if result < 0 || !questionSelected {
             result = 0
         }
         return result
     }
+
     func calcQuizReult(questions: [Question]) -> Double {
         var result: Double = 0
         for question in questions {
