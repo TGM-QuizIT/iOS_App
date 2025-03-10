@@ -109,8 +109,6 @@ struct MainMenu: View {
                                     }
                                     .frame(height: 200)
                                 }
-                                
-                                
                                 HStack {
                                     Text("Deine Statistiken").font(Font.custom("Poppins-SemiBold", size: 16))
                                         .padding(.leading)
@@ -125,8 +123,6 @@ struct MainMenu: View {
                                 
                             }
                         }
-                        
-                        
                     }
                     
                     Spacer()
@@ -138,8 +134,8 @@ struct MainMenu: View {
         }
         .sheet(item: $selectedChallenge) { challenge in
                     ChallengeAlert(challenge: challenge)
-                .presentationDetents([.height(326)]) // Definiert verschiedene Größen für das Bottom-Sheet
-                        .presentationDragIndicator(.visible) // Zeigt den Drag-Indikator an
+                .presentationDetents([.height(326)])
+                        .presentationDragIndicator(.visible)
                         .onDisappear() {
                             handleRequests()
                         }
@@ -241,7 +237,7 @@ extension MainMenu {
                         image
                             .resizable()
                             .frame(width: 214, height: 107)
-                            .clipShape(CustomCorners(corners: [.topLeft, .topRight], radius: 20))  // Apply corner radius only to top corners
+                            .clipShape(CustomCorners(corners: [.topLeft, .topRight], radius: 20))
                             .padding(.top, -43)
                     }
                     

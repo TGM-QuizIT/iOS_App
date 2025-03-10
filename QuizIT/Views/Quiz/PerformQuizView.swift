@@ -13,8 +13,8 @@ struct PerformQuizView: View {
     
     @State private var selectedAnswerIndices: Set<Int> = []
     @State private var selectedAnswerScale: CGFloat = 1.0
-    @State private var currentQuestionIndex: Int = 0 // Aktueller Fragenindex
-    @State private var progressValue: Double = 0.0 // Fortschrittswert für Animation
+    @State private var currentQuestionIndex: Int = 0
+    @State private var progressValue: Double = 0.0
     @State private var showQuestionDetail: Bool = false
     
     @State private var showResult: Bool = false
@@ -48,7 +48,7 @@ struct PerformQuizView: View {
                        
                         
                         HStack {
-                            Text("\(currentQuestionIndex + 1)/\(quiz.questions.count)") // Frage-Fortschritt
+                            Text("\(currentQuestionIndex + 1)/\(quiz.questions.count)")
                                 .font(Font.custom("Roboto-Regular", size: 20))
                                 .foregroundStyle(.darkGrey)
                                 .multilineTextAlignment(.center)
@@ -96,11 +96,11 @@ struct PerformQuizView: View {
                         .frame(maxWidth: 320)
                         .lineLimit(9)
                         .multilineTextAlignment(.center)
-                        .onTapGesture {
-                            withAnimation(.easeInOut) {
-                                showQuestionDetail.toggle()
-                            }
-                        }
+//                        .onTapGesture {
+//                            withAnimation(.easeInOut) {
+//                                showQuestionDetail.toggle()
+//                            }
+//                        }
                     
                     
                     if showQuestionDetail {
@@ -112,7 +112,7 @@ struct PerformQuizView: View {
                 }
                 
                 // Antworten
-                ForEach(0..<quiz.questions[currentQuestionIndex].options.count, id: \.self) { answerIndex in
+                ForEach(0..<quiz.questions[currentQuestio   nIndex].options.count, id: \.self) { answerIndex in
                     answerCard(
                         questionAnswerText: quiz.questions[currentQuestionIndex].options[answerIndex].text,
                         isSelected: selectedAnswerIndices.contains(answerIndex),
@@ -263,7 +263,7 @@ extension PerformQuizView {
                 .stroke(Color.lightGrey, lineWidth: 1.7)
                 .background(isSelected ? Color.lightBlue : Color.white)
                 .cornerRadius(12)
-                .frame(width: 330, height: isSelected ? 55 : 50)
+                .frame(width: 330, height: isSelected ? 50 : 50)
                 .scaleEffect(CGSize(width: 1, height: scale))
             
             HStack {
@@ -272,7 +272,7 @@ extension PerformQuizView {
                     .foregroundColor(Color.black)
                     .padding()
                     .frame(maxWidth: 340)
-                    .frame(height: isSelected ? 55 : 50)
+                    .frame(height: isSelected ? 50 : 50)
                     .cornerRadius(12)
                     .padding(5)
             }
