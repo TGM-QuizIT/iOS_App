@@ -14,6 +14,7 @@ struct Response: Codable {
     let user: User?
     let users: [User]?
     let stats: Statistic?
+    let blocked: Bool?
     
     let subjects: [Subject]?
     

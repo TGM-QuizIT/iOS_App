@@ -33,7 +33,7 @@ struct FocusView: View {
                     NavigationHeader(title: "Schwerpunkte " + subject.name) {
                         dismiss()
                     }
-                    NavigationLink(destination: QuizHistoryView(subject: subject, quizType: 0)) {
+                    NavigationLink(destination: QuizHistoryView(subject: subject, quizType: .subject)) {
                         AllFocusCard(subject: subject) {
                             self.loadingQuiz = true
                             network.fetchSubjectQuiz(id: subject.id) { questions, error in
@@ -48,7 +48,7 @@ struct FocusView: View {
                                         } else {
                                             //questions ready for next view
                                             quizData.questions = questions
-                                            quizData.quizType = 0
+                                            quizData.quizType = .subject
                                             quizData.showQuiz = true
                                         }
                                     }
@@ -62,7 +62,7 @@ struct FocusView: View {
                     ForEach(focusList, id: \.self) { focus in
                         NavigationLink(
                             destination: QuizHistoryView(
-                                focus: focus, quizType: 1)
+                                focus: focus, quizType: .focus)
                         ) {
                             FocusCard(focus: focus) {
                                 self.loadingQuiz = true
@@ -80,7 +80,7 @@ struct FocusView: View {
                                             } else {
                                                 //questions ready for next view
                                                 quizData.questions = questions
-                                                quizData.quizType = 1
+                                                quizData.quizType = .focus
                                                 quizData.showQuiz = true
                                             }
                                         }

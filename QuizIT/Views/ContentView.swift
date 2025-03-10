@@ -89,9 +89,12 @@ struct ContentView: View {
             .animation(.easeInOut, value: showSignInView)
             .navigationDestination(isPresented: Binding(projectedValue: $quizData.showQuiz)) {
                 PerformQuizView(
-                    focus: quizData.focus ?? dummyFocuses[0],
+                    focus: quizData.focus,
                     subject: quizData.subject,
-                    quiz: Quiz(questions: quizData.questions), quizType: quizData.quizType)
+                    quiz: Quiz(questions: quizData.questions),
+                    quizType: quizData.quizType,
+                    challenge: quizData.challenge
+                )
             }
         }
         

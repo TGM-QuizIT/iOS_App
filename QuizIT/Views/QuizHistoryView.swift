@@ -23,7 +23,7 @@ struct QuizHistoryView: View {
 
     @State private var questions: [Question] = []
     @State private var selectedFocus: Focus?
-    var quizType: Int
+    var quizType: QuizType
 
     @State private var errorMsg: String = ""
     @State private var loading = false
@@ -519,6 +519,11 @@ extension QuizHistoryView {
                             .font(.custom("Poppins-SemiBold", size: 12))
                             .frame(width: 140, alignment: .center)
                             .padding(.leading, 50)
+                    } else if let subject = challenge.subject {
+                        Text(subject.name)
+                            .font(.custom("Poppins-SemiBold", size: 12))
+                            .frame(width: 140, alignment: .center)
+                            .padding(.leading, 50)
                     }
                 }
                 .padding(.top, 90)
@@ -532,5 +537,5 @@ extension QuizHistoryView {
 }
 
 #Preview {
-    QuizHistoryView(quizType: 0)
+    QuizHistoryView(quizType: .subject)
 }

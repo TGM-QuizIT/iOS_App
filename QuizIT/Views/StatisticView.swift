@@ -184,54 +184,106 @@ extension StatisticView {
                    // .shadow(radius: 5)
                     .padding()
                 
+                
                 //TODO: Add Subject aswell
-                VStack {
-                    ZStack {
-                        Rectangle()
-                            .fill(Color.lightBlue)
-                            .frame(width: 169, height: 65)
-                            .clipShape(CustomCorners(corners: [.topLeft, .topRight], radius: 20))
-                            .padding()
-                            .padding(.top, -43)
-                        
-                        URLImage(URL(string:result.focus?.imageAddress ?? "")!) { image in
-                            image
-                                .resizable()
+                if let focus = result.focus {
+                    VStack {
+                        ZStack {
+                            Rectangle()
+                                .fill(Color.lightBlue)
                                 .frame(width: 169, height: 65)
                                 .clipShape(CustomCorners(corners: [.topLeft, .topRight], radius: 20))
+                                .padding()
                                 .padding(.top, -43)
+                            
+                            URLImage(URL(string: focus.imageAddress)!) { image in
+                                image
+                                    .resizable()
+                                    .frame(width: 169, height: 65)
+                                    .clipShape(CustomCorners(corners: [.topLeft, .topRight], radius: 20))
+                                    .padding(.top, -43)
+                            }
+                        }
+                        
+                        VStack(alignment: .center) {
+                            Text(focus.name)
+                                .font(Font.custom("Poppins-SemiBold", size: 11))
+                                .padding(.top, -10)
+                            // Fortschrittsanzeige
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 5)
+                                    .fill(Color.lightBlue)
+                                    .frame(width: 143.28, height: 16) // Erhöhte Höhe
+                                
+                                ProgressView(value: result.score / 100)
+                                    .progressViewStyle(LinearProgressViewStyle(tint: result.score >= 40 ? .blue : .red))
+                                    .frame(width: 143.28, height: 50)
+                                    .scaleEffect(x: 1, y: 4, anchor: .center)
+                                    .cornerRadius(20)
+                                    .animation(.easeInOut(duration: 0.5), value: 0.2 / 100)
+                                
+                                
+                                Text(result.score.description + "%")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundColor(result.score>=40 ? .white : .black)
+                            }
+                            .padding(.top,-15)
+                            
+                            
+                            
+                            
                         }
                     }
-                    
-                    VStack(alignment: .center) {
-                        Text(result.focus?.name ?? "")
-                            .font(Font.custom("Poppins-SemiBold", size: 11))
-                            .padding(.top, -10)
-                        // Fortschrittsanzeige
+                } else if let subject = result.subject {
+                    VStack {
                         ZStack {
-                            RoundedRectangle(cornerRadius: 5)
+                            Rectangle()
                                 .fill(Color.lightBlue)
-                                .frame(width: 143.28, height: 16) // Erhöhte Höhe
+                                .frame(width: 169, height: 65)
+                                .clipShape(CustomCorners(corners: [.topLeft, .topRight], radius: 20))
+                                .padding()
+                                .padding(.top, -43)
                             
-                            ProgressView(value: result.score / 100)
-                                .progressViewStyle(LinearProgressViewStyle(tint: result.score>=40 ? .blue : .red))
-                                .frame(width: 143.28, height: 50)
-                                .scaleEffect(x: 1, y: 4, anchor: .center)
-                                .cornerRadius(20)
-                                .animation(.easeInOut(duration: 0.5), value: 0.2 / 100)
-                            
-
-                            Text(result.score.description + "%")
-                                            .font(.system(size: 12, weight: .bold))
-                                            .foregroundColor(result.score>=40 ? .white : .black)
+                            URLImage(URL(string: subject.imageAddress)!) { image in
+                                image
+                                    .resizable()
+                                    .frame(width: 169, height: 65)
+                                    .clipShape(CustomCorners(corners: [.topLeft, .topRight], radius: 20))
+                                    .padding(.top, -43)
+                            }
                         }
-                        .padding(.top,-15)
-
-
-
                         
+                        VStack(alignment: .center) {
+                            Text(subject.name)
+                                .font(Font.custom("Poppins-SemiBold", size: 11))
+                                .padding(.top, -10)
+                            // Fortschrittsanzeige
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 5)
+                                    .fill(Color.lightBlue)
+                                    .frame(width: 143.28, height: 16) // Erhöhte Höhe
+                                
+                                ProgressView(value: result.score / 100)
+                                    .progressViewStyle(LinearProgressViewStyle(tint: result.score >= 40 ? .blue : .red))
+                                    .frame(width: 143.28, height: 50)
+                                    .scaleEffect(x: 1, y: 4, anchor: .center)
+                                    .cornerRadius(20)
+                                    .animation(.easeInOut(duration: 0.5), value: 0.2 / 100)
+                                
+                                
+                                Text(result.score.description + "%")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundColor(result.score>=40 ? .white : .black)
+                            }
+                            .padding(.top,-15)
+                            
+                            
+                            
+                            
+                        }
                     }
                 }
+                
                 Spacer()
             }
     }

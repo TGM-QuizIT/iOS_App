@@ -141,6 +141,32 @@ class Network: ObservableObject {
             }
     }
     
+    func checkBlocked(completion: @escaping(Bool?, String?) -> Void) {
+        guard let id = self.user?.id else {
+            //throw UserError.missingUserObject(message: "The ID is null.")
+            return
+        }
+        AF.request("\(self.baseUrl)/user/stats?id=\(id)", method: .get, headers: self.headers)
+            .validate(statusCode: 200..<500)
+            .responseDecodable(of: Response.self) { res in
+                switch res.result {
+                case .success(let response):
+                    if let code = res.response?.statusCode {
+                        switch code {
+                        case 200:
+                            completion(response.blocked, nil)
+                        case 400...500:
+                            completion(nil, response.reason)
+                        default:
+                            completion(nil, "Unhandeled HTTP-Code")
+                        }
+                    }
+                case .failure(let error):
+                    completion(nil, "Request failed! Reason: \(error)")
+                }
+            }
+    }
+    
     /*------------Subject-Requests---------------*/
     func fetchSubjects(completion: @escaping (String?) -> Void) {
         guard let id = self.user?.id else {

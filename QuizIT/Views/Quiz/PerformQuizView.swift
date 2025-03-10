@@ -19,14 +19,14 @@ struct PerformQuizView: View {
     
     @State private var showResult: Bool = false
     @State private var result: Result?
-    @State var challenge: Challenge?
     
     
     
     var focus: Focus?
     var subject: Subject?
     @State var quiz: Quiz
-    var quizType: Int
+    var quizType: QuizType
+    @State var challenge: Challenge?
     
     var body: some View {
         NavigationStack {
@@ -147,55 +147,7 @@ struct PerformQuizView: View {
                         selectedAnswerIndices.removeAll()
                     } else {
                         //self.result?.score = calcQuizReult(questions: quiz.questions)
-                        if self.quizType == 0 {
-                            if let subject = self.subject {
-                            self.network.postSubjectResult(score: calcQuizReult(questions: quiz.questions), subjectId: subject.id) { result, error in
-                                if var result = result {
-                                    result.subject = self.subject
-                                    self.result = result
-                                    showResult.toggle()
-                                } else {
-                                    if let error = error {
-                                        print(error)
-                                    }
-                                }
-                                }
-                            }
-                        } else if self.quizType == 1 {
-                            if let focus = self.focus {
-                                self.network.postFocusResult(score: calcQuizReult(questions: quiz.questions), focusId: focus.id) { result, error in
-                                    if var result = result {
-                                        result.focus = self.focus
-                                        self.result = result
-                                        showResult.toggle()
-                                    } else {
-                                        if let error = error {
-                                            print(error)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if var challenge = self.challenge {
-                            
-                            let dispatchGroup = DispatchGroup()
-                            guard let rId = result?.id else {
-                                //throw new Error missing result
-                                return
-                            }
-                            dispatchGroup.enter()
-                            network.assignResultToChallenge(challengeId: challenge.id, resultId: rId) { challenge, error in
-                                if let challenge = challenge {
-                                    self.challenge = challenge
-                                } else if error != nil {
-                                    //TODO: Fehlerbehandlung
-                                }
-                                dispatchGroup.leave()
-                            }
-                        }
-                        
-                        
-                        
+                        handleRequests()
                     }
                 }) {
                     Text(currentQuestionIndex < quiz.questions.count - 1 ? "Weiter" : "Beenden")
@@ -226,6 +178,64 @@ struct PerformQuizView: View {
             }
         }
         
+    }
+    
+    private func handleRequests() {
+        let dispatchGroup = DispatchGroup()
+        if self.quizType == .subject {
+            if let subject = self.subject {
+                dispatchGroup.enter()
+                self.network.postSubjectResult(score: calcQuizReult(questions: quiz.questions), subjectId: subject.id) { result, error in
+                    if var result = result {
+                        result.subject = self.subject
+                        self.result = result
+                        showResult.toggle()
+                    } else {
+                        if let error = error {
+                            print(error)
+                        }
+                    }
+                    dispatchGroup.leave()
+                }
+            }
+        } else if self.quizType == .focus {
+            if let focus = self.focus {
+                dispatchGroup.enter()
+                self.network.postFocusResult(score: calcQuizReult(questions: quiz.questions), focusId: focus.id) { result, error in
+                    if var result = result {
+                        result.focus = self.focus
+                        self.result = result
+                        showResult.toggle()
+                    } else {
+                        if let error = error {
+                            print(error)
+                        }
+                    }
+                    dispatchGroup.leave()
+                }
+            }
+        }
+        dispatchGroup.notify(queue: .main) {
+            if var challenge = self.challenge {
+                print("would be assigning")
+                let dispatchGroup = DispatchGroup()
+                guard let rId = result?.id else {
+                    //throw new Error missing result
+                    return
+                }
+                dispatchGroup.enter()
+                network.assignResultToChallenge(challengeId: challenge.id, resultId: rId) { challenge, error in
+                    if let challenge = challenge {
+                        self.challenge = challenge
+                    } else if error != nil {
+                        //TODO: Fehlerbehandlung
+                    }
+                    dispatchGroup.leave()
+                }
+            } else {
+                print(" nope would not be assigning")
+            }
+        }
     }
         
 }

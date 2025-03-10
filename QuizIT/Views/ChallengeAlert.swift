@@ -104,8 +104,9 @@ struct ChallengeAlert: View {
                                     } else {
                                         //questions ready for next view
                                         quizData.subject = subject
-                                        quizData.quizType = 0
+                                        quizData.quizType = .subject
                                         quizData.questions = questions
+                                        quizData.challenge = self.challenge
                                         quizData.showQuiz = true
                                         dismiss()
                                     }
@@ -127,8 +128,9 @@ struct ChallengeAlert: View {
                                     } else {
                                         //questions ready for next view
                                         quizData.focus = focus
-                                        quizData.quizType = 1
+                                        quizData.quizType = .focus
                                         quizData.questions = questions
+                                        quizData.challenge = self.challenge
                                         quizData.showQuiz = true
                                         dismiss()
                                     }
