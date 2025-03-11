@@ -19,7 +19,9 @@ struct MainMenu: View {
     @State private var stats: Statistic? = nil
     @State private var loading = false
     @State private var error = false
+    
     @State private var selectedChallenge: Challenge?
+    @State private var showStatisticInfoCard: Bool = false
     
     var body: some View {
         VStack {
@@ -118,11 +120,17 @@ struct MainMenu: View {
                                 }
                                 if let stats = self.stats {
                                     StatisticCard(stats: stats)
+                                        .onTapGesture {
+                                            self.showStatisticInfoCard = true
+                                        }
                                 }
                                 
                                 
                             }
                         }
+                    }
+                    .refreshable {
+                        handleRequests()
                     }
                     
                     Spacer()
@@ -140,6 +148,11 @@ struct MainMenu: View {
                             handleRequests()
                         }
                 }
+        .sheet(isPresented: $showStatisticInfoCard) {
+            StatisticInfoCard()
+                .presentationDetents([.height(280)])
+                .presentationDragIndicator(.visible)
+        }
                 
     }
     
