@@ -5,72 +5,78 @@
 //  Created by Marius on 03.12.24.
 //
 
+import Charts
 import SwiftUI
 import URLImage
-import Charts
 
 struct StatisticView: View {
-    
+
     @EnvironmentObject var network: Network
-    
+
     @State private var lastResults: [Result] = []
     @State private var stats: Statistic? = nil
     @State private var challenges: [Challenge] = []
-    
+
     @State private var loading = false
     @State private var error = false
-    
+    @State private var showStatisticInfoCard = false
+
     var body: some View {
         VStack {
-            if (loading) {
+            if loading {
                 ProgressView()
-            } else if (error) {
+            } else if error {
                 //TODO: Display error
-            }else {
+            } else {
                 ScrollView {
                     VStack {
                         if let stats = self.stats {
                             StatisticCard(stats: stats)
+                                .onTapGesture {
+                                    self.showStatisticInfoCard = true
+                                }
                         }
-                        
+
                         HStack {
-                            Text("Quiz Verlauf").font(.custom("Poppins-SemiBold", size: 16))
-                                .padding(.leading,20)
+                            Text("Quiz Verlauf").font(
+                                .custom("Poppins-SemiBold", size: 16)
+                            )
+                            .padding(.leading, 20)
                             Spacer()
                         }
                         ScrollView(.horizontal) {
-                            HStack(spacing:-20) {
+                            HStack(spacing: -20) {
                                 ForEach(lastResults, id: \.self) { result in
                                     ResultCard(result: result)
-                                    
+
                                 }
                             }
                         }
                         .scrollIndicators(.hidden)
-                        
+
                         // StatisticChartView(lastResults: lastResults)
-                        
-                        
-                    }
-                    .onAppear {
-                        // TODO: Raphael Statistik laden
+
                     }
                 }
             }
         }
-        .onAppear() {
+        .onAppear {
             handleRequests()
         }
-        
-    
+        .sheet(isPresented: $showStatisticInfoCard) {
+            StatisticInfoCard()
+                .presentationDetents([.height(280)])
+                .presentationDragIndicator(.visible)
+        }
+
     }
-    
+
     private func handleRequests() {
         self.loading = true
         self.error = false
-        
+
         let dispatchGroup = DispatchGroup()
-        
+
         dispatchGroup.enter()
         network.fetchResults(fId: nil, sId: nil, amount: 7) { results, error in
             if let results = results {
@@ -80,7 +86,7 @@ struct StatisticView: View {
             }
             dispatchGroup.leave()
         }
-        
+
         dispatchGroup.enter()
         guard let id = network.user?.id else {
             //throw UserError.missingUserObject(message: "The ID is null.")
@@ -94,9 +100,9 @@ struct StatisticView: View {
             }
             dispatchGroup.leave()
         }
-        
+
         dispatchGroup.enter()
-        network.fetchDoneChallenges() { challenges, error in
+        network.fetchDoneChallenges { challenges, error in
             if let challenges = challenges {
                 self.challenges = challenges
             } else if error != nil {
@@ -104,7 +110,6 @@ struct StatisticView: View {
             }
             dispatchGroup.leave()
         }
-        
 
         dispatchGroup.notify(queue: .main) {
             self.loading = false
@@ -125,27 +130,26 @@ extension StatisticView {
                     Image(systemName: "star.fill")
                         .font(.title2)
                         .foregroundStyle(Color.white)
-                    
+
                     Text("Challenges")
                         .font(.title3)
                         .foregroundStyle(Color.white.opacity(0.5))
                     Text("\(Int(stats.winRate)) %")
                         .font(.title3)
                         .foregroundStyle(Color.white)
-                    
-                    
+
                 }
                 .padding()
-                
+
                 Divider()
                     .frame(width: 10, height: 60)
                     .foregroundStyle(.black)
-                
+
                 VStack {
                     Image(systemName: "graduationcap.fill")
                         .font(.title2)
                         .foregroundStyle(Color.white)
-                    
+
                     Text("Level")
                         .font(.title3)
                         .foregroundStyle(Color.white.opacity(0.5))
@@ -154,16 +158,16 @@ extension StatisticView {
                         .foregroundStyle(Color.white)
                 }
                 .padding()
-                
+
                 Divider()
-                    .frame(width: 10,height: 60)
+                    .frame(width: 10, height: 60)
                     .foregroundStyle(.black)
-                
+
                 VStack {
                     Image(systemName: "trophy.fill")
                         .font(.title2)
                         .foregroundStyle(Color.white)
-                    
+
                     Text("Score")
                         .font(.title3)
                         .foregroundStyle(Color.white.opacity(0.5))
@@ -177,137 +181,147 @@ extension StatisticView {
         }
     }
     private func ResultCard(result: Result) -> some View {
-            ZStack {
-                RoundedRectangle(cornerRadius: 15)
-                    .fill(Color.base)
-                    .frame(width: 169, height: 129)
-                   // .shadow(radius: 5)
-                    .padding()
-                
-                
-                //TODO: Add Subject aswell
-                if let focus = result.focus {
-                    VStack {
-                        ZStack {
-                            Rectangle()
-                                .fill(Color.lightBlue)
+        ZStack {
+            RoundedRectangle(cornerRadius: 15)
+                .fill(Color.base)
+                .frame(width: 169, height: 129)
+                // .shadow(radius: 5)
+                .padding()
+
+            //TODO: Add Subject aswell
+            if let focus = result.focus {
+                VStack {
+                    ZStack {
+                        Rectangle()
+                            .fill(Color.lightBlue)
+                            .frame(width: 169, height: 65)
+                            .clipShape(
+                                CustomCorners(
+                                    corners: [.topLeft, .topRight], radius: 20)
+                            )
+                            .padding()
+                            .padding(.top, -43)
+
+                        URLImage(URL(string: focus.imageAddress)!) { image in
+                            image
+                                .resizable()
                                 .frame(width: 169, height: 65)
-                                .clipShape(CustomCorners(corners: [.topLeft, .topRight], radius: 20))
-                                .padding()
+                                .clipShape(
+                                    CustomCorners(
+                                        corners: [.topLeft, .topRight],
+                                        radius: 20)
+                                )
                                 .padding(.top, -43)
-                            
-                            URLImage(URL(string: focus.imageAddress)!) { image in
-                                image
-                                    .resizable()
-                                    .frame(width: 169, height: 65)
-                                    .clipShape(CustomCorners(corners: [.topLeft, .topRight], radius: 20))
-                                    .padding(.top, -43)
-                            }
-                        }
-                        
-                        VStack(alignment: .center) {
-                            Text(focus.name)
-                                .font(Font.custom("Poppins-SemiBold", size: 11))
-                                .padding(.top, -10)
-                            // Fortschrittsanzeige
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 5)
-                                    .fill(Color.lightBlue)
-                                    .frame(width: 143.28, height: 16) // Erhöhte Höhe
-                                
-                                ProgressView(value: result.score / 100)
-                                    .progressViewStyle(LinearProgressViewStyle(tint: result.score >= 40 ? .blue : .red))
-                                    .frame(width: 143.28, height: 50)
-                                    .scaleEffect(x: 1, y: 4, anchor: .center)
-                                    .cornerRadius(20)
-                                    .animation(.easeInOut(duration: 0.5), value: 0.2 / 100)
-                                
-                                
-                                Text(result.score.description + "%")
-                                    .font(.system(size: 12, weight: .bold))
-                                    .foregroundColor(result.score>=40 ? .white : .black)
-                            }
-                            .padding(.top,-15)
-                            
-                            
-                            
-                            
                         }
                     }
-                } else if let subject = result.subject {
-                    VStack {
+
+                    VStack(alignment: .center) {
+                        Text(focus.name)
+                            .font(Font.custom("Poppins-SemiBold", size: 11))
+                            .padding(.top, -10)
+                        // Fortschrittsanzeige
                         ZStack {
-                            Rectangle()
+                            RoundedRectangle(cornerRadius: 5)
                                 .fill(Color.lightBlue)
-                                .frame(width: 169, height: 65)
-                                .clipShape(CustomCorners(corners: [.topLeft, .topRight], radius: 20))
-                                .padding()
-                                .padding(.top, -43)
-                            
-                            URLImage(URL(string: subject.imageAddress)!) { image in
-                                image
-                                    .resizable()
-                                    .frame(width: 169, height: 65)
-                                    .clipShape(CustomCorners(corners: [.topLeft, .topRight], radius: 20))
-                                    .padding(.top, -43)
-                            }
+                                .frame(width: 143.28, height: 16)  // Erhöhte Höhe
+
+                            ProgressView(value: result.score / 100)
+                                .progressViewStyle(
+                                    LinearProgressViewStyle(
+                                        tint: result.score >= 40 ? .blue : .red)
+                                )
+                                .frame(width: 143.28, height: 50)
+                                .scaleEffect(x: 1, y: 4, anchor: .center)
+                                .cornerRadius(20)
+                                .animation(
+                                    .easeInOut(duration: 0.5), value: 0.2 / 100)
+
+                            Text(result.score.description + "%")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundColor(
+                                    result.score >= 40 ? .white : .black)
                         }
-                        
-                        VStack(alignment: .center) {
-                            Text(subject.name)
-                                .font(Font.custom("Poppins-SemiBold", size: 11))
-                                .padding(.top, -10)
-                            // Fortschrittsanzeige
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 5)
-                                    .fill(Color.lightBlue)
-                                    .frame(width: 143.28, height: 16) // Erhöhte Höhe
-                                
-                                ProgressView(value: result.score / 100)
-                                    .progressViewStyle(LinearProgressViewStyle(tint: result.score >= 40 ? .blue : .red))
-                                    .frame(width: 143.28, height: 50)
-                                    .scaleEffect(x: 1, y: 4, anchor: .center)
-                                    .cornerRadius(20)
-                                    .animation(.easeInOut(duration: 0.5), value: 0.2 / 100)
-                                
-                                
-                                Text(result.score.description + "%")
-                                    .font(.system(size: 12, weight: .bold))
-                                    .foregroundColor(result.score>=40 ? .white : .black)
-                            }
-                            .padding(.top,-15)
-                            
-                            
-                            
-                            
-                        }
+                        .padding(.top, -15)
+
                     }
                 }
-                
-                Spacer()
+            } else if let subject = result.subject {
+                VStack {
+                    ZStack {
+                        Rectangle()
+                            .fill(Color.lightBlue)
+                            .frame(width: 169, height: 65)
+                            .clipShape(
+                                CustomCorners(
+                                    corners: [.topLeft, .topRight], radius: 20)
+                            )
+                            .padding()
+                            .padding(.top, -43)
+
+                        URLImage(URL(string: subject.imageAddress)!) { image in
+                            image
+                                .resizable()
+                                .frame(width: 169, height: 65)
+                                .clipShape(
+                                    CustomCorners(
+                                        corners: [.topLeft, .topRight],
+                                        radius: 20)
+                                )
+                                .padding(.top, -43)
+                        }
+                    }
+
+                    VStack(alignment: .center) {
+                        Text(subject.name)
+                            .font(Font.custom("Poppins-SemiBold", size: 11))
+                            .padding(.top, -10)
+                        // Fortschrittsanzeige
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 5)
+                                .fill(Color.lightBlue)
+                                .frame(width: 143.28, height: 16)  // Erhöhte Höhe
+
+                            ProgressView(value: result.score / 100)
+                                .progressViewStyle(
+                                    LinearProgressViewStyle(
+                                        tint: result.score >= 40 ? .blue : .red)
+                                )
+                                .frame(width: 143.28, height: 50)
+                                .scaleEffect(x: 1, y: 4, anchor: .center)
+                                .cornerRadius(20)
+                                .animation(
+                                    .easeInOut(duration: 0.5), value: 0.2 / 100)
+
+                            Text(result.score.description + "%")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundColor(
+                                    result.score >= 40 ? .white : .black)
+                        }
+                        .padding(.top, -15)
+
+                    }
+                }
             }
+
+            Spacer()
+        }
     }
-    
+
 }
 
 #Preview {
     StatisticView()
 }
 
-
-
-import SwiftUI
-import Charts
-
 struct StatisticChartView: View {
     var lastResults: [Result]
-    
+
     var body: some View {
         VStack {
             Text("Ergebnisse im Überblick")
                 .font(.custom("Poppins-SemiBold", size: 16))
                 .padding(.leading)
-            
+
             Chart(lastResults) { result in
                 BarMark(
                     x: .value("Fokus", result.focus?.name ?? ""),
@@ -328,9 +342,7 @@ struct StatisticChartView: View {
             .cornerRadius(12)
             .shadow(radius: 5)  // Schattierung für das Diagramm
             .padding(.top, 16)
-            
+
         }
     }
 }
-
-
