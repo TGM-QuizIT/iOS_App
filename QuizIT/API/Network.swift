@@ -167,6 +167,32 @@ class Network: ObservableObject {
             }
     }
     
+    func deleteUser(completion: @escaping(String?) -> Void) {
+        guard let id = self.user?.id else {
+            //throw UserError.missingUserObject(message: "The ID is null.")
+            return
+        }
+        AF.request("\(self.baseUrl)/user?id=\(id)", method: .delete, headers: self.headers)
+            .validate(statusCode: 200..<500)
+            .responseDecodable(of: Response.self) { res in
+                switch res.result {
+                case .success(let response):
+                    if let code = res.response?.statusCode {
+                        switch code {
+                        case 200:
+                            completion(nil)
+                        case 400...500:
+                            completion(response.reason)
+                        default:
+                            completion("Unhandeled HTTP-Code")
+                        }
+                    }
+                case .failure(let error):
+                    completion("Request failed! Reason: \(error)")
+                }
+            }
+    }
+    
     /*------------Subject-Requests---------------*/
     func fetchSubjects(completion: @escaping (String?) -> Void) {
         guard let id = self.user?.id else {
