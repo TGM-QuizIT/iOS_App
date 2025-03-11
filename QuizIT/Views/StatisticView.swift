@@ -61,7 +61,7 @@ struct StatisticView: View {
             }
         }
         .onAppear {
-            handleRequests()
+         handleRequests()
         }
         .sheet(isPresented: $showStatisticInfoCard) {
             StatisticInfoCard()
@@ -185,10 +185,9 @@ extension StatisticView {
             RoundedRectangle(cornerRadius: 15)
                 .fill(Color.base)
                 .frame(width: 169, height: 129)
-                // .shadow(radius: 5)
                 .padding()
 
-            //TODO: Add Subject aswell
+            // FOCUS
             if let focus = result.focus {
                 VStack {
                     ZStack {
@@ -196,22 +195,28 @@ extension StatisticView {
                             .fill(Color.lightBlue)
                             .frame(width: 169, height: 65)
                             .clipShape(
-                                CustomCorners(
-                                    corners: [.topLeft, .topRight], radius: 20)
+                                CustomCorners(corners: [.topLeft, .topRight], radius: 20)
                             )
                             .padding()
                             .padding(.top, -43)
 
-                        URLImage(URL(string: focus.imageAddress)!) { image in
+                        URLImage(URL(string: focus.imageAddress)!) {
+                            EmptyView()
+                        } inProgress: { _ in
+                            CustomLoading()
+                        } failure: { error, retry in
+                            VStack {
+                                Text(error.localizedDescription)
+                                Button("Retry", action: retry)
+                            }
+                        } content: { image in
                             image
                                 .resizable()
-                                .frame(width: 169, height: 65)
-                                .clipShape(
-                                    CustomCorners(
-                                        corners: [.topLeft, .topRight],
-                                        radius: 20)
-                                )
-                                .padding(.top, -43)
+                                .scaledToFill()
+                                .frame(width: 120, height: 60) // 2:1 Verhältnis
+                                .clipped()
+                                .cornerRadius(10)
+                                .padding(.top, -40)
                         }
                     }
 
@@ -219,32 +224,12 @@ extension StatisticView {
                         Text(focus.name)
                             .font(Font.custom("Poppins-SemiBold", size: 11))
                             .padding(.top, -10)
-                        // Fortschrittsanzeige
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 5)
-                                .fill(Color.lightBlue)
-                                .frame(width: 143.28, height: 16)  // Erhöhte Höhe
 
-                            ProgressView(value: result.score / 100)
-                                .progressViewStyle(
-                                    LinearProgressViewStyle(
-                                        tint: result.score >= 40 ? .blue : .red)
-                                )
-                                .frame(width: 143.28, height: 50)
-                                .scaleEffect(x: 1, y: 4, anchor: .center)
-                                .cornerRadius(20)
-                                .animation(
-                                    .easeInOut(duration: 0.5), value: 0.2 / 100)
-
-                            Text(result.score.description + "%")
-                                .font(.system(size: 12, weight: .bold))
-                                .foregroundColor(
-                                    result.score >= 40 ? .white : .black)
-                        }
-                        .padding(.top, -15)
-
+                        ProgressBar(score: Int(result.score))
                     }
                 }
+
+            // SUBJECT
             } else if let subject = result.subject {
                 VStack {
                     ZStack {
@@ -252,22 +237,28 @@ extension StatisticView {
                             .fill(Color.lightBlue)
                             .frame(width: 169, height: 65)
                             .clipShape(
-                                CustomCorners(
-                                    corners: [.topLeft, .topRight], radius: 20)
+                                CustomCorners(corners: [.topLeft, .topRight], radius: 20)
                             )
                             .padding()
                             .padding(.top, -43)
 
-                        URLImage(URL(string: subject.imageAddress)!) { image in
+                        URLImage(URL(string: subject.imageAddress)!) {
+                            EmptyView()
+                        } inProgress: { _ in
+                            CustomLoading()
+                        } failure: { error, retry in
+                            VStack {
+                                Text(error.localizedDescription)
+                                Button("Retry", action: retry)
+                            }
+                        } content: { image in
                             image
                                 .resizable()
-                                .frame(width: 169, height: 65)
-                                .clipShape(
-                                    CustomCorners(
-                                        corners: [.topLeft, .topRight],
-                                        radius: 20)
-                                )
-                                .padding(.top, -43)
+                                .scaledToFill()
+                                .frame(width: 120, height: 60) // 2:1 Verhältnis
+                                .clipped()
+                                .cornerRadius(10)
+                                .padding(.top, -40)
                         }
                     }
 
@@ -275,30 +266,8 @@ extension StatisticView {
                         Text(subject.name)
                             .font(Font.custom("Poppins-SemiBold", size: 11))
                             .padding(.top, -10)
-                        // Fortschrittsanzeige
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 5)
-                                .fill(Color.lightBlue)
-                                .frame(width: 143.28, height: 16)  // Erhöhte Höhe
 
-                            ProgressView(value: result.score / 100)
-                                .progressViewStyle(
-                                    LinearProgressViewStyle(
-                                        tint: result.score >= 40 ? .blue : .red)
-                                )
-                                .frame(width: 143.28, height: 50)
-                                .scaleEffect(x: 1, y: 4, anchor: .center)
-                                .cornerRadius(20)
-                                .animation(
-                                    .easeInOut(duration: 0.5), value: 0.2 / 100)
-
-                            Text(result.score.description + "%")
-                                .font(.system(size: 12, weight: .bold))
-                                .foregroundColor(
-                                    result.score >= 40 ? .white : .black)
-                        }
-                        .padding(.top, -15)
-
+                        ProgressBar(score: Int(result.score))
                     }
                 }
             }
@@ -306,6 +275,27 @@ extension StatisticView {
             Spacer()
         }
     }
+    private func ProgressBar(score: Int) -> some View {
+        ZStack(alignment: .leading) {
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(Color.blue.opacity(0.7), lineWidth: 2)
+                .frame(height: 23)
+
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color.blue.opacity(0.7))
+                .frame(width: CGFloat(score) * 1.5, height: 23) // Dynamisch nach Score
+                .animation(.easeInOut(duration: 0.3), value: score)
+
+            Text("\(score)%")
+                .foregroundColor(.darkGrey)
+                .bold()
+                .frame(width: 150, height: 40)
+                .background(Color.clear)
+        }
+        .frame(width: 125, height: 30)
+    }
+
+
 
 }
 
@@ -345,4 +335,5 @@ struct StatisticChartView: View {
 
         }
     }
+    
 }
