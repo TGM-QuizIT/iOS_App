@@ -53,6 +53,23 @@ struct StatisticView: View {
                             }
                         }
                         .scrollIndicators(.hidden)
+                        
+                        if !challenges.isEmpty {
+                            ScrollView(.horizontal) {
+                                HStack {
+                                    ForEach(
+                                        self.challenges, id: \.self
+                                    ) {
+                                        challenge in
+                                        FinishedChallengeCard(
+                                            challenge: challenge)
+                                    }
+                                }
+                                .padding(.leading, 20)
+                                
+                            }
+                            .scrollIndicators(.hidden)
+                        }
 
                         // StatisticChartView(lastResults: lastResults)
 
@@ -61,7 +78,7 @@ struct StatisticView: View {
             }
         }
         .onAppear {
-         handleRequests()
+            handleRequests()
         }
         .sheet(isPresented: $showStatisticInfoCard) {
             StatisticInfoCard()
@@ -293,6 +310,123 @@ extension StatisticView {
                 .background(Color.clear)
         }
         .frame(width: 125, height: 30)
+    }
+    func FinishedChallengeCard(challenge: Challenge) -> some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 15)
+                .fill(Color.base)
+                .frame(width: 250, height: 170)
+
+            // .shadow(radius: 5)
+
+            ZStack {
+                Rectangle()
+                    .fill(Color.lightBlue)
+                    .frame(width: 250, height: 105)
+                    .clipShape(
+                        CustomCorners(
+                            corners: [.topLeft, .topRight], radius: 20)
+                    )
+
+            }
+            .padding(.bottom, 70)
+            ZStack {
+                HStack {
+                    // Kreis
+                    ZStack {
+                        Circle()
+                            .stroke(lineWidth: 9)
+                            .opacity(0.2)
+                            .foregroundColor(.darkBlue)
+
+                        Circle()
+                            .trim(
+                                from: 0.0,
+                                to: CGFloat((challenge.score1?.score ?? 0) / 100) //TODO: Sinnvollen Standardwert bzw. Optional Binding
+                            )
+                            .stroke(
+                                style: StrokeStyle(
+                                    lineWidth: 9, lineCap: .round)
+                            )
+                            .foregroundColor(.blue)
+                            .rotationEffect(.degrees(-90))
+
+                        Text("\(Int(challenge.score1?.score ?? 0))%").font( //TODO: Sinnvollen Standardwert bzw. Optional Binding
+                            .custom("Roboto-Bold", size: 16)
+                        )
+                        .bold()
+                    }
+                    .frame(width: 60, height: 60)
+                    .padding(.leading, 20)
+                    Spacer()
+                    Image("trophy_gold")
+                        .resizable()
+                        .frame(width: 46, height: 46)
+                    Spacer()
+                    // Kreis
+                    ZStack {
+                        Circle()
+                            .stroke(lineWidth: 9)
+                            .opacity(0.2)
+                            .foregroundColor(.enemyRed)
+
+                        Circle()
+                            .trim(
+                                from: 0.0,
+                                to: CGFloat(
+                                    ((challenge.score2?.score ?? 0) / 100))
+                            )
+                            .stroke(
+                                style: StrokeStyle(
+                                    lineWidth: 9, lineCap: .round)
+                            )
+                            .foregroundColor(.enemyRed)
+                            .rotationEffect(.degrees(-90))
+
+                        Text("\(Int(challenge.score2?.score ?? 0))%").font(
+                            .custom("Roboto-Bold", size: 16)
+                        )
+                        .bold()
+                    }
+                    .frame(width: 60, height: 60)
+                    .padding(.trailing, 20)
+
+                }
+                .padding(.bottom, 70)
+
+                Image("AvatarBackground")
+                    .resizable()
+                    .frame(width: 47, height: 47)
+                    .padding(.trailing, 160)
+                    .padding(.bottom, 120)
+                    .padding(.top, 215)
+
+                VStack(alignment: .center) {
+                    Text(challenge.friendship.user2.fullName)
+                        .font(.custom("Poppins-SemiBold", size: 15))
+                        .frame(width: 120, alignment: .center)
+                        .lineLimit(1)
+                        .padding(.top, 10)
+                        .padding(.leading, 50)
+                    if let focus = challenge.focus {
+                        Text(focus.name)
+                            .font(.custom("Poppins-SemiBold", size: 12))
+                            .frame(width: 140, alignment: .center)
+                            .padding(.leading, 50)
+                    } else if let subject = challenge.subject {
+                        Text(subject.name)
+                            .font(.custom("Poppins-SemiBold", size: 12))
+                            .frame(width: 140, alignment: .center)
+                            .padding(.leading, 50)
+                    }
+                }
+                .padding(.top, 90)
+
+            }
+            .frame(width: 250, height: 170)
+
+        }
+
     }
 
 
