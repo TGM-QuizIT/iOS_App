@@ -336,57 +336,47 @@ extension QuizHistoryView {
 
         }
     }
-    private func OpenChallengeCard(challenge: Challenge) -> some View {
+}
+
+struct OpenChallengeCard: View {
+    var challenge: Challenge
+
+    var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 15)
                 .fill(Color.base)
                 .frame(width: 200, height: 129)
-
-            // .shadow(radius: 5)
 
             VStack {
                 ZStack {
                     Rectangle()
                         .fill(Color.lightBlue)
                         .frame(width: 200, height: 75)
-                        .clipShape(
-                            CustomCorners(
-                                corners: [.topLeft, .topRight], radius: 20)
-                        )
+                        .clipShape(CustomCorners(corners: [.topLeft, .topRight], radius: 20))
                 }
 
-                Text(
-                    challenge.focus?.name ?? challenge.subject?.name
-                        ?? "Unbekannt"
-                )
-                .font(Font.custom("Poppins-SemiBold", size: 11))
-                .padding(.bottom, 2)
+                Text(challenge.focus?.name ?? challenge.subject?.name ?? "Unbekannt")
+                    .font(Font.custom("Poppins-SemiBold", size: 11))
+                    .padding(.bottom, 2)
 
                 // Fortschrittsanzeige
-
                 ZStack(alignment: .leading) {
-                    // Hintergrund der Fortschrittsanzeige
                     RoundedRectangle(cornerRadius: 20)
                         .stroke(Color.blue.opacity(0.7), lineWidth: 2)
                         .frame(height: 23)
 
-                    // Fortschrittsfüllung
                     RoundedRectangle(cornerRadius: 20)
                         .fill(Color.blue).opacity(0.7)
                         .frame(
-                            width: CGFloat(challenge.score2?.score ?? 0) * 1.5, //TODO: Sinnvollen Standardwert bzw. Optional Binding
+                            width: CGFloat(challenge.score2?.score ?? 0) * 1.5,
                             height: 23
-                        )  // Breite basierend auf % (max. 250px)
-                        .animation(
-                            .easeInOut(duration: 0.3),
-                            value: challenge.score2?.score ?? 0) //TODO: Sinnvollen Standardwert bzw. Optional Binding
+                        )
+                        .animation(.easeInOut(duration: 0.3), value: challenge.score2?.score ?? 0)
 
-                    // Prozentzahl in der Mitte
                     Text("\(challenge.score2?.score.description ?? "0")%")
                         .foregroundColor(.darkGrey)
                         .bold()
                         .frame(width: 150, height: 40)
-                        .background(Color.clear)
                 }
                 .frame(width: 125, height: 30)
 
@@ -417,86 +407,40 @@ extension QuizHistoryView {
         }
         .padding(.leading, -30)
     }
-    func FinishedChallengeCard(challenge: Challenge) -> some View {
+}
+
+struct FinishedChallengeCard: View {
+    var challenge: Challenge
+
+    var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 15)
                 .fill(Color.base)
                 .frame(width: 250, height: 170)
 
-            // .shadow(radius: 5)
-
             ZStack {
                 Rectangle()
                     .fill(Color.lightBlue)
                     .frame(width: 250, height: 105)
-                    .clipShape(
-                        CustomCorners(
-                            corners: [.topLeft, .topRight], radius: 20)
-                    )
-
+                    .clipShape(CustomCorners(corners: [.topLeft, .topRight], radius: 20))
             }
             .padding(.bottom, 70)
+
             ZStack {
                 HStack {
-                    // Kreis
-                    ZStack {
-                        Circle()
-                            .stroke(lineWidth: 9)
-                            .opacity(0.2)
-                            .foregroundColor(.darkBlue)
+                    ProgressCircle(score: Int(challenge.score1?.score ?? 0), color: .darkBlue)
+                        .padding(.leading, 20)
 
-                        Circle()
-                            .trim(
-                                from: 0.0,
-                                to: CGFloat((challenge.score1?.score ?? 0) / 100) //TODO: Sinnvollen Standardwert bzw. Optional Binding
-                            )
-                            .stroke(
-                                style: StrokeStyle(
-                                    lineWidth: 9, lineCap: .round)
-                            )
-                            .foregroundColor(.blue)
-                            .rotationEffect(.degrees(-90))
-
-                        Text("\(Int(challenge.score1?.score ?? 0))%").font( //TODO: Sinnvollen Standardwert bzw. Optional Binding
-                            .custom("Roboto-Bold", size: 16)
-                        )
-                        .bold()
-                    }
-                    .frame(width: 60, height: 60)
-                    .padding(.leading, 20)
                     Spacer()
+
                     Image("trophy_gold")
                         .resizable()
                         .frame(width: 46, height: 46)
+
                     Spacer()
-                    // Kreis
-                    ZStack {
-                        Circle()
-                            .stroke(lineWidth: 9)
-                            .opacity(0.2)
-                            .foregroundColor(.enemyRed)
 
-                        Circle()
-                            .trim(
-                                from: 0.0,
-                                to: CGFloat(
-                                    ((challenge.score2?.score ?? 0) / 100))
-                            )
-                            .stroke(
-                                style: StrokeStyle(
-                                    lineWidth: 9, lineCap: .round)
-                            )
-                            .foregroundColor(.enemyRed)
-                            .rotationEffect(.degrees(-90))
-
-                        Text("\(Int(challenge.score2?.score ?? 0))%").font(
-                            .custom("Roboto-Bold", size: 16)
-                        )
-                        .bold()
-                    }
-                    .frame(width: 60, height: 60)
-                    .padding(.trailing, 20)
-
+                    ProgressCircle(score: Int(challenge.score2?.score ?? 0), color: .enemyRed)
+                        .padding(.trailing, 20)
                 }
                 .padding(.bottom, 70)
 
@@ -514,27 +458,46 @@ extension QuizHistoryView {
                         .lineLimit(1)
                         .padding(.top, 10)
                         .padding(.leading, 50)
-                    if let focus = challenge.focus {
-                        Text(focus.name)
-                            .font(.custom("Poppins-SemiBold", size: 12))
-                            .frame(width: 140, alignment: .center)
-                            .padding(.leading, 50)
-                    } else if let subject = challenge.subject {
-                        Text(subject.name)
-                            .font(.custom("Poppins-SemiBold", size: 12))
-                            .frame(width: 140, alignment: .center)
-                            .padding(.leading, 50)
-                    }
+
+                    Text(challenge.focus?.name ?? challenge.subject?.name ?? "")
+                        .font(.custom("Poppins-SemiBold", size: 12))
+                        .frame(width: 140, alignment: .center)
+                        .padding(.leading, 50)
                 }
                 .padding(.top, 90)
 
             }
             .frame(width: 250, height: 170)
-
         }
-
     }
 }
+struct ProgressCircle: View {
+    var score: Int
+    var color: Color
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .stroke(lineWidth: 9)
+                .opacity(0.2)
+                .foregroundColor(color)
+
+            Circle()
+                .trim(from: 0.0, to: CGFloat(score) / 100)
+                .stroke(
+                    style: StrokeStyle(lineWidth: 9, lineCap: .round)
+                )
+                .foregroundColor(color)
+                .rotationEffect(.degrees(-90))
+
+            Text("\(score)%")
+                .font(.custom("Roboto-Bold", size: 16))
+                .bold()
+        }
+        .frame(width: 60, height: 60)
+    }
+}
+
 
 #Preview {
     QuizHistoryView(quizType: .subject)

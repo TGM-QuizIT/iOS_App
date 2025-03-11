@@ -53,7 +53,13 @@ struct StatisticView: View {
                             }
                         }
                         .scrollIndicators(.hidden)
-                        
+                        HStack {
+                            Text("Herausforderungen Verlauf").font(
+                                .custom("Poppins-SemiBold", size: 16)
+                            )
+                            .padding(.leading, 20)
+                            Spacer()
+                        }
                         if !challenges.isEmpty {
                             ScrollView(.horizontal) {
                                 HStack {
