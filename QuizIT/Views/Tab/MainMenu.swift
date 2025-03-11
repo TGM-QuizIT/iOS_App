@@ -129,6 +129,9 @@ struct MainMenu: View {
                             }
                         }
                     }
+                    .refreshable {
+                        handleRequests()
+                    }
                     
                     Spacer()
                 }
