@@ -136,6 +136,12 @@ struct PerformQuizView: View {
                     
                     quiz.questions[currentQuestionIndex].score = calcQuestionResult(question: quiz.questions[currentQuestionIndex])
                     print(quiz.questions[currentQuestionIndex].score)
+                    
+                    // Haptisches Feedback
+                    let generator = UIImpactFeedbackGenerator(style: .light)
+                                generator.prepare()
+                                generator.impactOccurred()
+                    
                     if currentQuestionIndex < quiz.questions.count - 1 {
                         withAnimation(.easeInOut(duration: 0.5)) {
                             currentQuestionIndex += 1
@@ -281,8 +287,9 @@ extension PerformQuizView {
                     .font(Font.custom("Roboto-Regular", size: 15))
                     .foregroundColor(Color.black)
                     .padding()
-                    .frame(maxWidth: 340)
-                    .frame(height: isSelected ? 50 : 50)
+                    .frame(maxWidth: 340, alignment: .center)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
                     .cornerRadius(12)
                     .padding(5)
             }
