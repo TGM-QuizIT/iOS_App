@@ -175,7 +175,7 @@ struct PerformQuizView: View {
                 
             }
             .navigationDestination(isPresented: $showResult) {
-                ResultView(quiz: quiz, result: self.result ?? dummyResults[0], focus: self.focus ?? dummyFocuses[0], subject: self.subject ?? dummySubjects[0], quizType: self.quizType)
+                ResultView(quiz: quiz, result: self.result ?? dummyResults[0])
             }
             .navigationBarBackButtonHidden(true)
             .onAppear {
