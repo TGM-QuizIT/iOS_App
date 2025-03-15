@@ -13,6 +13,11 @@ struct SettingsView: View {
     @Binding var showSignInView: Bool
     @State private var user: User?
     @Binding var selectedTab: Int
+    
+    @State private var presentDialogDelete: Bool = false
+    @State private var presentDialogYear: Bool = false
+    @State private var selectedYear: Int = 1
+    private let years =  [1,2,3,4,5]
 
     var body: some View {
         VStack {
@@ -37,9 +42,21 @@ struct SettingsView: View {
 
             ListButton(icon: "archivebox", title: "Kontaktiere uns")
                 .padding(.top, 10)
+                .onTapGesture {
+                    guard let url = URL(string: "mailto:khoeher@tgm.ac.at?subject=QuizIT") else {
+                        return
+                    }
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
 
             ListButton(icon: "info.circle", title: "Über uns")
                 .padding(.top, 10)
+                .onTapGesture {
+                    guard let url = URL(string: "https://projekte.tgm.ac.at/quizit") else {
+                        return
+                    }
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
 
             ListButton(
                 icon: "rectangle.portrait.and.arrow.forward", title: "Abmelden"
@@ -53,7 +70,11 @@ struct SettingsView: View {
                 }
 
             }
-
+            ListButton(icon: "person.slash.fill", title: "Account löschen")
+                .padding(.top, 10)
+                .onTapGesture {
+                    self.presentDialogDelete = true
+                }
             Spacer()
         }
         .onAppear {
@@ -61,12 +82,75 @@ struct SettingsView: View {
                 withAnimation {
                     print("Benutzer geladen: \(loadedUser.name)")
                     self.user = loadedUser
+                    self.selectedYear = loadedUser.year
                     self.showSignInView = false
                 }
             } else {
                 print(
                     "Kein Benutzer gefunden. Zeige Anmeldeansicht.")
             }
+        }
+        .sheet(isPresented: $presentDialogDelete) {
+            VStack(alignment: .leading) {
+                Text("Account löschen").font(Font.custom("Poppins-SemiBold", size: 16))
+                    .padding(.leading)
+                Text("Bist du sicher, dass du deinen Account löschen möchtest? Alle mit dem Account verknüpften Daten werden gelöscht.").font(Font.custom("Poppins-SemiBold", size: 12))
+                    .padding(.horizontal)
+                HStack {
+                    Button("Abbrechen") {self.presentDialogDelete = false}
+                        .padding()
+                        .buttonStyle(.bordered)
+                        .foregroundStyle(.black)
+                    Spacer()
+                    Button("Löschen") {
+                        network.deleteUser() { error in
+                            if error != nil {
+                                //TODO: Fehlerbehandlung
+                            } else {
+                                self.presentDialogDelete = false
+                                UserManager.shared.deleteUser()
+                                showSignInView = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    selectedTab = 0
+                                }
+                            }
+                        }
+                    }
+                        .padding()
+                        .buttonStyle(.bordered)
+                        .foregroundStyle(.red)
+                }
+            }
+            .padding()
+            .presentationDetents([.medium, .fraction(0.25)]) // Adjust height as needed
+            .presentationDragIndicator(.visible) // Optional: Adds a drag indicator
+        }
+        .sheet(isPresented: $presentDialogYear) {
+            VStack(alignment: .leading) {
+                List {
+                    Picker("Jahrgang auswählen", selection: $selectedYear) {
+                        ForEach(self.years, id: \.self) { year in
+                            Text("\(year)xHIT").tag(year)
+                        }
+                    }
+                    
+                }
+                .pickerStyle(.inline)
+                .onChange(of: selectedYear) {
+                    network.editUserYear(newYear: selectedYear) { error in
+                        if let error = error {
+                            //TODO: Was passiert, wenn Bearbeiten des Jahres nicht möglich war
+                        } else {
+                            if let user = network.user {
+                                self.user = user
+                            }
+                            self.presentDialogYear = false
+                        }
+                    }
+                }
+            }
+            .presentationDetents([.medium, .fraction(0.35)])
+            .presentationDragIndicator(.visible)
         }
     }
 }
@@ -108,16 +192,7 @@ extension SettingsView {
 
         }
         .onTapGesture {
-
-            network.editUserYear(newYear: 4) { error in
-                if let error = error {
-                    //TODO: Was passiert, wenn Bearbeiten des Jahres nicht möglich war
-                } else {
-                    if let user = network.user {
-                        self.user = user
-                    }
-                }
-            }
+            self.presentDialogYear = true
         }
     }
     func ListButton(icon: String, title: String) -> some View {

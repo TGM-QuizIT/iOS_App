@@ -10,55 +10,34 @@ import SwiftUI
 struct AddFriendView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var network: Network
-    
+
     @State private var searchText: String = ""
     @State private var loading = false
-    @State var user: [User]
-    
-    @Binding var showAddFriendView: Bool
-    
+    @State var users: [User] = []
+
     @State private var showAlert = false
-    
+
     var filteredUsers: [User] {
         if searchText.isEmpty {
-            return user
+            return users
         } else {
-            return user.filter { $0.fullName.lowercased().contains(searchText.lowercased()) }
+            return users.filter {
+                $0.fullName.lowercased().contains(searchText.lowercased())
+            }
         }
     }
-    
+
     var body: some View {
+        
         VStack {
             if self.loading {
                 CustomLoading()
             } else {
                 VStack {
-                    ZStack {
-                        Text("Social")
-                            .font(.custom("Poppins-SemiBold", size: 20))
-                            .foregroundColor(.black)
-                        
-                        // Back Button
-                        HStack {
-                            Spacer()
-                            Button(action: {
-                                dismiss()
-                            }) {
-                                Image(systemName: "xmark")
-                                    .font(.system(size: 18, weight: .medium))
-                                    .foregroundColor(.black)
-                            }
-                            .padding(.trailing)
-                            
-                            
-                        }
-                        
-                        
+                    NavigationHeader(title: "Freund hinzufügen") {
+                        dismiss()
                     }
-                    .padding(.top, 16)
-                    .padding(.bottom, 8)
-                    .background(Color.white)
-                    
+
                     // Suchleiste
                     HStack {
                         TextField("Suche", text: $searchText)
@@ -73,9 +52,11 @@ struct AddFriendView: View {
                                         Button(action: {
                                             searchText = ""
                                         }) {
-                                            Image(systemName: "xmark.circle.fill")
-                                                .foregroundColor(.gray)
-                                                .padding(.trailing, 15)
+                                            Image(
+                                                systemName: "xmark.circle.fill"
+                                            )
+                                            .foregroundColor(.gray)
+                                            .padding(.trailing, 15)
                                         }
                                     }
                                 }
@@ -86,22 +67,14 @@ struct AddFriendView: View {
                         // Filtered User List
                         ScrollView {
                             ForEach(filteredUsers, id: \.id) { user in
-                                UserCard(user: user) {
-                                    // TODO: Raphi Freund hinzufügen request (user als Parameter)
-                                    withAnimation {
-                                        self.showAlert = true
-                                    }
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                        withAnimation {
-                                            self.showAlert = false
-                                        }
-                                        self.showAddFriendView = false
-                                    }
-                                    
-                                    
-                                    
+                                NavigationLink(
+                                    destination: DetailFriendView(
+                                        user: user, status: 0)
+                                ) {
+                                    UserCard(user: user)
                                 }
                             }
+
                         }
                         if showAlert {
                             VStack {
@@ -113,33 +86,41 @@ struct AddFriendView: View {
                                     .cornerRadius(10)
                                     .foregroundColor(.white)
                                     .shadow(radius: 5)
-                                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                                    .transition(
+                                        .move(edge: .bottom).combined(
+                                            with: .opacity)
+                                    )
                                     .padding(.bottom, 20)
                             }
                             .frame(maxWidth: .infinity)
                         }
                     }
-                    
+
                     Spacer()
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)
         .onAppear {
             self.loading = true
-            network.fetchAllUsers() { users, error in
+            network.fetchAllUsers { users, error in
                 if let users = users {
-                    self.user = users.filter { $0.id != network.user?.id}
+                    let acceptedIds = Set(network.acceptedFriendships?.map { $0.user2.id } ?? [])
+                    self.users = users.filter { user in
+                        return user.id != network.user?.id && !acceptedIds.contains(user.id)
+                    }
                 } else if let error = error {
-                    print(error)
+                    //Fehlerbehandlung
                 }
                 self.loading = false
             }
         }
+
     }
 }
 
 extension AddFriendView {
-    func UserCard(user: User, tapAction: @escaping () -> Void ) -> some View {
+    func UserCard(user: User) -> some View {
         HStack {
             ZStack {
                 HStack {
@@ -148,14 +129,15 @@ extension AddFriendView {
                         Text(user.fullName).font(
                             .custom("Poppins-SemiBold", size: 12)
                         )
-                        .padding(.leading,10)
-                        
+                        .padding(.leading, 10)
+                        .foregroundStyle(.black)
+
                         Text(user.uClass).font(
                             .custom("Roboto-Regular", size: 12)
                         )
-                        .padding(.leading,10)
+                        .padding(.leading, 10)
                         .foregroundStyle(.darkGrey)
-                        
+
                     }
                     Spacer()
                 }
@@ -163,21 +145,11 @@ extension AddFriendView {
                 .padding(.top, 16)
             }
         }
-        .onTapGesture {
-            network.sendFriendshipRequest(id: user.id) { success, error in
-                if let success = success {
-                    print(success)
-                    tapAction()
-                    //TODO: Unterscheiden, ob Request tatsächlich gesendet wurde (success = true -> Request gesendet; success = false -> User sind bereits befreundet oder angefragt)
-                } else if let error = error {
-                    print(error)
-                }
-            }
-        }
         
+
     }
 }
 
 #Preview {
-    AddFriendView(user: dummyUser, showAddFriendView: .constant(false))
+    AddFriendView()
 }

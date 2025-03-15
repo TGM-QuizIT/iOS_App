@@ -12,18 +12,20 @@ struct Focus: Identifiable, Codable, Hashable {
 
     let name: String
     let year: Int
+    let subjectId: Int
     let questionCount: Int
     let imageAddress: String
 
     init(
         id: Int, name: String, year: Int, questionCount: Int,
-        imageAddress: String
+        imageAddress: String, subjectId: Int
     ) {
         self.id = id
         self.name = name
         self.year = year
         self.questionCount = questionCount
         self.imageAddress = imageAddress
+        self.subjectId = subjectId
     }
     enum CodingKeys: String, CodingKey {
         case id = "focusId"
@@ -31,5 +33,6 @@ struct Focus: Identifiable, Codable, Hashable {
         case year = "focusYear"
         case questionCount = "questionCount"
         case imageAddress = "focusImageAddress"
+        case subjectId
     }
 }

@@ -12,6 +12,7 @@ import URLImageStore
 @main
 struct QuizITApp: App {
     var network: Network
+    @StateObject private var quizData = QuizData()
     
     var body: some Scene {
         
@@ -23,6 +24,7 @@ struct QuizITApp: App {
 //                .environmentObject(network)
             ContentView()
                 .environmentObject(network)
+                .environmentObject(quizData)
                 .environment(\.urlImageService, urlImageService)
 //            PerfomQuizView(
 //                focusName: "2. Weltkrieg",

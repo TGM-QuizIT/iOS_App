@@ -9,17 +9,15 @@ import SwiftUI
 import URLImage
 
 struct FocusView: View {
+    @EnvironmentObject var network: Network
+    @EnvironmentObject var quizData: QuizData
+
 
     var subject: Subject
 
-    @EnvironmentObject var network: Network
     @State private var focusList: [Focus] = []
     @State private var loading = true
 
-    @State private var showQuiz = false
-
-    @State private var questions: [Question] = []
-    @State private var selectedFocus: Focus?
 
     @State private var loadingQuiz = false
 
@@ -35,10 +33,9 @@ struct FocusView: View {
                     NavigationHeader(title: "Schwerpunkte " + subject.name) {
                         dismiss()
                     }
-                    NavigationLink(destination: QuizHistoryView(subject: subject)) {
+                    NavigationLink(destination: QuizHistoryView(subject: subject, quizType: .subject)) {
                         AllFocusCard(subject: subject) {
                             self.loadingQuiz = true
-                            self.selectedFocus = Focus(id: 0, name: subject.name, year: 0, questionCount: 1, imageAddress: "")
                             network.fetchSubjectQuiz(id: subject.id) { questions, error in
                                 if let error = error {
                                     //display error
@@ -50,8 +47,9 @@ struct FocusView: View {
                                             print("no questions in attribute")
                                         } else {
                                             //questions ready for next view
-                                            self.questions = questions
-                                            self.showQuiz = true
+                                            quizData.questions = questions
+                                            quizData.quizType = .subject
+                                            quizData.showQuiz = true
                                         }
                                     }
                                 }
@@ -64,11 +62,11 @@ struct FocusView: View {
                     ForEach(focusList, id: \.self) { focus in
                         NavigationLink(
                             destination: QuizHistoryView(
-                                focus: focus)
+                                focus: focus, quizType: .focus)
                         ) {
                             FocusCard(focus: focus) {
                                 self.loadingQuiz = true
-                                self.selectedFocus = focus
+                                quizData.focus = focus
                                 network.fetchFocusQuiz(id: focus.id) {
                                     questions, error in
                                     if let error = error {
@@ -81,8 +79,9 @@ struct FocusView: View {
                                                 print("no questions in attribute")
                                             } else {
                                                 //questions ready for next view
-                                                self.questions = questions
-                                                self.showQuiz = true
+                                                quizData.questions = questions
+                                                quizData.quizType = .focus
+                                                quizData.showQuiz = true
                                             }
                                         }
                                     }
@@ -97,11 +96,6 @@ struct FocusView: View {
 
                     Spacer()
                 }
-                .navigationDestination(isPresented: $showQuiz) {
-                    PerfomQuizView(
-                        focus: selectedFocus ?? dummyFocuses[0], subject: self.subject,
-                        quiz: Quiz(questions: self.questions))
-                }
                 .navigationBarBackButtonHidden(true)
 
             }
@@ -114,10 +108,11 @@ struct FocusView: View {
 
     private func fetchFocus() {
         self.loading = true
-        network.fetchFocus(id: self.subject.id) { focus in
+        network.fetchFocus(id: self.subject.id) { focus, error in
             if let focus = focus {
                 self.focusList = focus
-            } else {
+            } else if let error = error {
+                //TODO: Fehlerbehandlung
                 self.focusList = []
             }
         }

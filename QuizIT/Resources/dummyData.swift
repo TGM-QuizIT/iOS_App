@@ -33,7 +33,8 @@ let dummyFocuses: [Focus] = [
         year: 4,
         questionCount: 50,
         imageAddress:
-            "https://placehold.co/1600x600.png"
+            "https://placehold.co/1600x600.png",
+        subjectId: 1
     ),
     Focus(
         id: 2,
@@ -41,7 +42,8 @@ let dummyFocuses: [Focus] = [
         year: 4,
         questionCount: 45,
         imageAddress:
-            "https://placehold.co/1600x600.png"
+            "https://placehold.co/1600x600.png",
+        subjectId: 1
     ),
     Focus(
         id: 3,
@@ -49,14 +51,15 @@ let dummyFocuses: [Focus] = [
         year: 4,
         questionCount: 40,
         imageAddress:
-            "https://placehold.co/1600x600.png"
+            "https://placehold.co/1600x600.png",
+        subjectId: 1
     ),
 ]
 
 let dummyResults: [Result] = [
     Result(
         id: 1,
-        score: 45.5,
+        score: 50,
         userId: 101,
         focus: dummyFocuses[0],
         date: Date(timeIntervalSince1970: 1_701_667_200)  // 04.12.2023
@@ -203,9 +206,9 @@ let dummyChallenges: [Challenge] = [
         id: 1,
         friendship: dummyFriendships[0],
         focus: dummyFocuses[0],
-        subject: dummySubjects[0],
+        subject: nil,
         score1: dummyResults[0],
-        score2: dummyResults[0],
+        score2: dummyResults[2],
         date: Date(timeIntervalSince1970: 1_703_000_000)  // Beispiel für ein Datum
     ),
     Challenge(

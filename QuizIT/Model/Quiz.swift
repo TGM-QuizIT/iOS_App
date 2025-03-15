@@ -22,8 +22,8 @@ struct Quiz {
 }
 
 
-class QuizData {
-    static let shared = QuizData()
+class QuizDataDummy {
+    static let shared = QuizDataDummy()
     
     private init() {} // Private Initializer, damit nur eine Instanz existiert
 
