@@ -22,16 +22,18 @@ struct QuizITApp: App {
         WindowGroup {
 //            SignInView()
 //                .environmentObject(network)
-            ContentView()
+           ContentView()
                 .environmentObject(network)
                 .environmentObject(quizData)
                 .environment(\.urlImageService, urlImageService)
+     
 //            PerfomQuizView(
 //                focusName: "2. Weltkrieg",
 //                quiz: QuizData.shared.quiz
 //            )
        //     StartQuizView()
 //            SocialView()
+//            DetailFriendView(user: dummyUser[0], status: 0)
         }
     }
     

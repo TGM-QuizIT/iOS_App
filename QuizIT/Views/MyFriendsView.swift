@@ -43,15 +43,22 @@ struct MyFriendsView: View {
                                     .padding(10)
                                 Text("Freundesanfragen").font(.custom("Poppins-SemiBold", size: 16))
                                     .padding(.leading)
-                                ForEach(friendRequests, id: \.id) { friend in
-                                    NavigationLink(
-                                        destination: DetailFriendView(
-                                            user: friend.user2, status: 1),
-                                        label: {
-                                            FriendRequestCard(friend: friend)
-                                        }
-                                    )
+                                if !self.friendRequests.isEmpty {
+                                    ForEach(friendRequests, id: \.id) { friend in
+                                        NavigationLink(
+                                            destination: DetailFriendView(
+                                                user: friend.user2, status: 1),
+                                            label: {
+                                                FriendRequestCard(friend: friend)
+                                            }
+                                        )
+                                    }
+                                } else {
+                                    Image("no_pending_friends_placeholder")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
                                 }
+                                
                                 
                                 Spacer()
                             }
