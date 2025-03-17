@@ -34,7 +34,7 @@ struct SettingsView: View {
                 )
                 .foregroundStyle(.darkGrey)
             } else {
-                CustomLoading()
+                ProgressView()
             }
 
             SelectYearButton()

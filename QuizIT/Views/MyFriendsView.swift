@@ -19,7 +19,7 @@ struct MyFriendsView: View {
     var body: some View {
         VStack {
             if self.loading {
-                CustomLoading()
+                ProgressView()
             } else {
                 ZStack {
                     ScrollView {

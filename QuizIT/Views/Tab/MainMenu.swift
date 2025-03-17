@@ -26,7 +26,7 @@ struct MainMenu: View {
     var body: some View {
         VStack {
             if loading {
-                CustomLoading()
+                ProgressView()
             } else if error {
                 Image("internet_error_placeholder")
                     .resizable()
@@ -73,8 +73,9 @@ struct MainMenu: View {
                                 }
                                 
                                 else {
-                                    Text("Keine Fächer verfügbar").font(Font.custom("Poppins-Semibold", size: 15))
-                                        .padding(.leading)
+                                    Image("no_subject_placeholder")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
                                 }
                                 HStack {
                                     Text("Herausforderungen").font(Font.custom("Poppins-SemiBold", size: 16))
@@ -99,17 +100,9 @@ struct MainMenu: View {
                                     }
                                     .scrollIndicators(.hidden)
                                 } else {
-                                    VStack {
-                                        Text("Es konnten keine Herausforderungen gefunden werden.")
-                                            .font(
-                                                .custom(
-                                                    "Poppins-SemiBold", size: 16)
-                                            )
-                                            .padding()
-                                            .multilineTextAlignment(.center)
-                                            .foregroundStyle(.darkGrey)
-                                    }
-                                    .frame(height: 200)
+                                    Image("no_open_challenges_placeholder")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
                                 }
                                 HStack {
                                     Text("Deine Statistiken").font(Font.custom("Poppins-SemiBold", size: 16))
@@ -138,7 +131,7 @@ struct MainMenu: View {
             }
         }
         .onAppear {
-       handleRequests()
+ //      handleRequests()
         }
         .sheet(item: $selectedChallenge) { challenge in
                     ChallengeAlert(challenge: challenge)
@@ -251,7 +244,7 @@ extension MainMenu {
                         EmptyView()
                     } inProgress: { progress in
                         // Display progress
-                        CustomLoading()
+                        ProgressView()
                     } failure: { error, retry in
                         // Display error and retry button
                         VStack {

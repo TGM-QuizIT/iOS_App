@@ -26,13 +26,15 @@ struct FocusView: View {
     var body: some View {
         VStack {
             if loading {
-                CustomLoading()
+                ProgressView()
             } else {
                 VStack(alignment: .center) {
 
                     NavigationHeader(title: "Schwerpunkte " + subject.name) {
                         dismiss()
                     }
+                    ScrollView {
+
                     NavigationLink(destination: QuizHistoryView(subject: subject, quizType: .subject)) {
                         AllFocusCard(subject: subject) {
                             self.loadingQuiz = true
@@ -59,38 +61,38 @@ struct FocusView: View {
                     }
                     
 
-                    ForEach(focusList, id: \.self) { focus in
-                        NavigationLink(
-                            destination: QuizHistoryView(
-                                focus: focus, quizType: .focus)
-                        ) {
-                            FocusCard(focus: focus) {
-                                self.loadingQuiz = true
-                                quizData.focus = focus
-                                network.fetchFocusQuiz(id: focus.id) {
-                                    questions, error in
-                                    if let error = error {
-                                        //display error
-                                        print(error)
-                                    } else {
-                                        if let questions = questions {
-                                            if questions == [] {
-                                                //no questions error
-                                                print("no questions in attribute")
-                                            } else {
-                                                //questions ready for next view
-                                                quizData.questions = questions
-                                                quizData.quizType = .focus
-                                                quizData.showQuiz = true
+                        ForEach(focusList, id: \.self) { focus in
+                            NavigationLink(
+                                destination: QuizHistoryView(
+                                    focus: focus, quizType: .focus)
+                            ) {
+                                FocusCard(focus: focus) {
+                                    self.loadingQuiz = true
+                                    quizData.focus = focus
+                                    network.fetchFocusQuiz(id: focus.id) {
+                                        questions, error in
+                                        if let error = error {
+                                            //display error
+                                            print(error)
+                                        } else {
+                                            if let questions = questions {
+                                                if questions == [] {
+                                                    //no questions error
+                                                    print("no questions in attribute")
+                                                } else {
+                                                    //questions ready for next view
+                                                    quizData.questions = questions
+                                                    quizData.quizType = .focus
+                                                    quizData.showQuiz = true
+                                                }
                                             }
                                         }
                                     }
+                                    self.loadingQuiz = false
+                                    
                                 }
-                                self.loadingQuiz = false
-
                             }
                         }
-                        
 
                     }
 
@@ -142,7 +144,7 @@ extension FocusView {
                 EmptyView()
             } inProgress: { progress in
                 // Display progress
-                CustomLoading()
+                ProgressView()
                     .padding(.leading, 210)
 
             } failure: { error, retry in
@@ -191,7 +193,7 @@ extension FocusView {
                 .padding(6)
             Button(action: quizAction) {
                 if loadingQuiz {
-                    CustomLoading()
+                    ProgressView()
                 } else {
                     Text("Quiz starten").font(
                         .custom("Poppins-SemiBold", size: 12)
@@ -210,7 +212,7 @@ extension FocusView {
                 EmptyView()
             } inProgress: { progress in
                 // Display progress
-                CustomLoading()
+                ProgressView()
                     .padding(.leading, 210)
 
             } failure: { error, retry in

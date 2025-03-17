@@ -226,7 +226,7 @@ extension StatisticView {
                         URLImage(URL(string: focus.imageAddress)!) {
                             EmptyView()
                         } inProgress: { _ in
-                            CustomLoading()
+                            ProgressView()
                         } failure: { error, retry in
                             VStack {
                                 Text(error.localizedDescription)
@@ -268,7 +268,7 @@ extension StatisticView {
                         URLImage(URL(string: subject.imageAddress)!) {
                             EmptyView()
                         } inProgress: { _ in
-                            CustomLoading()
+                            ProgressView()
                         } failure: { error, retry in
                             VStack {
                                 Text(error.localizedDescription)

@@ -184,7 +184,7 @@ struct ResultView: View {
 
                     // Freundesliste
                     if (loading) {
-                        CustomLoading()
+                        ProgressView()
                     } else {
                         ScrollView {
                             ForEach(self.friends, id: \.id) { friend in
