@@ -131,7 +131,7 @@ struct MainMenu: View {
             }
         }
         .onAppear {
- //      handleRequests()
+            handleRequests()
         }
         .sheet(item: $selectedChallenge) { challenge in
                     ChallengeAlert(challenge: challenge)

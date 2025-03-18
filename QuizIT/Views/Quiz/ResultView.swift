@@ -76,19 +76,19 @@ struct ResultView: View {
                                     .foregroundColor(.blue)
                                 
                                 Circle()
-                                    .trim(from: 0.0, to: CGFloat((challenge.score1?.score ?? 0) / 100))
+                                    .trim(from: 0.0, to: CGFloat((result.score) / 100))
                                     .stroke(style: StrokeStyle(lineWidth: 15, lineCap: .round))
                                     .foregroundColor(.blue)
                                     .rotationEffect(.degrees(-90))
                                 
-                                Text("\(Int(challenge.score1?.score ?? 0))%")
+                                Text("\(Int(result.score))%")
                                     .font(.title2)
                                     .bold()
                             }
                             .frame(width: 85, height: 85)
                             
                             // Pokal
-                            if challenge.score1?.score ?? 0 > challenge.score2?.score ?? 0 {
+                            if result.score > challenge.score2?.score ?? 0 {
                                 Image("trophy_gold")
                                     .resizable()
                                     .frame(width: 40, height: 40)

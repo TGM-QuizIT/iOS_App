@@ -199,7 +199,6 @@ struct PerformQuizView: View {
                     if var result = result {
                         result.subject = self.subject
                         self.result = result
-                        showResult.toggle()
                     } else {
                         if let error = error {
                             print(error)
@@ -215,7 +214,6 @@ struct PerformQuizView: View {
                     if var result = result {
                         result.focus = self.focus
                         self.result = result
-                        showResult.toggle()
                     } else {
                         if let error = error {
                             print(error)
@@ -226,24 +224,28 @@ struct PerformQuizView: View {
             }
         }
         dispatchGroup.notify(queue: .main) {
+            let anotherDispatchGroup = DispatchGroup()
             if var challenge = self.challenge {
                 print("would be assigning")
-                let dispatchGroup = DispatchGroup()
-                guard let rId = result?.id else {
+                guard let rId = self.result?.id else {
                     //throw new Error missing result
                     return
                 }
-                dispatchGroup.enter()
+                anotherDispatchGroup.enter()
                 network.assignResultToChallenge(challengeId: challenge.id, resultId: rId) { challenge, error in
                     if let challenge = challenge {
                         self.challenge = challenge
                     } else if error != nil {
                         //TODO: Fehlerbehandlung
                     }
-                    dispatchGroup.leave()
+                    anotherDispatchGroup.leave()
                 }
             } else {
                 print(" nope would not be assigning")
+            }
+            anotherDispatchGroup.notify(queue: .main) {
+                print(challenge?.score1?.score ?? "nix da")
+                showResult.toggle()
             }
         }
     }
