@@ -175,7 +175,11 @@ struct PerformQuizView: View {
                 
             }
             .navigationDestination(isPresented: $showResult) {
-                ResultView(quiz: quiz, result: self.result ?? dummyResults[0])
+                if let challenge = self.challenge {
+                    ResultView(quiz: quiz, result: self.result ?? dummyResults[0], challenge: challenge)
+                } else {
+                    ResultView(quiz: quiz, result: self.result ?? dummyResults[0])
+                }
             }
             .navigationBarBackButtonHidden(true)
             .onAppear {
