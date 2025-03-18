@@ -80,9 +80,6 @@ struct ContentView: View {
                             .tag(3)
                         }
                     }
-                    .onAppear {
-                        // TODO: Raphael User/Subject/Fächer-Req
-                    }
                     .zIndex(0)
                 }
             }

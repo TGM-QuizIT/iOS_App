@@ -149,7 +149,7 @@ class Network: ObservableObject {
             //throw UserError.missingUserObject(message: "The ID is null.")
             return
         }
-        AF.request("\(self.baseUrl)/user/stats?id=\(id)", method: .get, headers: self.headers)
+        AF.request("\(self.baseUrl)/user/blocked?id=\(id)", method: .get, headers: self.headers)
             .validate(statusCode: 200..<500)
             .responseDecodable(of: Response.self) { res in
                 switch res.result {

@@ -158,20 +158,20 @@ struct MainMenu: View {
         network.checkBlocked() { blocked, error in
             if let blocked = blocked {
                 if blocked {
-                    //TODO: User wird abgemeldet und SignInView wird präsentiert
+                    UserManager.shared.deleteUser()
                     self.showSignInView = true
                     return
                 }
-            } else if let error = error {
-                //TODO: Fehlerbehandlung
+            } else if error != nil {
+                self.error = true
+                self.loading = false
             }
             dispatchGroup.leave()
         }
         
         dispatchGroup.enter()
         network.fetchSubjects() { error in
-            if let error = error {
-                // TODO: Fehlerbehandlung, wenn Fächer nicht abrufbar waren#
+            if error != nil {
                 self.error = true
                 self.loading = false
                 
@@ -190,7 +190,8 @@ struct MainMenu: View {
             if let stats = stats {
                 self.stats = stats
             } else if error != nil {
-                // TODO: Fehlerbehandlung
+                self.error = true
+                self.loading = false
             } else {
                 self.stats = Statistic(avg: 0, rank: -1, winRate: 0)
             }
@@ -200,7 +201,8 @@ struct MainMenu: View {
         dispatchGroup.enter()
         network.fetchFriendships() { accepted, pending, error in
             if error != nil {
-                // TODO: Fehlerbehandlung
+                self.error = true
+                self.loading = false
             }
             dispatchGroup.leave()
         }
@@ -210,7 +212,8 @@ struct MainMenu: View {
             if let challenges = challenges {
                 self.challenges = challenges.filter { $0.score1 == nil}
             } else if error != nil {
-                //TODO: Fehlerbehandlung
+                self.error = true
+                self.loading = false
             }
             dispatchGroup.leave()
         }

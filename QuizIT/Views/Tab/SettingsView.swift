@@ -104,9 +104,7 @@ struct SettingsView: View {
                     Spacer()
                     Button("Löschen") {
                         network.deleteUser() { error in
-                            if error != nil {
-                                //TODO: Fehlerbehandlung
-                            } else {
+                            if error == nil {
                                 self.presentDialogDelete = false
                                 UserManager.shared.deleteUser()
                                 showSignInView = true
@@ -138,9 +136,7 @@ struct SettingsView: View {
                 .pickerStyle(.inline)
                 .onChange(of: selectedYear) {
                     network.editUserYear(newYear: selectedYear) { error in
-                        if let error = error {
-                            //TODO: Was passiert, wenn Bearbeiten des Jahres nicht möglich war
-                        } else {
+                        if error != nil {
                             if let user = network.user {
                                 self.user = user
                             }

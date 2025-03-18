@@ -21,6 +21,7 @@ struct DetailFriendView: View {
     @State var doneChallenges: [Challenge] = []
 
     @State var loading = false
+    @State var error = false
     @State var stats: Statistic = Statistic(avg: 0, rank: -1, winRate: 0)
 
     @State private var selectedChallenge: Challenge?
@@ -30,6 +31,8 @@ struct DetailFriendView: View {
         VStack {
             if self.loading {
                 ProgressView()
+            } else if self.error {
+                //TODO: Fehler anzeigen @marius
             } else {
                 VStack {
 
@@ -188,8 +191,9 @@ struct DetailFriendView: View {
         network.fetchUserStats(id: user.id) { stats, error in
             if let stats = stats {
                 self.stats = stats
-            } else if let error = error {
-                //TODO: Fehlerbehandlung
+            } else if error != nil {
+                self.error = true
+                self.loading = false
             }
             dispatchGroup.leave()
         }
@@ -202,8 +206,9 @@ struct DetailFriendView: View {
                 {
                     self.openChallenges = openChallenges
                     self.doneChallenges = doneChallenges
-                } else if let error = error {
-                    //TODO: Fehlerbehandlung
+                } else if error != nil {
+                    self.error = true
+                    self.loading = false
                 }
                 dispatchGroup.leave()
             }
