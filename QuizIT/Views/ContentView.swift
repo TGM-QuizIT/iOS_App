@@ -48,7 +48,7 @@ struct ContentView: View {
                 } else {
                     ZStack {
                         TabView(selection: $selectedTab) {
-                            MainMenu()
+                            MainMenu(showSignInView: self.$showSignInView)
                                 .tabItem {
                                     Label("Home", systemImage: "house")
                                 }

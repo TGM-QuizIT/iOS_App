@@ -448,7 +448,7 @@ struct ResultView: View {
 
             }
             .onAppear {
-                //          self.friends = network.acceptedFriendships ?? []
+                   self.friends = network.acceptedFriendships ?? []
             }
             .presentationDetents([.medium, .large])
         }

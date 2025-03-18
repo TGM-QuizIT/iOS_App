@@ -118,17 +118,9 @@ struct DetailFriendView: View {
                                 }
                                 .scrollIndicators(.hidden)
                             } else {
-                                VStack {
-                                    Text(
-                                        "Du hast noch keine Herausforderungen!"
-                                    )
-                                    .font(.custom("Poppins-SemiBold", size: 16))
-                                    .padding()
-                                    .multilineTextAlignment(.center)
-                                    .foregroundStyle(.darkGrey)
-
-                                }
-                                .frame(height: 129)
+                                Image("no_done_challenges_placeholder")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
                             }
 
                             HStack {
@@ -154,17 +146,9 @@ struct DetailFriendView: View {
                                 }
                                 .scrollIndicators(.hidden)
                             } else {
-                                VStack {
-                                    Text(
-                                        "Du hast noch keine Herausforderungen!"
-                                    )
-                                    .font(.custom("Poppins-SemiBold", size: 16))
-                                    .padding()
-                                    .multilineTextAlignment(.center)
-                                    .foregroundStyle(.darkGrey)
-
-                                }
-                                .frame(height: 129)
+                                Image("no_open_challenges_placeholder")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
                             }
 
                         }

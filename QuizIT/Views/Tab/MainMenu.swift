@@ -22,6 +22,7 @@ struct MainMenu: View {
     
     @State private var selectedChallenge: Challenge?
     @State private var showStatisticInfoCard: Bool = false
+    @Binding var showSignInView: Bool
     
     var body: some View {
         VStack {
@@ -158,6 +159,7 @@ struct MainMenu: View {
             if let blocked = blocked {
                 if blocked {
                     //TODO: User wird abgemeldet und SignInView wird präsentiert
+                    self.showSignInView = true
                     return
                 }
             } else if let error = error {
@@ -432,8 +434,8 @@ extension MainMenu {
 
 }
 
-#Preview {
-    MainMenu()
-}
+//#Preview {
+//    MainMenu()
+//}
 
 
