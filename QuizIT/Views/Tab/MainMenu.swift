@@ -152,6 +152,7 @@ struct MainMenu: View {
     
     private func handleRequests() {
         self.loading = true
+        self.error = false
         let dispatchGroup = DispatchGroup()
         
         dispatchGroup.enter()
