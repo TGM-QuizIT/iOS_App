@@ -23,6 +23,8 @@ struct MainMenu: View {
     @State private var selectedChallenge: Challenge?
     @State private var showStatisticInfoCard: Bool = false
     @Binding var showSignInView: Bool
+    @Binding var selectedTab: Int
+    @Binding var socialTab: String
     
     var body: some View {
         VStack {
@@ -57,6 +59,9 @@ struct MainMenu: View {
                                     Spacer()
                                     Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 12))
                                         .padding(.trailing)
+                                        .onTapGesture {
+                                            self.selectedTab = 1
+                                        }
                                 }
                                 
                                 if self.subjects != [] {
@@ -84,6 +89,10 @@ struct MainMenu: View {
                                     Spacer()
                                     Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 12))
                                         .padding(.trailing)
+                                        .onTapGesture {
+                                            self.socialTab = "Statistik"
+                                            self.selectedTab = 2
+                                        }
                                 }
                                 
                                 if self.challenges != [] {
@@ -111,11 +120,16 @@ struct MainMenu: View {
                                     Spacer()
                                     Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 12))
                                         .padding(.trailing)
+                                        .onTapGesture {
+                                            self.socialTab = "Statistik"
+                                            self.selectedTab = 2
+                                        }
                                 }
                                 if let stats = self.stats {
                                     StatisticCard(stats: stats)
                                         .onTapGesture {
-                                            self.showStatisticInfoCard = true
+                                            self.socialTab = "Statistik"
+                                            self.selectedTab = 2
                                         }
                                 }
                                 

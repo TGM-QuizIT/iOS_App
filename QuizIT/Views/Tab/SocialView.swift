@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SocialView: View {
     
-    @State private var selectedTab = "Freunde"
+    @Binding var selectedTab: String
     
     var body: some View {
         NavigationStack {
@@ -73,9 +73,9 @@ struct SocialView: View {
     }
 }
 
-#Preview {
-    SocialView()
-}
+//#Preview {
+//    SocialView(selectedTab: "Freunde")
+//}
 
 
 

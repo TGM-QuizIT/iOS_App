@@ -16,6 +16,7 @@ struct ContentView: View {
     @State private var showSignInView = false
     @State private var startingApp = true
     @State private var selectedTab: Int = 0
+    @State private var socialTab: String = "Freunde"
 
     var body: some View {
         NavigationStack {
@@ -48,7 +49,7 @@ struct ContentView: View {
                 } else {
                     ZStack {
                         TabView(selection: $selectedTab) {
-                            MainMenu(showSignInView: self.$showSignInView)
+                            MainMenu(showSignInView: self.$showSignInView, selectedTab: self.$selectedTab, socialTab: self.$socialTab)
                                 .tabItem {
                                     Label("Home", systemImage: "house")
                                 }
@@ -60,7 +61,7 @@ struct ContentView: View {
                                 }
                                 .tag(1)  // Quiz-Tab
                             
-                            SocialView()
+                            SocialView(selectedTab: self.$socialTab)
                                 .tabItem {
                                     Label(
                                         NSLocalizedString("friends", comment: ""),

@@ -137,7 +137,7 @@ struct ResultView: View {
                                             .padding(.leading, 15)
                                         Spacer()
                                         Text("Herausfordern").font(
-                                            .custom("Poppins-SemiBold", size: 12)
+                                            .custom("Poppins-SemiBold", size: 10)
                                         )
                                         .foregroundStyle(.black)
                                         .padding(.trailing, 35)
@@ -164,7 +164,7 @@ struct ResultView: View {
                                                 .padding(.leading, 20)
                                             Spacer()
                                             Text("Historie").font(
-                                                .custom("Poppins-SemiBold", size: 12)
+                                                .custom("Poppins-SemiBold", size: 10)
                                             )
                                             .foregroundStyle(.black)
                                             .padding(.trailing, 85)
