@@ -10,27 +10,26 @@ import SwiftUI
 struct PerformQuizView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var network: Network
-    
+
     @State private var selectedAnswerIndices: Set<Int> = []
     @State private var selectedAnswerScale: CGFloat = 1.0
     @State private var currentQuestionIndex: Int = 0
     @State private var progressValue: Double = 0.0
     @State private var showQuestionDetail: Bool = false
-    
+
     @State private var showResult: Bool = false
+    @State private var showAlert = false
     @State private var result: Result?
-    
-    
-    
+
     var focus: Focus?
     var subject: Subject?
     @State var quiz: Quiz
     var quizType: QuizType
     @State var challenge: Challenge?
-    
+
     var body: some View {
         NavigationStack {
-            
+
             VStack {
                 VStack(spacing: 0) {
                     ZStack {
@@ -45,110 +44,123 @@ struct PerformQuizView: View {
                                 .fontWeight(.bold)
                                 .multilineTextAlignment(.center)
                         }
-                       
-                        
+
                         HStack {
-                            Text("\(currentQuestionIndex + 1)/\(quiz.questions.count)")
-                                .font(Font.custom("Roboto-Regular", size: 20))
-                                .foregroundStyle(.darkGrey)
-                                .multilineTextAlignment(.center)
-                                .padding(32)
+                            Text(
+                                "\(currentQuestionIndex + 1)/\(quiz.questions.count)"
+                            )
+                            .font(Font.custom("Roboto-Regular", size: 20))
+                            .foregroundStyle(.darkGrey)
+                            .multilineTextAlignment(.center)
+                            .padding(32)
                             Spacer()
-                            
+
                             Button {
-                                dismiss()
+                                self.showAlert = true
                             } label: {
                                 Image(systemName: "x.circle.fill")
                                     .foregroundStyle(.black)
                                     .padding(32)
                             }
-                            
-                            
+
                         }
                     }
-                    
+
                     // Fortschrittsanzeige
                     ZStack {
                         RoundedRectangle(cornerRadius: 20)
                             .fill(Color.white)
                             .frame(height: 15)
-                        
+
                         ProgressView(value: progressValue)
-                            .progressViewStyle(LinearProgressViewStyle(tint: .blue))
+                            .progressViewStyle(
+                                LinearProgressViewStyle(tint: .blue)
+                            )
                             .frame(height: 15)
                             .scaleEffect(x: 1, y: 3, anchor: .center)
                             .cornerRadius(20)
-                            .animation(.easeInOut(duration: 0.5), value: progressValue)
+                            .animation(
+                                .easeInOut(duration: 0.5), value: progressValue)
                     }
                     .padding(.horizontal)
                     .padding(.top, -20)
                 }
-                
+
                 // Frage
                 ZStack {
                     RoundedRectangle(cornerRadius: 30)
                         .fill(Color.lightGrey)
                         .frame(width: 350, height: 210)
                         .padding(20)
-                    
+
                     Text(quiz.questions[currentQuestionIndex].text)
                         .font(Font.custom("Poppins-SemiBold", size: 15))
                         .frame(maxWidth: 320)
                         .lineLimit(9)
                         .multilineTextAlignment(.center)
-//                        .onTapGesture {
-//                            withAnimation(.easeInOut) {
-//                                showQuestionDetail.toggle()
-//                            }
-//                        }
-                    
-                    
+                    //                        .onTapGesture {
+                    //                            withAnimation(.easeInOut) {
+                    //                                showQuestionDetail.toggle()
+                    //                            }
+                    //                        }
+
                     if showQuestionDetail {
                         CustomAlertView(
-                            questionText: quiz.questions[currentQuestionIndex].text,
+                            questionText: quiz.questions[currentQuestionIndex]
+                                .text,
                             isVisible: $showQuestionDetail
                         )
                     }
                 }
-                
+
                 // Antworten
-                ForEach(0..<quiz.questions[currentQuestionIndex].options.count, id: \.self) { answerIndex in
+                ForEach(
+                    0..<quiz.questions[currentQuestionIndex].options.count,
+                    id: \.self
+                ) { answerIndex in
                     answerCard(
-                        questionAnswerText: quiz.questions[currentQuestionIndex].options[answerIndex].text,
+                        questionAnswerText: quiz.questions[currentQuestionIndex]
+                            .options[answerIndex].text,
                         isSelected: selectedAnswerIndices.contains(answerIndex),
-                        scale: selectedAnswerIndices.contains(answerIndex) ? 1.1 : 1.0
+                        scale: selectedAnswerIndices.contains(answerIndex)
+                            ? 1.1 : 1.0
                     )
                     .onTapGesture {
                         // Haptisches Feedback
                         let generator = UIImpactFeedbackGenerator(style: .light)
-                                    generator.prepare()
-                                    generator.impactOccurred()
-                        
-                        quiz.questions[currentQuestionIndex].options[answerIndex].selected.toggle()
+                        generator.prepare()
+                        generator.impactOccurred()
+
+                        quiz.questions[currentQuestionIndex].options[
+                            answerIndex
+                        ].selected.toggle()
                         handleAnswerSelection(for: answerIndex)
                     }
                 }
-                
+
                 Spacer()
-                
-                
+
                 Button(action: {
-                    
-                    quiz.questions[currentQuestionIndex].score = calcQuestionResult(question: quiz.questions[currentQuestionIndex])
+
+                    quiz.questions[currentQuestionIndex].score =
+                        calcQuestionResult(
+                            question: quiz.questions[currentQuestionIndex])
                     print(quiz.questions[currentQuestionIndex].score)
-                    
+
                     // Haptisches Feedback
                     let generator = UIImpactFeedbackGenerator(style: .light)
-                                generator.prepare()
-                                generator.impactOccurred()
-                    
+                    generator.prepare()
+                    generator.impactOccurred()
+
                     if currentQuestionIndex < quiz.questions.count - 1 {
                         withAnimation(.easeInOut(duration: 0.5)) {
                             currentQuestionIndex += 1
-//                            if showQuestionDetail {
-//                                showQuestionDetail.toggle()
-//                            }
-                            progressValue = Double(currentQuestionIndex + 1) / Double(quiz.questions.count)
+                            //                            if showQuestionDetail {
+                            //                                showQuestionDetail.toggle()
+                            //                            }
+                            progressValue =
+                                Double(currentQuestionIndex + 1)
+                                / Double(quiz.questions.count)
                         }
                         selectedAnswerIndices.removeAll()
                     } else {
@@ -156,46 +168,64 @@ struct PerformQuizView: View {
                         handleRequests()
                     }
                 }) {
-                    Text(currentQuestionIndex < quiz.questions.count - 1 ? "Weiter" : "Beenden")
-                        .foregroundColor(Color.darkBlue)
-                        .padding()
-                        .frame(minWidth: 350)
-                        .frame(height: 50)
-                        .background(Color.white)
-                        .font(.subheadline)
-                        .fontWeight(.bold)
-                        .cornerRadius(12)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.blue, lineWidth: 1.7)
-                        )
+                    Text(
+                        currentQuestionIndex < quiz.questions.count - 1
+                            ? "Weiter" : "Beenden"
+                    )
+                    .foregroundColor(Color.darkBlue)
+                    .padding()
+                    .frame(minWidth: 350)
+                    .frame(height: 50)
+                    .background(Color.white)
+                    .font(.subheadline)
+                    .fontWeight(.bold)
+                    .cornerRadius(12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.blue, lineWidth: 1.7)
+                    )
                 }
                 .padding(.bottom, 35)
-                
-                
+
             }
             .navigationDestination(isPresented: $showResult) {
                 if let challenge = self.challenge {
-                    ResultView(quiz: quiz, result: self.result ?? dummyResults[0], challenge: challenge)
+                    ResultView(
+                        quiz: quiz, result: self.result ?? dummyResults[0],
+                        challenge: challenge)
                 } else {
-                    ResultView(quiz: quiz, result: self.result ?? dummyResults[0])
+                    ResultView(
+                        quiz: quiz, result: self.result ?? dummyResults[0])
                 }
             }
             .navigationBarBackButtonHidden(true)
             .onAppear {
                 // Initialen Fortschrittswert setzen
-                progressValue = Double(currentQuestionIndex + 1) / Double(quiz.questions.count)
+                progressValue =
+                    Double(currentQuestionIndex + 1)
+                    / Double(quiz.questions.count)
+            }
+            .alert(
+                "Willst du das Quiz wirklich beenden?", isPresented: $showAlert
+            ) {
+                Button("Ja") {
+                    dismiss()
+                }
+                Button("Nein", role: .cancel) {}
             }
         }
-        
+
     }
-    
+
     private func handleRequests() {
         let dispatchGroup = DispatchGroup()
         if self.quizType == .subject {
             if let subject = self.subject {
                 dispatchGroup.enter()
-                self.network.postSubjectResult(score: calcQuizReult(questions: quiz.questions), subjectId: subject.id) { result, error in
+                self.network.postSubjectResult(
+                    score: calcQuizReult(questions: quiz.questions),
+                    subjectId: subject.id
+                ) { result, error in
                     if var result = result {
                         result.subject = self.subject
                         self.result = result
@@ -210,7 +240,10 @@ struct PerformQuizView: View {
         } else if self.quizType == .focus {
             if let focus = self.focus {
                 dispatchGroup.enter()
-                self.network.postFocusResult(score: calcQuizReult(questions: quiz.questions), focusId: focus.id) { result, error in
+                self.network.postFocusResult(
+                    score: calcQuizReult(questions: quiz.questions),
+                    focusId: focus.id
+                ) { result, error in
                     if var result = result {
                         result.focus = self.focus
                         self.result = result
@@ -232,7 +265,9 @@ struct PerformQuizView: View {
                     return
                 }
                 anotherDispatchGroup.enter()
-                network.assignResultToChallenge(challengeId: challenge.id, resultId: rId) { challenge, error in
+                network.assignResultToChallenge(
+                    challengeId: challenge.id, resultId: rId
+                ) { challenge, error in
                     if let challenge = challenge {
                         self.challenge = challenge
                     } else if error != nil {
@@ -249,16 +284,14 @@ struct PerformQuizView: View {
             }
         }
     }
-        
+
 }
-
-
 
 extension PerformQuizView {
     func handleAnswerSelection(for answerIndex: Int) {
         withAnimation(.easeInOut(duration: 0.2)) {
             let isMultipleChoice = quiz.questions[currentQuestionIndex].mChoice
-            
+
             if isMultipleChoice {
                 if selectedAnswerIndices.contains(answerIndex) {
                     selectedAnswerIndices.remove(answerIndex)
@@ -267,19 +300,23 @@ extension PerformQuizView {
                 }
             } else {
                 // Reset all options for Single-Choice
-                quiz.questions[currentQuestionIndex].options.indices.forEach { index in
-                    quiz.questions[currentQuestionIndex].options[index].selected = false
+                quiz.questions[currentQuestionIndex].options.indices.forEach {
+                    index in
+                    quiz.questions[currentQuestionIndex].options[index]
+                        .selected = false
                 }
-                
+
                 // Set the newly selected answer
-                quiz.questions[currentQuestionIndex].options[answerIndex].selected = true
+                quiz.questions[currentQuestionIndex].options[answerIndex]
+                    .selected = true
                 selectedAnswerIndices = [answerIndex]
             }
         }
     }
 
-    
-    func answerCard(questionAnswerText: String, isSelected: Bool, scale: CGFloat) -> some View {
+    func answerCard(
+        questionAnswerText: String, isSelected: Bool, scale: CGFloat
+    ) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 12)
                 .stroke(Color.lightGrey, lineWidth: 1.7)
@@ -287,7 +324,7 @@ extension PerformQuizView {
                 .cornerRadius(12)
                 .frame(width: 330, height: isSelected ? 50 : 50)
                 .scaleEffect(CGSize(width: 1, height: scale))
-            
+
             HStack {
                 Text(questionAnswerText)
                     .font(Font.custom("Roboto-Regular", size: 15))
@@ -299,7 +336,7 @@ extension PerformQuizView {
                     .cornerRadius(12)
                     .padding(5)
             }
-            
+
             if isSelected {
                 Image("check_custom")
                     .resizable()
@@ -344,17 +381,17 @@ extension PerformQuizView {
 struct CustomAlertView: View {
     var questionText: String
     @Binding var isVisible: Bool
-    
+
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 20)
                 .frame(width: 350, height: 210)
                 .foregroundStyle(.lightGrey)
-            
+
             VStack(spacing: 1) {
                 HStack {
                     Spacer()
-                    
+
                     Spacer()
                     Button(action: {
                         withAnimation(.easeInOut) {
@@ -367,16 +404,14 @@ struct CustomAlertView: View {
                             .padding()
                     }
                 }
-                
-                
-                
+
                 ScrollView {
                     Text(questionText)
                         .font(Font.custom("Poppins-SemiBold", size: 18))
                         .multilineTextAlignment(.center)
                         .padding()
                 }
-                .padding(.top,-40)
+                .padding(.top, -40)
                 Spacer()
             }
             .frame(width: 350, height: 210)
@@ -384,18 +419,19 @@ struct CustomAlertView: View {
             .cornerRadius(20)
             .shadow(radius: 10)
         }
-        .transition(.opacity.combined(with: .scale)) // Ein-/Ausblendanimation
+        .transition(.opacity.combined(with: .scale))  // Ein-/Ausblendanimation
     }
 }
 
-
-
 struct LeftRoundedRectangle: Shape {
     var cornerRadius: CGFloat
-    
+
     func path(in rect: CGRect) -> Path {
         var path = Path()
-        path.addRoundedRect(in: rect, cornerSize: CGSize(width: cornerRadius, height: cornerRadius), style: .continuous)
+        path.addRoundedRect(
+            in: rect,
+            cornerSize: CGSize(width: cornerRadius, height: cornerRadius),
+            style: .continuous)
         return path
     }
 }
@@ -405,8 +441,8 @@ struct LeftRoundedRectangle: Shape {
 //        focus: dummyFocuses[0],
 //        subject: Subject(id: 1, name: "GGP",imageAddress: ""), quiz: QuizData.shared.quiz
 //    )
-//    
-//    
+//
+//
 //}
 
 //                HStack(spacing:0) {

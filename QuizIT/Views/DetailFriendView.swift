@@ -26,6 +26,7 @@ struct DetailFriendView: View {
 
     @State private var selectedChallenge: Challenge?
     @State private var showStatisticInfoCard = false
+    @State private var showAlert = false
 
     var body: some View {
         VStack {
@@ -60,7 +61,6 @@ struct DetailFriendView: View {
                                                 "Freundschaftsanfrage an \(user.name) gesendet!"
                                             )
                                             self.status = 1
-                                            self.handleRequests()
                                         } else {
                                             print("User ist bereits befreundet")
                                         }
@@ -69,20 +69,7 @@ struct DetailFriendView: View {
                                     }
                                 }
                             } else if self.status == 2 {
-                                if let friend = self.friend {
-                                    network.declineFriendship(id: friend.id) {
-                                        error in
-                                        if let error = error {
-                                            print(error)
-                                        } else {
-                                            print(
-                                                "Freund: \(friend.user2.name) entfernt"
-                                            )
-                                            self.status = 0
-
-                                        }
-                                    }
-                                }
+                                self.showAlert = true
                             }
                         }
 
@@ -183,6 +170,27 @@ struct DetailFriendView: View {
                 .presentationDragIndicator(.visible)
         }
         .navigationBarBackButtonHidden(true)
+        .alert(
+            "Willst du die Freundschaft wirklich beenden?", isPresented: $showAlert
+        ) {
+            Button("Ja") {
+                if let friend = self.friend {
+                    network.declineFriendship(id: friend.id) {
+                        error in
+                        if let error = error {
+                            print(error)
+                        } else {
+                            print(
+                                "Freund: \(friend.user2.name) entfernt"
+                            )
+                            self.status = 0
+
+                        }
+                    }
+                }
+            }
+            Button("Nein", role: .cancel) {}
+        }
 
     }
     private func handleRequests() {
