@@ -29,17 +29,22 @@ struct MyFriendsView: View {
                                     .custom("Poppins-SemiBold", size: 16)
                                 )
                                 .padding(.leading)
-
-                                ForEach(currentFriends, id: \.id) { friend in
-                                    NavigationLink(
-                                        destination: DetailFriendView(
-                                            user: friend.user2, status: 2,
-                                            friend: friend),
-                                        label: {
-                                            CurrentFriendCard(friend: friend)
-                                        }
-                                    )
-                                    .buttonStyle(PlainButtonStyle())
+                                if !self.currentFriends.isEmpty {
+                                    ForEach(currentFriends, id: \.id) { friend in
+                                        NavigationLink(
+                                            destination: DetailFriendView(
+                                                user: friend.user2, status: 2,
+                                                friend: friend),
+                                            label: {
+                                                CurrentFriendCard(friend: friend)
+                                            }
+                                        )
+                                        .buttonStyle(PlainButtonStyle())
+                                    }
+                                } else {
+                                    Image("no_friends_placeholder")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
                                 }
 
                                 Divider()
