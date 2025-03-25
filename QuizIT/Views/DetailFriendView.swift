@@ -14,7 +14,7 @@ struct DetailFriendView: View {
     @EnvironmentObject var network: Network
 
     var user: User
-    @State var status: Int
+    @State var status: Int = 0
     var friend: Friendship?
     @State var results: [Result] = []
     @State var openChallenges: [Challenge] = []
@@ -60,6 +60,7 @@ struct DetailFriendView: View {
                                                 "Freundschaftsanfrage an \(user.name) gesendet!"
                                             )
                                             self.status = 1
+                                            self.handleRequests()
                                         } else {
                                             print("User ist bereits befreundet")
                                         }
@@ -165,6 +166,7 @@ struct DetailFriendView: View {
             }
         }
         .onAppear {
+            self.getPending(user: self.user)
             self.handleRequests()
         }
         .sheet(item: $selectedChallenge) { challenge in
@@ -346,6 +348,19 @@ extension DetailFriendView {
             .padding(10)
         }
     }
+    private func getPending(user: User) {
+        let isInAccepted = network.acceptedFriendships?.contains { $0.user2.id == user.id } ?? false
+        let isInPending = network.pendingFriendships?.contains { $0.user2.id == user.id } ?? false
+        
+        if isInAccepted {
+            self.status = 2
+        } else if isInPending {
+            self.status = 1
+        } else {
+            self.status = 0
+        }
+    }
+
 
 }
 
