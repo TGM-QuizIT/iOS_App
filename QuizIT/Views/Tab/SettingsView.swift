@@ -57,6 +57,11 @@ struct SettingsView: View {
                     }
                     UIApplication.shared.open(url, options: [:], completionHandler: nil)
                 }
+            ListButton(icon: "person.slash.fill", title: "Account löschen")
+                .padding(.top, 10)
+                .onTapGesture {
+                    self.presentDialogDelete = true
+                }
 
             ListButton(
                 icon: "rectangle.portrait.and.arrow.forward", title: "Abmelden"
@@ -70,11 +75,7 @@ struct SettingsView: View {
                 }
 
             }
-            ListButton(icon: "person.slash.fill", title: "Account löschen")
-                .padding(.top, 10)
-                .onTapGesture {
-                    self.presentDialogDelete = true
-                }
+            
             Spacer()
         }
         .onAppear {
@@ -139,6 +140,7 @@ struct SettingsView: View {
                         if error != nil {
                             if let user = network.user {
                                 self.user = user
+                                self.selectedYear = user.year
                             }
                             self.presentDialogYear = false
                         }
@@ -174,7 +176,7 @@ extension SettingsView {
                 VStack(alignment: .leading) {
                     Text("Jahrgang auswählen").font(
                         .custom("Roboto-Bold", size: 15))
-                    Text((user?.year.description ?? "0") + "xHIT").font(
+                    Text((self.selectedYear.description ?? "0") + "xHIT").font(
                         .custom("Roboto-Regular", size: 15)
                     )
                     .foregroundStyle(.darkGrey)

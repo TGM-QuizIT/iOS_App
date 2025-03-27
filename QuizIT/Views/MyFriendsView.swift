@@ -61,7 +61,7 @@ struct MyFriendsView: View {
                                                 user: friend.user2, status: 1),
                                             label: {
                                                 FriendRequestCard(
-                                                    friend: friend)
+                                                    friend: friend, actionReq: friend.actionReq ?? false)
                                             }
                                         )
                                     }
@@ -107,6 +107,8 @@ struct MyFriendsView: View {
                     }
 
                 }
+                .frame(width: .infinity)
+
             }
         }
 
@@ -125,9 +127,7 @@ struct MyFriendsView: View {
                 let pendingFriendships = pendingFriendships
             {
                 self.currentFriends = acceptedFriendships
-                self.friendRequests = pendingFriendships.filter {
-                    $0.actionReq == true
-                }
+                self.friendRequests = pendingFriendships
             } else if let reason = reason {
                 print(reason)
             }
@@ -161,7 +161,7 @@ extension MyFriendsView {
         }
     }
 
-    func FriendRequestCard(friend: Friendship) -> some View {
+    func FriendRequestCard(friend: Friendship,actionReq: Bool) -> some View {
         ZStack {
             HStack {
                 Image("Avatar")
@@ -180,68 +180,69 @@ extension MyFriendsView {
 
                 }
                 Spacer()
-
-                Image("Accept")
-                    .onTapGesture {
-                        self.loading = true
-                        network.acceptFriendship(id: friend.id) { error in
-                            if let error = error {
-                                print(error)
-                            } else {
-                                network.fetchFriendships {
-                                    acceptedFriendships, pendingFriendships,
-                                    reason in
-                                    if let acceptedFriendships =
-                                        acceptedFriendships,
-                                        let pendingFriendships =
+                if actionReq {
+                    Image("Accept")
+                        .onTapGesture {
+                            self.loading = true
+                            network.acceptFriendship(id: friend.id) { error in
+                                if let error = error {
+                                    print(error)
+                                } else {
+                                    network.fetchFriendships {
+                                        acceptedFriendships, pendingFriendships,
+                                        reason in
+                                        if let acceptedFriendships =
+                                            acceptedFriendships,
+                                           let pendingFriendships =
                                             pendingFriendships
-                                    {
-                                        self.currentFriends =
+                                        {
+                                            self.currentFriends =
                                             acceptedFriendships
-                                        self.friendRequests =
+                                            self.friendRequests =
                                             pendingFriendships.filter {
                                                 $0.actionReq == true
                                             }
-                                    } else if let reason = reason {
-                                        print(reason)
+                                        } else if let reason = reason {
+                                            print(reason)
+                                        }
                                     }
                                 }
                             }
+                            
+                            self.loading = false
                         }
-
-                        self.loading = false
-                    }
-
-                Image("Decline")
-                    .padding(.horizontal, 10)
-                    .onTapGesture {
-                        self.loading = true
-                        network.declineFriendship(id: friend.id) { error in
-                            if let error = error {
-                                print(error)
-                            } else {
-                                network.fetchFriendships {
-                                    acceptedFriendships, pendingFriendships,
-                                    reason in
-                                    if let acceptedFriendships =
-                                        acceptedFriendships,
-                                        let pendingFriendships =
+                    
+                    Image("Decline")
+                        .padding(.horizontal, 10)
+                        .onTapGesture {
+                            self.loading = true
+                            network.declineFriendship(id: friend.id) { error in
+                                if let error = error {
+                                    print(error)
+                                } else {
+                                    network.fetchFriendships {
+                                        acceptedFriendships, pendingFriendships,
+                                        reason in
+                                        if let acceptedFriendships =
+                                            acceptedFriendships,
+                                           let pendingFriendships =
                                             pendingFriendships
-                                    {
-                                        self.currentFriends =
+                                        {
+                                            self.currentFriends =
                                             acceptedFriendships
-                                        self.friendRequests =
+                                            self.friendRequests =
                                             pendingFriendships.filter {
                                                 $0.actionReq == true
                                             }
-                                    } else if let reason = reason {
-                                        print(reason)
+                                        } else if let reason = reason {
+                                            print(reason)
+                                        }
                                     }
                                 }
                             }
+                            self.loading = false
                         }
-                        self.loading = false
-                    }
+                }
             }
             .padding(.leading)
             .padding(.top, 16)
