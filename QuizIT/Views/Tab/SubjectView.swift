@@ -20,7 +20,7 @@ struct SubjectView: View {
     var body: some View {
         VStack {
             if loading {
-                CustomLoading()
+                ProgressView()
             }
             else {
                 NavigationStack {
@@ -97,7 +97,7 @@ extension SubjectView {
                         EmptyView()
                     } inProgress: { progress in
                         // Display progress
-                        CustomLoading()
+                        ProgressView()
                     } failure: { error, retry in
                         // Display error and retry button
                         VStack {

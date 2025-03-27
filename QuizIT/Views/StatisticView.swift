@@ -226,7 +226,7 @@ extension StatisticView {
                         URLImage(URL(string: focus.imageAddress)!) {
                             EmptyView()
                         } inProgress: { _ in
-                            CustomLoading()
+                            ProgressView()
                         } failure: { error, retry in
                             VStack {
                                 Text(error.localizedDescription)
@@ -268,7 +268,7 @@ extension StatisticView {
                         URLImage(URL(string: subject.imageAddress)!) {
                             EmptyView()
                         } inProgress: { _ in
-                            CustomLoading()
+                            ProgressView()
                         } failure: { error, retry in
                             VStack {
                                 Text(error.localizedDescription)
@@ -348,7 +348,7 @@ extension StatisticView {
                         Circle()
                             .trim(
                                 from: 0.0,
-                                to: CGFloat((challenge.score1?.score ?? 0) / 100) //TODO: Sinnvollen Standardwert bzw. Optional Binding
+                                to: CGFloat((challenge.score1?.score ?? 0) / 100)
                             )
                             .stroke(
                                 style: StrokeStyle(
@@ -357,7 +357,7 @@ extension StatisticView {
                             .foregroundColor(.blue)
                             .rotationEffect(.degrees(-90))
 
-                        Text("\(Int(challenge.score1?.score ?? 0))%").font( //TODO: Sinnvollen Standardwert bzw. Optional Binding
+                        Text("\(Int(challenge.score1?.score ?? 0))%").font(
                             .custom("Roboto-Bold", size: 16)
                         )
                         .bold()

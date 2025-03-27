@@ -68,8 +68,7 @@ struct SignInView: View {
             }) {
                 if self.loading {
                     ZStack {
-                        CustomLoading()
-                            .frame(width: 150, height: 44)
+                        ProgressView()
                     }
                 } else {
                     Text("Einloggen").font(

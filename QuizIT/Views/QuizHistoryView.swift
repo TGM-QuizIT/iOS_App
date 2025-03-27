@@ -18,6 +18,9 @@ struct QuizHistoryView: View {
     @State private var results: [Result] = []
     @State private var openChallenges: [Challenge] = []
     @State private var finishedChallenges: [Challenge] = []
+    @State private var selectedChallenge: Challenge?
+
+    
 
     
 
@@ -27,11 +30,13 @@ struct QuizHistoryView: View {
 
     @State private var errorMsg: String = ""
     @State private var loading = false
+    @State private var showStatisticInfoCard = false
+
 
     var body: some View {
         VStack {
             if self.loading {
-                CustomLoading()
+                ProgressView()
             } else {
                 ZStack {
                     VStack {
@@ -61,6 +66,9 @@ struct QuizHistoryView: View {
                                             challenge in
                                             OpenChallengeCard(
                                                 challenge: challenge)
+                                            .onTapGesture {
+                                                self.selectedChallenge = challenge
+                                            }
                                         }
                                     }
                                     .padding(.leading, 20)
@@ -68,17 +76,9 @@ struct QuizHistoryView: View {
                                 }
                                 .scrollIndicators(.hidden)
                             } else {
-                                VStack {
-                                    Text(
-                                        "Du hast noch keine Herausforderungen!"
-                                    )
-                                    .font(.custom("Poppins-SemiBold", size: 16))
-                                    .padding()
-                                    .multilineTextAlignment(.center)
-                                    .foregroundStyle(.darkGrey)
-
-                                }
-                                .frame(height: 129)
+                                Image("no_open_challenges_placeholder")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
                             }
 
                             HStack {
@@ -104,17 +104,9 @@ struct QuizHistoryView: View {
                                 }
                                 .scrollIndicators(.hidden)
                             } else {
-                                VStack {
-                                    Text(
-                                        "Du hast noch keine Herausforderungen!"
-                                    )
-                                    .font(.custom("Poppins-SemiBold", size: 16))
-                                    .padding()
-                                    .multilineTextAlignment(.center)
-                                    .foregroundStyle(.darkGrey)
-
-                                }
-                                .frame(height: 129)
+                                Image("no_done_challenges_placeholder")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
                             }
 
                             HStack {
@@ -124,7 +116,7 @@ struct QuizHistoryView: View {
                                 .padding(.leading, 20)
                                 Spacer()
                             }
-                            if self.errorMsg == "" {
+                            if !self.results.isEmpty {
                                 VStack {
                                     ForEach(
                                         Array(self.results.enumerated()),
@@ -138,23 +130,11 @@ struct QuizHistoryView: View {
                                 .scrollIndicators(.hidden)
 
                             } else {
-                                VStack {
-//                                    Image("error")
-//                                        .resizable()
-//                                        .frame(width: 270)
-//                                    Text(errorMsg)
-//                                        .font(
-//                                            .custom(
-//                                                "Poppins-SemiBold", size: 16)
-//                                        )
-//                                        .padding()
-//                                        .multilineTextAlignment(.center)
-//                                        .foregroundStyle(.darkGrey)
+                                
                                 Image("no_results_placeholder")
-
-                                }
-                                .frame(
-                                    height: UIScreen.main.bounds.height * 0.37)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                
                             }
 
                         }
@@ -214,7 +194,7 @@ struct QuizHistoryView: View {
                             self.loading = false
                         } label: {
                             if loading {
-                                CustomLoading()
+                                ProgressView()
                             } else {
                                 Text("Quiz starten").font(
                                     .custom("Poppins-SemiBold", size: 16)
@@ -235,43 +215,54 @@ struct QuizHistoryView: View {
 
         }
         .onAppear {
-            self.loading = true
-            let dispatchGroup = DispatchGroup()
-
-            dispatchGroup.enter()
-            network.fetchResults(fId: self.focus?.id, sId: self.subject?.id, amount: nil) { results, error in
-                if let error = error {
-                    self.errorMsg = "Deine Resultate konnten nicht geladen werden. Versuche es später erneut."
-                } else {
-                    if let results = results {
-                        self.results = results.sorted { $0.score > $1.score }
-                    }
-                }
-                dispatchGroup.leave()
-            }
-
-            dispatchGroup.enter()
-            guard let subjectId = subject?.id ?? focus?.subjectId else {
-                self.errorMsg = "Es wurde keine ID gefunden."
-                return
-            }
-
-            network.fetchSubjectChallenges(subjectId: subjectId) { openChallenges, finishedChallenges, error in
-                if let openChallenges = openChallenges, let finishedChallenges = finishedChallenges {
-                    self.openChallenges = openChallenges
-                    self.finishedChallenges = finishedChallenges
-                } else if let error = error {
-                    self.errorMsg = "Es konnten keine Challenges gefunden werden."
-                }
-                dispatchGroup.leave()
-            }
-
-            dispatchGroup.notify(queue: .main) {
-                self.loading = false
-            }
+            handleRequests()
         }
+        .sheet(item: $selectedChallenge) { challenge in
+                    ChallengeAlert(challenge: challenge)
+                .presentationDetents([.height(326)])
+                        .presentationDragIndicator(.visible)
+                        .onDisappear() {
+                            handleRequests()
+                        }
+                }
         .navigationBarBackButtonHidden(true)
 
+    }
+    private func handleRequests() {
+        self.loading = true
+        let dispatchGroup = DispatchGroup()
+
+        dispatchGroup.enter()
+        network.fetchResults(fId: self.focus?.id, sId: self.subject?.id, amount: nil) { results, error in
+            if let error = error {
+                self.errorMsg = "Deine Resultate konnten nicht geladen werden. Versuche es später erneut."
+            } else {
+                if let results = results {
+                    self.results = results.sorted { $0.score > $1.score }
+                }
+            }
+            dispatchGroup.leave()
+        }
+
+        dispatchGroup.enter()
+        guard let subjectId = subject?.id ?? focus?.subjectId else {
+            self.errorMsg = "Es wurde keine ID gefunden."
+            return
+        }
+
+        network.fetchSubjectChallenges(subjectId: subjectId) { openChallenges, finishedChallenges, error in
+            if let openChallenges = openChallenges, let finishedChallenges = finishedChallenges {
+                self.openChallenges = openChallenges
+                self.finishedChallenges = finishedChallenges
+            } else if let error = error {
+                self.errorMsg = "Es konnten keine Challenges gefunden werden."
+            }
+            dispatchGroup.leave()
+        }
+
+        dispatchGroup.notify(queue: .main) {
+            self.loading = false
+        }
     }
 }
 
@@ -432,10 +423,16 @@ struct FinishedChallengeCard: View {
                         .padding(.leading, 20)
 
                     Spacer()
-
-                    Image("trophy_gold")
-                        .resizable()
-                        .frame(width: 46, height: 46)
+                    if challenge.score1?.score ?? 0 >= challenge.score2?.score ?? 0 {
+                        Image("trophy_gold")
+                            .resizable()
+                            .frame(width: 46, height: 46)
+                    } else {
+                        Image("trophy_silver")
+                            .resizable()
+                            .frame(width: 46, height: 46)
+                    }
+                    
 
                     Spacer()
 

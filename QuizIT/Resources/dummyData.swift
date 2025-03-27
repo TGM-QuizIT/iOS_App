@@ -207,8 +207,8 @@ let dummyChallenges: [Challenge] = [
         friendship: dummyFriendships[0],
         focus: dummyFocuses[0],
         subject: nil,
-        score1: dummyResults[0],
-        score2: dummyResults[2],
+        score1: dummyResults[2],
+        score2: dummyResults[0],
         date: Date(timeIntervalSince1970: 1_703_000_000)  // Beispiel für ein Datum
     ),
     Challenge(

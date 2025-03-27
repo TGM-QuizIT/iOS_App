@@ -22,11 +22,14 @@ struct MainMenu: View {
     
     @State private var selectedChallenge: Challenge?
     @State private var showStatisticInfoCard: Bool = false
+    @Binding var showSignInView: Bool
+    @Binding var selectedTab: Int
+    @Binding var socialTab: String
     
     var body: some View {
         VStack {
             if loading {
-                CustomLoading()
+                ProgressView()
             } else if error {
                 Image("internet_error_placeholder")
                     .resizable()
@@ -56,6 +59,9 @@ struct MainMenu: View {
                                     Spacer()
                                     Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 12))
                                         .padding(.trailing)
+                                        .onTapGesture {
+                                            self.selectedTab = 1
+                                        }
                                 }
                                 
                                 if self.subjects != [] {
@@ -73,8 +79,9 @@ struct MainMenu: View {
                                 }
                                 
                                 else {
-                                    Text("Keine Fächer verfügbar").font(Font.custom("Poppins-Semibold", size: 15))
-                                        .padding(.leading)
+                                    Image("no_subject_placeholder")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
                                 }
                                 HStack {
                                     Text("Herausforderungen").font(Font.custom("Poppins-SemiBold", size: 16))
@@ -82,6 +89,10 @@ struct MainMenu: View {
                                     Spacer()
                                     Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 12))
                                         .padding(.trailing)
+                                        .onTapGesture {
+                                            self.socialTab = "Statistik"
+                                            self.selectedTab = 2
+                                        }
                                 }
                                 
                                 if self.challenges != [] {
@@ -99,17 +110,9 @@ struct MainMenu: View {
                                     }
                                     .scrollIndicators(.hidden)
                                 } else {
-                                    VStack {
-                                        Text("Es konnten keine Herausforderungen gefunden werden.")
-                                            .font(
-                                                .custom(
-                                                    "Poppins-SemiBold", size: 16)
-                                            )
-                                            .padding()
-                                            .multilineTextAlignment(.center)
-                                            .foregroundStyle(.darkGrey)
-                                    }
-                                    .frame(height: 200)
+                                    Image("no_open_challenges_placeholder")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
                                 }
                                 HStack {
                                     Text("Deine Statistiken").font(Font.custom("Poppins-SemiBold", size: 16))
@@ -117,11 +120,16 @@ struct MainMenu: View {
                                     Spacer()
                                     Text("mehr anzeigen").font(Font.custom("Poppins-SemiBold", size: 12))
                                         .padding(.trailing)
+                                        .onTapGesture {
+                                            self.socialTab = "Statistik"
+                                            self.selectedTab = 2
+                                        }
                                 }
                                 if let stats = self.stats {
                                     StatisticCard(stats: stats)
                                         .onTapGesture {
-                                            self.showStatisticInfoCard = true
+                                            self.socialTab = "Statistik"
+                                            self.selectedTab = 2
                                         }
                                 }
                                 
@@ -138,7 +146,7 @@ struct MainMenu: View {
             }
         }
         .onAppear {
-       handleRequests()
+            handleRequests()
         }
         .sheet(item: $selectedChallenge) { challenge in
                     ChallengeAlert(challenge: challenge)
@@ -158,25 +166,27 @@ struct MainMenu: View {
     
     private func handleRequests() {
         self.loading = true
+        self.error = false
         let dispatchGroup = DispatchGroup()
         
         dispatchGroup.enter()
         network.checkBlocked() { blocked, error in
             if let blocked = blocked {
                 if blocked {
-                    //TODO: User wird abgemeldet und SignInView wird präsentiert
+                    UserManager.shared.deleteUser()
+                    self.showSignInView = true
                     return
                 }
-            } else if let error = error {
-                //TODO: Fehlerbehandlung
+            } else if error != nil {
+                self.error = true
+                self.loading = false
             }
             dispatchGroup.leave()
         }
         
         dispatchGroup.enter()
         network.fetchSubjects() { error in
-            if let error = error {
-                // TODO: Fehlerbehandlung, wenn Fächer nicht abrufbar waren#
+            if error != nil {
                 self.error = true
                 self.loading = false
                 
@@ -195,7 +205,8 @@ struct MainMenu: View {
             if let stats = stats {
                 self.stats = stats
             } else if error != nil {
-                // TODO: Fehlerbehandlung
+                self.error = true
+                self.loading = false
             } else {
                 self.stats = Statistic(avg: 0, rank: -1, winRate: 0)
             }
@@ -205,7 +216,8 @@ struct MainMenu: View {
         dispatchGroup.enter()
         network.fetchFriendships() { accepted, pending, error in
             if error != nil {
-                // TODO: Fehlerbehandlung
+                self.error = true
+                self.loading = false
             }
             dispatchGroup.leave()
         }
@@ -215,7 +227,8 @@ struct MainMenu: View {
             if let challenges = challenges {
                 self.challenges = challenges.filter { $0.score1 == nil}
             } else if error != nil {
-                //TODO: Fehlerbehandlung
+                self.error = true
+                self.loading = false
             }
             dispatchGroup.leave()
         }
@@ -251,7 +264,7 @@ extension MainMenu {
                         EmptyView()
                     } inProgress: { progress in
                         // Display progress
-                        CustomLoading()
+                        ProgressView()
                     } failure: { error, retry in
                         // Display error and retry button
                         VStack {
@@ -439,8 +452,8 @@ extension MainMenu {
 
 }
 
-#Preview {
-    MainMenu()
-}
+//#Preview {
+//    MainMenu()
+//}
 
 

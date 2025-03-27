@@ -46,8 +46,8 @@
             filePath = "QuizIT/Views/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "19"
-            endingLineNumber = "19"
+            startingLineNumber = "20"
+            endingLineNumber = "20"
             landmarkName = "ContentView"
             landmarkType = "14">
          </BreakpointContent>
@@ -64,7 +64,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "162"
             endingLineNumber = "162"
-            landmarkName = "fetchSubjects(completion:)"
+            landmarkName = "checkBlocked(completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

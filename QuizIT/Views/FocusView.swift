@@ -26,13 +26,15 @@ struct FocusView: View {
     var body: some View {
         VStack {
             if loading {
-                CustomLoading()
+                ProgressView()
             } else {
                 VStack(alignment: .center) {
 
                     NavigationHeader(title: "Schwerpunkte " + subject.name) {
                         dismiss()
                     }
+                    ScrollView {
+
                     NavigationLink(destination: QuizHistoryView(subject: subject, quizType: .subject)) {
                         AllFocusCard(subject: subject) {
                             self.loadingQuiz = true
@@ -59,38 +61,38 @@ struct FocusView: View {
                     }
                     
 
-                    ForEach(focusList, id: \.self) { focus in
-                        NavigationLink(
-                            destination: QuizHistoryView(
-                                focus: focus, quizType: .focus)
-                        ) {
-                            FocusCard(focus: focus) {
-                                self.loadingQuiz = true
-                                quizData.focus = focus
-                                network.fetchFocusQuiz(id: focus.id) {
-                                    questions, error in
-                                    if let error = error {
-                                        //display error
-                                        print(error)
-                                    } else {
-                                        if let questions = questions {
-                                            if questions == [] {
-                                                //no questions error
-                                                print("no questions in attribute")
-                                            } else {
-                                                //questions ready for next view
-                                                quizData.questions = questions
-                                                quizData.quizType = .focus
-                                                quizData.showQuiz = true
+                        ForEach(focusList, id: \.self) { focus in
+                            NavigationLink(
+                                destination: QuizHistoryView(
+                                    focus: focus, quizType: .focus)
+                            ) {
+                                FocusCard(focus: focus) {
+                                    self.loadingQuiz = true
+                                    quizData.focus = focus
+                                    network.fetchFocusQuiz(id: focus.id) {
+                                        questions, error in
+                                        if let error = error {
+                                            //display error
+                                            print(error)
+                                        } else {
+                                            if let questions = questions {
+                                                if questions == [] {
+                                                    //no questions error
+                                                    print("no questions in attribute")
+                                                } else {
+                                                    //questions ready for next view
+                                                    quizData.questions = questions
+                                                    quizData.quizType = .focus
+                                                    quizData.showQuiz = true
+                                                }
                                             }
                                         }
                                     }
+                                    self.loadingQuiz = false
+                                    
                                 }
-                                self.loadingQuiz = false
-
                             }
                         }
-                        
 
                     }
 
@@ -127,32 +129,34 @@ extension FocusView {
                 .fill(Color.lightGrey)
                 .frame(width: 347, height: 110)
                 .padding(6)
+            
+            let totalQuestions = focusList.reduce(0) { $0 + $1.questionCount }
+            let isDisabled = totalQuestions < 5
+            
             Button(action: quizAction) {
-                Text("Quiz starten").font(.custom("Poppins-SemiBold", size: 12))
+                Text("Quiz starten")
+                    .font(.custom("Poppins-SemiBold", size: 12))
                     .foregroundColor(.black)
                     .padding()
                     .frame(width: 110, height: 30)
-                    .background(Color.white)
+                    .background(isDisabled ? Color.gray : Color.white)
                     .cornerRadius(40)
             }
+            .disabled(isDisabled)
             .padding(.top, 50)
             .padding(.trailing, 200)
+            
             URLImage(URL(string: subject.imageAddress)!) {
-                // This view is displayed before download starts
                 EmptyView()
             } inProgress: { progress in
-                // Display progress
-                CustomLoading()
+                ProgressView()
                     .padding(.leading, 210)
-
             } failure: { error, retry in
-                // Display error and retry button
                 VStack {
                     Text(error.localizedDescription)
                     Button("Retry", action: retry)
                 }
             } content: { image in
-                // Downloaded image
                 image
                     .resizable()
                     .scaledToFill()
@@ -168,59 +172,55 @@ extension FocusView {
                         .padding(.leading, 50)
                         .foregroundStyle(.black)
 
-                    Text("\(focusList.reduce(0) { $0 + $1.questionCount }) Fragen im Pool")
+                    Text("\(totalQuestions) Fragen im Pool")
                         .font(Font.custom("Poppins-Regular", size: 12))
                         .foregroundStyle(.black)
                         .padding(.leading, 50)
                         .padding(.bottom, 35)
                 }
-
                 Spacer()
-
             }
         }
     }
 
-    private func FocusCard(focus: Focus, quizAction: @escaping () -> Void)
-        -> some View
-    {
+
+    private func FocusCard(focus: Focus, quizAction: @escaping () -> Void) -> some View {
         ZStack {
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color.lightGrey)
                 .frame(width: 347, height: 110)
                 .padding(6)
+            
+            let isDisabled = focus.questionCount < 5
+            
             Button(action: quizAction) {
                 if loadingQuiz {
-                    CustomLoading()
+                    ProgressView()
                 } else {
-                    Text("Quiz starten").font(
-                        .custom("Poppins-SemiBold", size: 12)
-                    )
-                    .foregroundColor(.black)
-                    .padding()
-                    .frame(width: 110, height: 30)
-                    .background(Color.white)
-                    .cornerRadius(40)
+                    Text("Quiz starten")
+                        .font(.custom("Poppins-SemiBold", size: 12))
+                        .foregroundColor(.black)
+                        .padding()
+                        .frame(width: 110, height: 30)
+                        .background(isDisabled ? Color.gray : Color.white)
+                        .cornerRadius(40)
                 }
             }
+            .disabled(isDisabled)
             .padding(.top, 50)
             .padding(.trailing, 200)
+            
             URLImage(URL(string: focus.imageAddress)!) {
-                // This view is displayed before download starts
                 EmptyView()
             } inProgress: { progress in
-                // Display progress
-                CustomLoading()
+                ProgressView()
                     .padding(.leading, 210)
-
             } failure: { error, retry in
-                // Display error and retry button
                 VStack {
                     Text(error.localizedDescription)
                     Button("Retry", action: retry)
                 }
             } content: { image in
-                // Downloaded image
                 image
                     .resizable()
                     .scaledToFill()
@@ -236,21 +236,17 @@ extension FocusView {
                         .padding(.leading, 50)
                         .foregroundStyle(.black)
 
-                    Text(
-                        focus.questionCount.codingKey.stringValue
-                            + " Fragen im Pool"
-                    )
-                    .font(Font.custom("Poppins-Regular", size: 12))
-                    .foregroundStyle(.black)
-                    .padding(.leading, 50)
-                    .padding(.bottom, 35)
+                    Text("\(focus.questionCount) Fragen im Pool")
+                        .font(Font.custom("Poppins-Regular", size: 12))
+                        .foregroundStyle(.black)
+                        .padding(.leading, 50)
+                        .padding(.bottom, 35)
                 }
-
                 Spacer()
-
             }
         }
     }
+
 }
 
 #Preview {

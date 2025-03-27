@@ -10,7 +10,7 @@ import Alamofire
 
 class Network: ObservableObject {
     private let baseUrl = "https://projekte.tgm.ac.at/quizit/api"
-   // private let baseUrl = "http://10.2.24.50:63300"
+   // private let baseUrl = "http://10.0.105.50:63000"
     private let headers: HTTPHeaders = [
         "authorization" : Bundle.main.infoDictionary?["API_KEY"] as? String ?? ""
     ]
@@ -38,6 +38,9 @@ class Network: ObservableObject {
         
         AF.request("\(self.baseUrl)/user/login", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: self.headers)
             .validate(statusCode: 200...500)
+            .responseString() { string in
+                print(string)
+            }
             .responseDecodable(of: Response.self) { res in
                 switch res.result {
                 case .success(let response):
@@ -146,7 +149,7 @@ class Network: ObservableObject {
             //throw UserError.missingUserObject(message: "The ID is null.")
             return
         }
-        AF.request("\(self.baseUrl)/user/stats?id=\(id)", method: .get, headers: self.headers)
+        AF.request("\(self.baseUrl)/user/blocked?id=\(id)", method: .get, headers: self.headers)
             .validate(statusCode: 200..<500)
             .responseDecodable(of: Response.self) { res in
                 switch res.result {
@@ -201,6 +204,9 @@ class Network: ObservableObject {
         }
         AF.request("\(self.baseUrl)/subject?id=\(id)", method: .get, headers: self.headers)
             .validate(statusCode: 200..<500)
+            .responseString() { string in
+                print(string)
+            }
             .responseDecodable(of: Response.self) { res in
                 switch res.result {
                 case .success(let response):
@@ -643,6 +649,7 @@ class Network: ObservableObject {
         
         AF.request("\(self.baseUrl)/challenge", method: .put, parameters: parameters, encoding: JSONEncoding.default, headers: self.headers)
             .validate(statusCode: 200...500)
+            .responseString() { string in print(string)}
             .responseDecodable(of: Response.self, decoder: self.decoder) { res in
                 switch res.result {
                 case .success(let response):

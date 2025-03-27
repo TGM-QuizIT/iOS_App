@@ -156,9 +156,7 @@ struct ChallengeAlert: View {
                 }
                 Button(action: {
                     network.deleteChallenge(challengeId: self.challenge.id) { error in
-                        if error != nil {
-                            //TODO: Fehlerbehandlung
-                        } else {
+                        if error == nil {
                             dismiss()
                         }
                     }

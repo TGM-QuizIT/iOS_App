@@ -9,55 +9,57 @@ import SwiftUI
 import URLImage
 
 struct DetailFriendView: View {
-    
+
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var network: Network
 
-
-    
     var user: User
-    @State var status: Int
+    @State var status: Int = 0
     var friend: Friendship?
     @State var results: [Result] = []
     @State var openChallenges: [Challenge] = []
     @State var doneChallenges: [Challenge] = []
-    
+
     @State var loading = false
+    @State var error = false
     @State var stats: Statistic = Statistic(avg: 0, rank: -1, winRate: 0)
-    
+
     @State private var selectedChallenge: Challenge?
     @State private var showStatisticInfoCard = false
-
-
+    @State private var showAlert = false
 
     var body: some View {
         VStack {
             if self.loading {
                 ProgressView()
-            }
-            else {
+            } else if self.error {
+                //TODO: Fehler anzeigen @marius
+            } else {
                 VStack {
-                    
+
                     NavigationHeader(title: "Social") {
                         dismiss()
                     }
                     ScrollView {
                         Image("AvatarM")
-                        
+
                         Text(user.fullName).font(
                             .custom("Poppins-SemiBold", size: 20))
-                        
+
                         Text(user.uClass).font(
                             .custom("Roboto-Regular", size: 20)
                         )
                         .fontWeight(.medium)
-                        
+
                         pendingFriendButton(status: self.status) {
-                            if(self.status == 0) {
-                                network.sendFriendshipRequest(friendId: user.id) { success, error in
+                            if self.status == 0 {
+                                network.sendFriendshipRequest(friendId: user.id)
+                                { success, error in
                                     if let success = success {
-                                        if(success) {
-                                            print("Freundschaftsanfrage an \(user.name) gesendet!")
+                                        if success {
+                                            print(
+                                                "Freundschaftsanfrage an \(user.name) gesendet!"
+                                            )
                                             self.status = 1
                                         } else {
                                             print("User ist bereits befreundet")
@@ -66,37 +68,27 @@ struct DetailFriendView: View {
                                         print(error)
                                     }
                                 }
-                            } else if(self.status == 2) {
-                                if let friend = self.friend {
-                                    network.declineFriendship(id: friend.id) { error in
-                                        if let error = error {
-                                            print(error)
-                                        } else {
-                                            print("Freund: \(friend.user2.name) entfernt")
-                                            self.status = 0
-                                            
-                                        }
-                                    }
-                                }
+                            } else if self.status == 2 {
+                                self.showAlert = true
                             }
                         }
-                        
+
                         StatisticCard(stats: self.stats)
                             .onTapGesture {
                                 self.showStatisticInfoCard = true
                             }
 
-                        
                         VStack(alignment: .leading) {
                             HStack {
-                                Text(user.fullName + "'s Herausforderungen").font(
-                                    .custom("Poppins-SemiBold", size: 16)
-                                )
-                                .padding(.leading)
-                                .padding(.top,20)
+                                Text(user.fullName + "'s Herausforderungen")
+                                    .font(
+                                        .custom("Poppins-SemiBold", size: 16)
+                                    )
+                                    .padding(.leading)
+                                    .padding(.top, 20)
                                 Spacer()
                             }
-                            
+
                             if !openChallenges.isEmpty {
                                 ScrollView(.horizontal) {
                                     HStack {
@@ -104,30 +96,24 @@ struct DetailFriendView: View {
                                         {
                                             challenge in
                                             OpenChallengeCard(
-                                                challenge: challenge)
+                                                challenge: challenge
+                                            )
                                             .onTapGesture {
-                                                self.selectedChallenge = challenge
+                                                self.selectedChallenge =
+                                                    challenge
                                             }
                                         }
                                     }
                                     .padding(.leading, 20)
-                                    
+
                                 }
                                 .scrollIndicators(.hidden)
                             } else {
-                                VStack {
-                                    Text(
-                                        "Du hast noch keine Herausforderungen!"
-                                    )
-                                    .font(.custom("Poppins-SemiBold", size: 16))
-                                    .padding()
-                                    .multilineTextAlignment(.center)
-                                    .foregroundStyle(.darkGrey)
-                                    
-                                }
-                                .frame(height: 129)
+                                Image("no_done_challenges_placeholder")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
                             }
-                            
+
                             HStack {
                                 Text("Herausforderungen Historie").font(
                                     .custom("Poppins-SemiBold", size: 16)
@@ -147,48 +133,65 @@ struct DetailFriendView: View {
                                         }
                                     }
                                     .padding(.leading, 20)
-                                    
+
                                 }
                                 .scrollIndicators(.hidden)
                             } else {
-                                VStack {
-                                    Text(
-                                        "Du hast noch keine Herausforderungen!"
-                                    )
-                                    .font(.custom("Poppins-SemiBold", size: 16))
-                                    .padding()
-                                    .multilineTextAlignment(.center)
-                                    .foregroundStyle(.darkGrey)
-                                    
-                                }
-                                .frame(height: 129)
+                                Image("no_open_challenges_placeholder")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
                             }
-                            
+
                         }
                     }
-                    
+                    .refreshable {
+                        handleRequests()
+                    }
+
                     Spacer()
                 }
             }
         }
         .onAppear {
+            self.getPending(user: self.user)
             self.handleRequests()
         }
         .sheet(item: $selectedChallenge) { challenge in
-                    ChallengeAlert(challenge: challenge)
+            ChallengeAlert(challenge: challenge)
                 .presentationDetents([.height(326)])
-                        .presentationDragIndicator(.visible)
-                        .onDisappear {
-                            self.handleRequests()
-                        }
+                .presentationDragIndicator(.visible)
+                .onDisappear {
+                    self.handleRequests()
                 }
+        }
         .sheet(isPresented: $showStatisticInfoCard) {
             StatisticInfoCard()
                 .presentationDetents([.height(280)])
                 .presentationDragIndicator(.visible)
         }
         .navigationBarBackButtonHidden(true)
-        
+        .alert(
+            "Willst du die Freundschaft wirklich beenden?", isPresented: $showAlert
+        ) {
+            Button("Ja") {
+                if let friend = self.friend {
+                    network.declineFriendship(id: friend.id) {
+                        error in
+                        if let error = error {
+                            print(error)
+                        } else {
+                            print(
+                                "Freund: \(friend.user2.name) entfernt"
+                            )
+                            self.status = 0
+
+                        }
+                    }
+                }
+            }
+            Button("Nein", role: .cancel) {}
+        }
+
     }
     private func handleRequests() {
         self.loading = true
@@ -198,24 +201,29 @@ struct DetailFriendView: View {
         network.fetchUserStats(id: user.id) { stats, error in
             if let stats = stats {
                 self.stats = stats
-            } else if let error = error {
-                //TODO: Fehlerbehandlung
+            } else if error != nil {
+                self.error = true
+                self.loading = false
             }
             dispatchGroup.leave()
         }
         if let friendship = self.friend {
             dispatchGroup.enter()
-            network.fetchFriendshipsChallenges(friendshipId: friendship.id) { openChallenges, doneChallenges, error in
-                if let openChallenges = openChallenges, let doneChallenges = doneChallenges {
+            network.fetchFriendshipsChallenges(friendshipId: friendship.id) {
+                openChallenges, doneChallenges, error in
+                if let openChallenges = openChallenges,
+                    let doneChallenges = doneChallenges
+                {
                     self.openChallenges = openChallenges
                     self.doneChallenges = doneChallenges
-                } else if let error = error {
-                    //TODO: Fehlerbehandlung
+                } else if error != nil {
+                    self.error = true
+                    self.loading = false
                 }
                 dispatchGroup.leave()
             }
         }
-        
+
         //Challenges einer Freundschaft fetchen
         dispatchGroup.notify(queue: .main) {
             self.loading = false
@@ -224,7 +232,9 @@ struct DetailFriendView: View {
 }
 
 extension DetailFriendView {
-    func pendingFriendButton(status: Int, clickAction: @escaping () -> Void) -> some View {
+    func pendingFriendButton(status: Int, clickAction: @escaping () -> Void)
+        -> some View
+    {
         ZStack {
             Button {
                 clickAction()
@@ -236,7 +246,8 @@ extension DetailFriendView {
                             : status == 1
                                 ? "pending_friend"
                                 : status == 2
-                                    ? "check_white" : "default")
+                                    ? "check_white" : "default"
+                    )
                     .resizable()
                     .frame(width: 15, height: 15)
                     Text(
@@ -281,7 +292,7 @@ extension DetailFriendView {
                 .cornerRadius(20)
             }
         }
-        
+
     }
     private func StatisticCard(stats: Statistic) -> some View {
         ZStack {
@@ -291,7 +302,7 @@ extension DetailFriendView {
                 .shadow(radius: 5)
                 .padding()
 
-            HStack(spacing: 0) { // Kein zusätzlicher Abstand zwischen den Spalten
+            HStack(spacing: 0) {  // Kein zusätzlicher Abstand zwischen den Spalten
                 VStack {
                     Image(systemName: "star.fill")
                         .font(.title2)
@@ -304,7 +315,7 @@ extension DetailFriendView {
                         .font(.title3)
                         .foregroundStyle(Color.white)
                 }
-                .frame(maxWidth: .infinity) // Gleichmäßige Verteilung
+                .frame(maxWidth: .infinity)  // Gleichmäßige Verteilung
 
                 Divider()
                     .frame(height: 60)
@@ -345,7 +356,20 @@ extension DetailFriendView {
             .padding(10)
         }
     }
-    
+    private func getPending(user: User) {
+        let isInAccepted = network.acceptedFriendships?.contains { $0.user2.id == user.id } ?? false
+        let isInPending = network.pendingFriendships?.contains { $0.user2.id == user.id } ?? false
+        
+        if isInAccepted {
+            self.status = 2
+        } else if isInPending {
+            self.status = 1
+        } else {
+            self.status = 0
+        }
+    }
+
+
 }
 
 #Preview {

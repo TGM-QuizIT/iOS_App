@@ -31,7 +31,7 @@ struct AddFriendView: View {
         
         VStack {
             if self.loading {
-                CustomLoading()
+                ProgressView()
             } else {
                 VStack {
                     NavigationHeader(title: "Freund hinzufügen") {
